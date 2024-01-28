@@ -32,18 +32,25 @@ def generateManageProjectCard():
                     children=[
                         dbc.Col([
                         html.Img(
-                        src=dash.get_asset_url("syncIcon.png"),
+                        src=dash.get_asset_url("fileImage.png"),
                         className="img-fluid rounded-start",
                         style={"width": "90px", "height": "90px","margin-right": 0, "margin-bottom" : "0%", "padding-top" : "0%"}, #inline alows for the html to stack on one line
                         ), 
-                        html.P("Sync Projects", style={"font-size": "20px","margin-left": 0,'padding-left': '20px', "margin-top" : "100%"}),]),
-                        dbc.Button("Return to Sync Menue", color="primary",href = "/syncMenue", style={'display': 'inline-block'} , className="position-absolute bottom-0 end-0 m-3"),
+                        html.P("Manage Projects", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
+                        ]),
+                        dbc.Button("+ Create Project", color="primary",href = "#", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3"),
                         html.Br(),
-                         html.P("For a given request, accept the projects that you want to sync. Projects that already exist on your computer will be grayed out and cannot be synced"),
+
                         createTable(),
-                        dbc.Button("Return to Sync Menue", color="primary",href = "/syncMenue", className="position-absolute bottom-0 end-0 m-3"),
-                        dbc.Button("Return to Sync Menue", color="primary",href = "/syncMenue", className="position-absolute bottom-0 end-0 m-3"),
-                        dbc.Button("Return to Sync Menue", color="primary",href = "/syncMenue", className="position-absolute bottom-0 end-0 m-3")
+                        html.Div(
+                        [
+                            dbc.Button("Ingest Logs", color="primary",href = "#"),
+                            dbc.Button("Delete Project", color="primary",href = "#"),
+                            dbc.Button("Open Project", color="primary",href = "#"),
+                        ],
+                        className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
+                        ), 
+
                         ],
                 ),
                 dbc.Col(width=1)

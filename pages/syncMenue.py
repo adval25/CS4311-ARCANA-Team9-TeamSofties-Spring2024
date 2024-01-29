@@ -51,7 +51,7 @@ layout = html.Div([
     html.Br(),
     html.Br(),
     html.Br(),
-    dcc.Link(menueCardCreator("View Sync Requests","fileImage.png"), href="/syncRequest"),#set href to were the card redirects
+    dcc.Link(menueCardCreator("View Sync Requests","fileImage.png"), href="/syncView"),#set href to were the card redirects
 
     ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) #justifyContent sets the content in the center of the screen
 ])

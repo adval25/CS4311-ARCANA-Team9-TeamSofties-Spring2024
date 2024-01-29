@@ -1,13 +1,14 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc
+from dash import dcc,dash_table
 from dash import html
+from collections import OrderedDict
+import pandas as pd
 
 dash.register_page(__name__, path='/syncRequest')
 
-def generateSyncCard():
-   
-   return html.Div(
+def generateSyncCard():  
+    return html.Div(
     dbc.Card(
        
         dbc.Row(
@@ -23,14 +24,42 @@ def generateSyncCard():
                         ), 
                         html.P("Create Sync Request", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
                         html.Br(),
-                        html.P("Enter a Destination IP Address"),
+                        html.P("Enter a destination IP Address"),
                         html.P("IP Address"),
-                        #html.Br(),
                         dbc.Form(
                         dbc.Row(dbc.Col(html.Div(dbc.Input(type="Ip adress", placeholder="0.0.0.0")),width = 3),)
                         ),
-                        dbc.Col(width=1),
+                        html.Br(),
+                        html.Br(),
+                        html.P("Select the projects you want to send to the destination IP Address"),
+                        
+                        
+                        html.Div(
+                        [
+                            dbc.Label("Projects"),
+                            dbc.Checklist(
+                                options=[
+                                    {"label": "Project A", "value": 1},
+                                    {"label": "Project B", "value": 2},
+                                    {"label": "Project C", "value": 3},
+                                    {"label": "Project D", "value": 4},
+                                ],
+                                value=[1],
+                                id="checklist-input",
+                            ),
                         ],
+                        ),
+                        html.Div(
+                        [
+                            dbc.Button("Cancel", color="secondary"),
+                            dbc.Button("Sync", color="primary"),
+                        ],
+                        className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
+                        ), 
+                        dbc.Col(width=1), 
+                            
+                        
+                    ],
                 ),
             ],
         

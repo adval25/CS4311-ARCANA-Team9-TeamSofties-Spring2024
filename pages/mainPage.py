@@ -46,7 +46,7 @@ menueTitle =  html.Div(
 layout = html.Div([
     dbc.Container([
        menueTitle,
-       dcc.Link(menueCardCreator("Manage Projects","fileImage.png"), href=""),#set href to were the card redirects
+       dcc.Link(menueCardCreator("Manage Projects","fileImage.png"), href="/manageProjects"),#set href to were the card redirects
        dcc.Link(menueCardCreator("Sync Projects","syncIcon.png"), href="/syncMenue"),
        dcc.Link(menueCardCreator("View User Activity Logs","activityLogs.png"), href="/viewUserActivityLog"),
        dcc.Link(menueCardCreator("Change Website Color","websiteColor.png"), href="/changeWebsiteColor")

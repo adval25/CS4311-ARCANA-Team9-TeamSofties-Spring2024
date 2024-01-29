@@ -44,7 +44,7 @@ def generateChangeColorCard():
                                 value=1,
                                 id="radioitems-inline-input",
                                 inline=True,
-                                labelStyle={"margin-right": 85,"margin-left":20},#creates space between the two tik boxes                    
+                                labelStyle={"margin-right": 60,"margin-left":20},#creates space between the two tik boxes                    
                                 ),
                         ]
                         ),

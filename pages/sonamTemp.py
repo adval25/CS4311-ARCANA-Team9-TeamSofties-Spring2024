@@ -5,17 +5,17 @@ from dash import html
 from collections import OrderedDict
 import pandas as pd
 
-projects = {
-    'Project': ['Project A', 'Project B', 'Project C', 'Project D']
-}
-projects_df = pd.DataFrame(projects)
+# projects = {
+#     'Project': ['Project A', 'Project B', 'Project C', 'Project D']
+# }
+# projects_df = pd.DataFrame(projects)
 
 dash.register_page(__name__, path='/sonamTemp')
 
 def generateSyncCard():  
-    checklist_projects = [
-        dict(label=proj, value=proj) for proj in projects_df['Project']
-    ]
+    # checklist_projects = [
+    #     dict(label=proj, value=proj) for proj in projects_df['Project']
+    # ]
     return html.Div(
     dbc.Card(
        
@@ -51,22 +51,44 @@ def generateSyncCard():
                         html.P("Select the projects you want to send to the destination IP Address"),
                         html.Br(),
                         dbc.Label("Projects", width="auto"),
-                        dbc.Checklist(
-                                id="projects-checklist",
-                                options=checklist_projects,
-                                value=[],
-                                labelStyle={'display': 'inline-block', 'padding-right': '10px'},
-                                inline=True,
+                        # dbc.Stack(
+                        # [
+                        #     dbc.Checklist(
+                        #         id="projects-checklist",
+                        #         options=checklist_projects,
+                        #         value=[],
+                        #         labelStyle={'display': 'inline-block', 'padding-right': '10px'},
+                        #         inline=True,
+                        #     ),    
+                        # ],
+                        # gap=3,
+                        # ),
+                        
+                        html.Div(
+                        [
+                            dbc.Label("Projects"),
+                            dbc.Checklist(
+                                options=[
+                                    {"label": "Project A", "value": 1},
+                                    {"label": "Project B", "value": 2},
+                                    {"label": "Project C", "value": 3},
+                                    {"label": "Project D", "value": 4},
+                                ],
+                                value=[1],
+                                id="checklist-input",
+                            ),
+                        ],
                         ),
-                        button = html.Div(
+                        html.Div(
                         [
                             dbc.Button("Cancel", color="secondary"),
                             dbc.Button("Sync", color="primary"),
                         ],
-                        className="d-grid gap-2 d-md-flex justify-content-md-end",
+                        className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
                         ), 
                         dbc.Col(width=1), 
                             
+                        
                     ],
                 ),
             ],

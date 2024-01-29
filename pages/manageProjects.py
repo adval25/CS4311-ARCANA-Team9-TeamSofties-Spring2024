@@ -4,11 +4,28 @@ from dash import dcc,dash_table
 from dash import html
 from collections import OrderedDict
 import pandas as pd
-
+from dash import Input, Output, State
 
 
 dash.register_page(__name__, path='/manageProjects')
 
+modal = html.Div(
+    [
+        dbc.Button("+ Create Project", color="primary", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3", id = "open", n_clicks=0),
+        dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("Header")),
+                dbc.ModalBody("This is the content of the modal"),
+                dbc.ModalFooter(
+                    dbc.Button("Close", id="close", className="ms-auto", n_clicks=0)
+                ),
+            ],
+            id = "modal",
+            is_open = False,
+        ),
+    ]
+    
+)
 
 def createTable():
     row0 = html.Tr(html.Td("Project A"),)
@@ -32,18 +49,42 @@ def generateManageProjectCard():
                     children=[
                         dbc.Col([
                         html.Img(
-                        src=dash.get_asset_url("syncIcon.png"),
+                        src=dash.get_asset_url("fileImage.png"),
                         className="img-fluid rounded-start",
                         style={"width": "90px", "height": "90px","margin-right": 0, "margin-bottom" : "0%", "padding-top" : "0%"}, #inline alows for the html to stack on one line
                         ), 
-                        html.P("Sync Projects", style={"font-size": "20px","margin-left": 0,'padding-left': '20px', "margin-top" : "100%"}),]),
-                        dbc.Button("Return to Sync Menue", color="primary",href = "/syncMenue", style={'display': 'inline-block'} , className="position-absolute bottom-0 end-0 m-3"),
+                        html.P("Manage Projects", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
+                        ]),
+
+                        
+
+                        #dbc.Button("+ Create Project", color="primary", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3", id = "open", n_clicks=0),
+                        #dbc.Modal(
+                        #    [
+                        #        dbc.ModalHeader(dbc.ModalTitle("Header")),
+                        #        dbc.ModalBody("This is the content of the modal"),
+                        #        dbc.ModalFooter(
+                        #            dbc.Button(
+                        #                "Close", id="close", className="ms-auto", n_clicks=0
+                        #            )
+                        #        ),
+                        #    ],
+                        #    id="modal",
+                        #    is_open=False,
+                        #),
+                        modal,
                         html.Br(),
-                         html.P("For a given request, accept the projects that you want to sync. Projects that already exist on your computer will be grayed out and cannot be synced"),
+                        
                         createTable(),
-                        dbc.Button("Return to Sync Menue", color="primary",href = "/syncMenue", className="position-absolute bottom-0 end-0 m-3"),
-                        dbc.Button("Return to Sync Menue", color="primary",href = "/syncMenue", className="position-absolute bottom-0 end-0 m-3"),
-                        dbc.Button("Return to Sync Menue", color="primary",href = "/syncMenue", className="position-absolute bottom-0 end-0 m-3")
+                        html.Div(
+                        [
+                            dbc.Button("Ingest Logs", color="primary",href = "#"),
+                            dbc.Button("Delete Project", color="primary",href = "#"),
+                            dbc.Button("Open Project", color="primary",href = "#"),
+                        ],
+                        className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
+                        ), 
+
                         ],
                 ),
                 dbc.Col(width=1)
@@ -59,3 +100,5 @@ layout = html.Div([
        generateManageProjectCard()
     ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
 ])
+
+

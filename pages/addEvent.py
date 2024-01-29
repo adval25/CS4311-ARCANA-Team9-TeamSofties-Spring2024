@@ -5,7 +5,7 @@ from dash import html
 from collections import OrderedDict
 import pandas as pd
 
-dash.register_page(__name__, path='/createEvent')
+dash.register_page(__name__, path='/addEvent')
 
 def generateCreateEvent():
     team_options = ["White", "Red", "Blue"]

@@ -101,10 +101,16 @@ def generateCreateEvent():
                                 dbc.Textarea(placeholder="Description", style={"height": "100px"},),
                                 
                                 html.P("Event Node Icon*"),
-                                dbc.Select(
-                                    options=[{"label": i, "value": i} for i in event_node_icons_options.keys()],
-                                    value=list(event_node_icons_options.keys())[0],
-                                ),
+                                html.Img(
+                                    src=dash.get_asset_url("eventNodeIcon.png"),
+                                    className="img-fluid rounded-start",
+                                    style={"width": "60px", "height": "60px","margin-right": 0,'display': 'inline-block', "margin-bottom" : "0%"},
+                                ), 
+                                html.P("White Team Activity"),
+                                # dbc.Select(
+                                #     options=[{"label": i, "value": i} for i in event_node_icons_options.keys()],
+                                #     value=list(event_node_icons_options.keys())[0],
+                                # ),
                                 
                                 dbc.Checkbox(
                                     id="standalone-checkbox",
@@ -125,7 +131,8 @@ def generateCreateEvent():
                         ),
                     ),    
                 ],                   
-            ), style={"height": 500, "width": 600,},   
+            ), 
+            # style={"height": "100%", "width": "100%",},   
         ),
     )
 
@@ -136,6 +143,6 @@ layout = html.Div(
        generateCreateEvent()
     ], 
     fluid=True, 
-    style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "width": "80vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
+    style={"backgroundColor": "#D3D3D3", "margin": "auto", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
     ]
 )

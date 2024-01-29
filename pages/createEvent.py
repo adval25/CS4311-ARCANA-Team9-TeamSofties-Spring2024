@@ -4,6 +4,7 @@ from dash import dcc,dash_table
 from dash import html
 from collections import OrderedDict
 import pandas as pd
+from . import eventNavbar
 
 dash.register_page(__name__, path='/createEvent')
 
@@ -128,13 +129,13 @@ def generateCreateEvent():
                                 dbc.Col(width=1), 
                             
                             ],                             
-                            style={"display": "flex", "flexDirection": "column", "alignItems": "center", "justifyContent": "center", "height": "100%"}  
+                            style={"display": "flex", "flexDirection": "column", "height": "100%"}  
 
                         ),
                     ),    
                 ],                   
             ), 
-            style={"margin": "auto", "width": "80%", "maxWidth": "800px"}  
+            style={"margin-left": "18rem","margin-right": "2rem","margin-top": "8rem","padding": "2rem 1rem","height" : "65rem"}
 
         ),
     )
@@ -143,6 +144,7 @@ layout = html.Div(
     [
     dbc.Container(
     [
+       eventNavbar.eventSidebar,
        generateCreateEvent()
     ], 
     fluid=True, 

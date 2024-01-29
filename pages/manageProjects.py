@@ -4,11 +4,28 @@ from dash import dcc,dash_table
 from dash import html
 from collections import OrderedDict
 import pandas as pd
-
+from dash import Input, Output, State
 
 
 dash.register_page(__name__, path='/manageProjects')
 
+modal = html.Div(
+    [
+        dbc.Button("+ Create Project", color="primary", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3", id = "open", n_clicks=0),
+        dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("Header")),
+                dbc.ModalBody("This is the content of the modal"),
+                dbc.ModalFooter(
+                    dbc.Button("Close", id="close", className="ms-auto", n_clicks=0)
+                ),
+            ],
+            id = "modal",
+            is_open = False,
+        ),
+    ]
+    
+)
 
 def createTable():
     row0 = html.Tr(html.Td("Project A"),)
@@ -38,9 +55,26 @@ def generateManageProjectCard():
                         ), 
                         html.P("Manage Projects", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
                         ]),
-                        dbc.Button("+ Create Project", color="primary",href = "#", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3"),
-                        html.Br(),
 
+                        
+
+                        #dbc.Button("+ Create Project", color="primary", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3", id = "open", n_clicks=0),
+                        #dbc.Modal(
+                        #    [
+                        #        dbc.ModalHeader(dbc.ModalTitle("Header")),
+                        #        dbc.ModalBody("This is the content of the modal"),
+                        #        dbc.ModalFooter(
+                        #            dbc.Button(
+                        #                "Close", id="close", className="ms-auto", n_clicks=0
+                        #            )
+                        #        ),
+                        #    ],
+                        #    id="modal",
+                        #    is_open=False,
+                        #),
+                        modal,
+                        html.Br(),
+                        
                         createTable(),
                         html.Div(
                         [
@@ -66,3 +100,5 @@ layout = html.Div([
        generateManageProjectCard()
     ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
 ])
+
+

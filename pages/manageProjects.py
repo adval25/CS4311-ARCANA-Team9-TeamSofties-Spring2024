@@ -14,13 +14,85 @@ modal = html.Div(
         dbc.Button("+ Create Project", color="primary", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3", id = "open", n_clicks=0),
         dbc.Modal(
             [
-                dbc.ModalHeader(dbc.ModalTitle("Header")),
+                dbc.ModalHeader(dbc.ModalTitle("Create Project")),
                 dbc.ModalBody("This is the content of the modal"),
                 dbc.ModalFooter(
                     dbc.Button("Close", id="close", className="ms-auto", n_clicks=0)
                 ),
             ],
             id = "modal",
+            is_open = False,
+        ),
+    ]
+    
+)
+
+modal_2 = html.Div(
+    [
+        html.Div(
+            [
+                dbc.Button("Ingest Logs", color="primary",id = "open modal_2"),
+                dbc.Button("Delete Project", color="primary",href = "#"),
+                dbc.Button("Open Project", color="primary",href = "#"),
+            ],
+            className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
+        ), 
+        dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("Ingest Logs")),
+                dbc.ModalBody("This is the content of the modal"),
+                dbc.ModalFooter(
+                    dbc.Button("Close", id="close modal_2", className="ms-auto", n_clicks=0)
+                ),
+            ],
+            id = "modal_2",
+            is_open = False,
+        ),
+    ]
+    
+)
+
+modal_3 = html.Div(
+    [
+        html.Div(
+            [
+                dbc.Button("Delete Project", color="primary",id = "open modal_3"),
+                dbc.Button("Open Project", color="primary"),
+            ],
+            className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
+        ), 
+        dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("Delete Project")),
+                dbc.ModalBody("This is the content of the modal"),
+                dbc.ModalFooter(
+                    dbc.Button("Close", id="close modal_3", className="ms-auto", n_clicks=0)
+                ),
+            ],
+            id = "modal_3",
+            is_open = False,
+        ),
+    ]
+    
+)
+
+modal_4 = html.Div(
+    [
+        html.Div(
+            [
+                dbc.Button("Open Project", color="primary",id = "open modal_4"),
+            ],
+            className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
+        ), 
+        dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("Open Project")),
+                dbc.ModalBody("This is the content of the modal"),
+                dbc.ModalFooter(
+                    dbc.Button("Close", id="close modal_4", className="ms-auto", n_clicks=0)
+                ),
+            ],
+            id = "modal_4",
             is_open = False,
         ),
     ]
@@ -56,31 +128,18 @@ def generateManageProjectCard():
                         html.P("Manage Projects", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
                         ]),
 
-                        
-
-                        #dbc.Button("+ Create Project", color="primary", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3", id = "open", n_clicks=0),
-                        #dbc.Modal(
-                        #    [
-                        #        dbc.ModalHeader(dbc.ModalTitle("Header")),
-                        #        dbc.ModalBody("This is the content of the modal"),
-                        #        dbc.ModalFooter(
-                        #            dbc.Button(
-                        #                "Close", id="close", className="ms-auto", n_clicks=0
-                        #            )
-                        #        ),
-                        #    ],
-                        #    id="modal",
-                        #    is_open=False,
-                        #),
                         modal,
+                        modal_2,
+                        modal_3,
+                        modal_4,
                         html.Br(),
                         
                         createTable(),
                         html.Div(
                         [
-                            dbc.Button("Ingest Logs", color="primary",href = "#"),
-                            dbc.Button("Delete Project", color="primary",href = "#"),
-                            dbc.Button("Open Project", color="primary",href = "#"),
+                            #dbc.Button("Ingest Logs", color="primary",href = "#"),
+                            #dbc.Button("Delete Project", color="primary",href = "#"),
+                            #dbc.Button("Open Project", color="primary",href = "#"),
                         ],
                         className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
                         ), 

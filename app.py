@@ -37,5 +37,35 @@ def toggle_modal(n1, n2, is_open):
         return not is_open
     return is_open
 
+@app.callback(
+    Output("modal_2", "is_open"),
+    [Input("open modal_2", "n_clicks"), Input("close modal_2", "n_clicks")],
+    [State("modal_2", "is_open")],
+)
+def toggle_modal_2(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output("modal_3", "is_open"),
+    [Input("open modal_3", "n_clicks"), Input("close modal_3", "n_clicks")],
+    [State("modal_3", "is_open")],
+)
+def toggle_modal_3(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output("modal_4", "is_open"),
+    [Input("open modal_4", "n_clicks"), Input("close modal_4", "n_clicks")],
+    [State("modal_4", "is_open")],
+)
+def toggle_modal_4(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
+
 if __name__ == '__main__':
     app.run(debug=True)

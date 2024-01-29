@@ -5,17 +5,9 @@ from dash import html
 from collections import OrderedDict
 import pandas as pd
 
-# projects = {
-#     'Project': ['Project A', 'Project B', 'Project C', 'Project D']
-# }
-# projects_df = pd.DataFrame(projects)
-
 dash.register_page(__name__, path='/syncRequest')
 
 def generateSyncCard():  
-    #checklist_projects = [
-    #    dict(label=proj, value=proj) for proj in projects_df['Project']
-    #]
     return html.Div(
     dbc.Card(
        

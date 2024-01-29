@@ -127,12 +127,15 @@ def generateCreateEvent():
                                 ), 
                                 dbc.Col(width=1), 
                             
-                            ], 
+                            ],                             
+                            style={"display": "flex", "flexDirection": "column", "alignItems": "center", "justifyContent": "center", "height": "100%"}  
+
                         ),
                     ),    
                 ],                   
             ), 
-            # style={"height": "100%", "width": "100%",},   
+            style={"margin": "auto", "width": "80%", "maxWidth": "800px"}  
+
         ),
     )
 

@@ -80,7 +80,7 @@ modal_4 = html.Div(
     [
         html.Div(
             [
-                dbc.Button("Open Project", color="primary",id = "open modal_4"),
+                dbc.Button("Open Project", color="primary",id = "open modal_4",href="/displayEvents"),
             ],
             className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
         ), 

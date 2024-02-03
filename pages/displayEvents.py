@@ -50,10 +50,10 @@ def generatedisplayEventCard():
                          ])
                          ),
                 dash_table.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns],style_table={'height': '300px', 'overflowY': 'auto'}),
-                html.Div(dbc.Button("+ Create Event", color="primary",href = "#",className="position-absolute bottom-0 start-0 m-3")),
+                html.Div(dbc.Button("+ Create Event", color="primary",href = "/addEvent",className="position-absolute bottom-0 start-0 m-3")),
                   html.Div(
                         [
-                            dbc.Button("Edit Event", color="primary",href = "#"),
+                            dbc.Button("Edit Event", color="primary",href = "/addEvent"),
                             dbc.Button("Delete Event", color="primary",href = "#"),
                         ],
                         className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",

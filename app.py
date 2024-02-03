@@ -8,7 +8,7 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],use_pages=True) #use
 
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("View Opened Project", href="#")),
+        dbc.NavItem(dbc.NavLink("View Opened Project", href="/displayEvents")),
         dbc.NavItem(dbc.NavLink("Sync Projects", href="/syncMenue")),
         dbc.NavItem(dbc.NavLink("Manage Projects", href="/manageProjects")),
         dbc.NavItem(dbc.NavLink("Home", href="/")), #temporary replace with image

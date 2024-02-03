@@ -15,9 +15,52 @@ modal = html.Div(
         dbc.Modal(
             [
                 dbc.ModalHeader(dbc.ModalTitle("Create Project")),
-                dbc.ModalBody("This is the content of the modal"),
+                dbc.ModalBody(
+                    [
+                        html.P("Project Name"),
+                        dbc.Form(
+                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Name", placeholder="Project Name")),width = 12),)
+                        ),
+                        html.Br(),
+                        html.P("Project Location"),
+                        dbc.Form(
+                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Location", placeholder="Project Location")),width = 12),)
+                        ),
+                        html.Br(),
+                        dbc.Row(
+                            [
+                                dbc.Col(html.P("Start Date")),
+                                dbc.Col(html.P("End Date")),
+                            ]
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Start Date", placeholder="mm/dd/yyyy")))))),
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="End Date", placeholder="mm/dd/yyyy")))))),
+                            ]
+                        ),
+                        html.Br(),
+                        html.P("Initials"),
+                        dbc.Form(
+                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Initials", placeholder="III")),width = 6),)
+                        ),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close", className="ms-auto", n_clicks=0)),
+                                dbc.Col(dbc.Button("Create Project", size = "lg", color="primary", id="create Project", className="ms-auto", n_clicks=0)),
+                            ]
+                        ),
+                    ],
+                ),
                 dbc.ModalFooter(
-                    dbc.Button("Close", id="close", className="ms-auto", n_clicks=0)
+                    [
+                        
+                    ]
                 ),
             ],
             id = "modal",
@@ -40,10 +83,35 @@ modal_2 = html.Div(
         dbc.Modal(
             [
                 dbc.ModalHeader(dbc.ModalTitle("Ingest Logs")),
-                dbc.ModalBody("This is the content of the modal"),
-                dbc.ModalFooter(
-                    dbc.Button("Close", id="close modal_2", className="ms-auto", n_clicks=0)
+                dbc.ModalBody(
+                    [
+                        html.P("Select a directory to ingest logs from."),
+                        html.P("Log directory", style={"font-size": "20px",'display': 'inline-block'}),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Log Directory", placeholder="ex. /Location/folder"))))), width = 9),
+                                dbc.Col(dbc.Button("Browse", color="primary",id = "Browse")),
+                            ]
+                        ),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close modal_2", className="ms-auto", n_clicks=0)),
+                                dbc.Col(dbc.Button("Ingest Logs", size = "lg", color="primary", id="create Project", className="ms-auto", n_clicks=0)),
+                            ]
+                        ),
+                    ]
                 ),
+                dbc.ModalFooter(),
             ],
             id = "modal_2",
             is_open = False,
@@ -63,11 +131,24 @@ modal_3 = html.Div(
         ), 
         dbc.Modal(
             [
-                dbc.ModalHeader(dbc.ModalTitle("Delete Project")),
-                dbc.ModalBody("This is the content of the modal"),
-                dbc.ModalFooter(
-                    dbc.Button("Close", id="close modal_3", className="ms-auto", n_clicks=0)
+                dbc.ModalHeader(),
+                dbc.ModalBody(
+                    [
+                        html.P("Are you sure you want to delete Project D?", style={"font-size": "40px", "margin-left": "10px", 'display': 'inline-block'}),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close modal_3", className="ms-auto", n_clicks=0)),
+                                dbc.Col(dbc.Button("Delete", size = "lg", color="primary", id="delete Project", className="ms-auto", n_clicks=0)),
+                            ]
+                        ),
+                    ]
                 ),
+                dbc.ModalFooter(),
             ],
             id = "modal_3",
             is_open = False,

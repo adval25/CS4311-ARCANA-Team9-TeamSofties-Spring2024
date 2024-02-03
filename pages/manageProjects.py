@@ -230,7 +230,8 @@ def generateManageProjectCard():
                 dbc.Col(width=1)
             ],
         
-        ),style={"height": 500, "width": 900,},className="mx-auto"
+        ),style={"height": 820, "width": 1820,},className="m-auto"
+        
        
     )
 )

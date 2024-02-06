@@ -1,5 +1,7 @@
-ARCANA System \n
-Language: Python \n 
+ARCANA System
+
+Language: Python
+
 System Requirements: Linux OS
 
 Program Description:

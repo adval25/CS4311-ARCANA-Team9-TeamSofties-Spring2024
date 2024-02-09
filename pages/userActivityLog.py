@@ -63,7 +63,7 @@ def generateActivityLog():
                 ),
             ],
         
-        ),style={"height": "42vw", "width": "98vw", "justifyContent": "center"},
+        ),style={"height": "42vw", "width": "90vw", "justifyContent": "center"},className="mx-auto"
        
     )
 )

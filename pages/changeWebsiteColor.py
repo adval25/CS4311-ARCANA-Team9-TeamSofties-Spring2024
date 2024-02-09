@@ -61,7 +61,7 @@ def generateChangeColorCard():
                 ),
             ],
         
-        ), style={"height": "42vw", "width": "98vw",},className="mx-auto" #card size
+        ), style={"height": "42vw", "width": "90vw",},className="mx-auto" #card size
        
     )
 )

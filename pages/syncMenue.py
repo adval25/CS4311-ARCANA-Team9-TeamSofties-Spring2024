@@ -37,8 +37,8 @@ def menueCardCreator(title,icon):
 
 menueTitle =  html.Div(
     dbc.Row(
-        dbc.Col(html.H5("Sync Menue",style={"fontSize": "40px","margin-left": 222,"margin-bottom" : "5%","color": "black"}),
-  style={"fontSize": "30px", "color": "white", "fontFamily": "Arial, sans-serif", "marginRight": "100px"} 
+        dbc.Col(html.H5("Sync Menue",style={"fontSize": "40px","margin-left": 100,"margin-bottom" : "5%","color": "black"}),
+  style={"fontSize": "30px", "color": "white", "fontFamily": "Arial, sans-serif", "marginRight": "100px",} 
          )
     )
 )

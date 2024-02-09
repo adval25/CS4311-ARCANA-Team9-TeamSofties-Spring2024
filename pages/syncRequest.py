@@ -63,12 +63,12 @@ def generateSyncCard():
                 ),
             ],
         
-        ),style={"height": 500, "width": 600,},
+        ),style={"height": 820, "width": 1880,},
        
     )
 )
 layout = html.Div([
     dbc.Container([
        generateSyncCard()
-    ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "width": "80vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
+    ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
 ])

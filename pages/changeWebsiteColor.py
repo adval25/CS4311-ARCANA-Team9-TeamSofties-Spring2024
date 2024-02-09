@@ -22,12 +22,12 @@ def generateChangeColorCard():
                         ), 
                         html.P("Change Website Color", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '50px'}),
                         html.Br(),
-                        html.P("Select a color scheme if you would like to apply the color scheme permantly click save"),
+                        html.P("Select a color scheme if you would like to apply the color scheme permantly click save", style={"margin-left": 300,'display': 'inline-block' ,'padding-left': '50px'}),
                         html.Br(),
                          html.Img(
                         src=dash.get_asset_url("defaultColor.png"),
                         className="img-fluid rounded-start",
-                        style={"padding-right": 220,"margin-left": 40}
+                        style={"padding-right": 220,"margin-left": 400}
 
                     ),
                      html.Img(
@@ -44,14 +44,16 @@ def generateChangeColorCard():
                                 value=1,
                                 id="radioitems-inline-input",
                                 inline=True,
-                                labelStyle={"margin-right": 60,"margin-left":20},#creates space between the two tik boxes                    
+                                labelStyle={"margin-right": 60,"margin-left":80},#creates space between the two tik boxes                    
                                 ),
-                        ]
+                        ],
+                        style={"margin-left": "450px"},
                         ),
+
                         html.Br(),
                         html.Div(
-                            dbc.Button("Save", color="primary", className="me-1"),
-                            style={"margin-left": "250px"},
+                            dbc.Button("Save", color="primary", className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3"),
+                            style={"margin-left": "1200px"},
 
                         ),
                         dbc.Col(width=1),
@@ -59,7 +61,7 @@ def generateChangeColorCard():
                 ),
             ],
         
-        ),
+        ), style={"height": 820, "width": 1880,},className="mx-auto" #card size
        
     )
 )
@@ -67,5 +69,5 @@ def generateChangeColorCard():
 layout = html.Div([
     dbc.Container([
        generateChangeColorCard()
-    ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "width": "80vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
+    ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh",  "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
 ])

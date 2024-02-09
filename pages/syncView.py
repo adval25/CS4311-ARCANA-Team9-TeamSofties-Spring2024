@@ -66,7 +66,7 @@ def generateSyncRequestCard():
                 dbc.Col(width=1)
             ],
         
-        ),style={"height": 820, "width": 1880,},className="mx-auto"
+        ),style={"height": "42vw", "width": "98vw",},className="mx-auto"
        
     )
 )

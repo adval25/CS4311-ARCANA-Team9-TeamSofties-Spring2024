@@ -53,7 +53,7 @@ def generateChangeColorCard():
                         html.Br(),
                         html.Div(
                             dbc.Button("Save", color="primary", className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3"),
-                            style={"margin-left": "1200px"},
+                            style={"margin-left": "60vw"},
 
                         ),
                         dbc.Col(width=1),
@@ -61,7 +61,7 @@ def generateChangeColorCard():
                 ),
             ],
         
-        ), style={"height": 820, "width": 1880,},className="mx-auto" #card size
+        ), style={"height": "42vw", "width": "98vw",},className="mx-auto" #card size
        
     )
 )

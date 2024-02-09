@@ -193,7 +193,7 @@ def createTable():
 def generateManageProjectCard():
    return html.Div(
     dbc.Card(
-       
+        
         dbc.Row(
             id="control-card",
             children=[
@@ -216,21 +216,12 @@ def generateManageProjectCard():
                         html.Br(),
                         
                         createTable(),
-                        html.Div(
-                        [
-                            #dbc.Button("Ingest Logs", color="primary",href = "#"),
-                            #dbc.Button("Delete Project", color="primary",href = "#"),
-                            #dbc.Button("Open Project", color="primary",href = "#"),
-                        ],
-                        className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
-                        ), 
-
                         ],
                 ),
                 dbc.Col(width=1)
             ],
         
-        ),style={"height": 820, "width": 1820,},className="m-auto"
+        ), style={"height": "42vw", "width": "98vw",},className="mx-auto"
         
        
     )

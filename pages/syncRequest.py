@@ -63,7 +63,7 @@ def generateSyncCard():
                 ),
             ],
         
-        ),style={"height": 820, "width": 1880,},
+        ),style={"height": "42vw", "width": "98vw",},
        
     )
 )

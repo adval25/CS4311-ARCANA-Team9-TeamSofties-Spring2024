@@ -32,7 +32,7 @@ def get_blogs(): # Returns a list of file paths for Blue team logs
         if 'blue' in subdirs:
             blue_sd_list.append(os.path.join(dirpath, 'blue'))
 
-    # compiles a list of file paths for all "white" team log files
+    # compiles a list of file paths for all "blue" team log files
     for dir in blue_sd_list:
         for dirpath, subdirs, filenames in os.walk(dir):
             for file in filenames:

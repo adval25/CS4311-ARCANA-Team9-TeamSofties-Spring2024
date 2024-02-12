@@ -3,16 +3,15 @@
 #pip install mongoengine
 import mongoengine
 from mongoengine import connect
+from project import Project
+from event import Event
 
-connect("animals")
-#mongoengine.EmbeddedDocument) if the document is embedded
-class Animal(mongoengine.Document):
-    name = mongoengine.StringField(required=True)
-    age = mongoengine.IntField()
-    employeeid = mongoengine.StringField(max_length=50)
-    meta = {"collection" : "employess"} #db_alias : databaseName sets what database this goes too
-    #without meta the collection in the db will be named after the classn 
+connect("projects-FM")
 
-tofu = Animal(name = "Greg", age = 10, employeeid = "864").save()
-
-    
+projectOne = Project(projectName = "Project1FM",analystInitals ="FM")
+projectOne.save()
+event1 = Event(eventDescription = "HELLO HELLO HELLO ")
+projectOne.addEvent(event1)
+event2 = Event(eventDescription = "HELLO HELLO HELLO 1")
+projectOne.addEvent(event2)
+projectOne.save()

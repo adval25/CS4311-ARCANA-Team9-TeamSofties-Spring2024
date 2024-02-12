@@ -1,8 +1,10 @@
 # Ingests logs from directory and returns lists with log directories
+
 import os
 path = os.getcwd()
 folder_name = 'pdrr'
 file_path = os.path.join(path, folder_name)
+
 
 def get_wlogs(): # Returns a list of file paths for White team logs
     wlogs_dir = [] # final list that will be returned with directories of all white team logs
@@ -60,3 +62,10 @@ def get_rlogs(): # Returns a list of file paths for Red team logs
                     rlogs_dir.append(fp)
 
     return rlogs_dir
+
+def getCsvPaths(listOfFilePaths):
+    csvPaths = []
+    for paths in listOfFilePaths:
+        if(paths.endswith(".csv")):
+            csvPaths.append(paths)
+    return csvPaths

@@ -9,3 +9,7 @@ class Project(mongoengine.Document):
     def addEvent(self,event):
         self.eventCollection.append(event)
 
+    def getCollection(self):
+        for event in self.eventCollection:
+            print(event.getEventDescription())
+

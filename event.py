@@ -11,3 +11,6 @@ class Event(mongoengine.EmbeddedDocument):
     eventVectorId = mongoengine.StringField()
     eventDataSource = mongoengine.StringField()
 
+    def getEventDescription(self):
+        return self.eventDescription
+

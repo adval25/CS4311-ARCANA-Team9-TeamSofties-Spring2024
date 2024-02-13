@@ -1,6 +1,7 @@
 # Ingests logs from directory and returns lists with log directories
 
 import os
+import pandas
 path = os.getcwd()
 folder_name = 'pdrr'
 file_path = os.path.join(path, folder_name)
@@ -70,3 +71,12 @@ def getCsvPaths(listOfFilePaths):
             csvPaths.append(paths)
     return csvPaths
 
+def csvsToDataFrame(csvPaths):
+    allCsvs = []
+    for csvFile in csvPaths:
+        df = pandas.read_csv(csvFile, index_col=None, header=0)
+        allCsvs.append(df)
+    return pandas.concat(allCsvs,axis=0,ignore_index=True)
+
+eventsDataFrame = csvsToDataFrame(getCsvPaths(get_wlogs()))
+print(eventsDataFrame.columns)

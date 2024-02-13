@@ -69,3 +69,4 @@ def getCsvPaths(listOfFilePaths):
         if(paths.endswith(".csv")):
             csvPaths.append(paths)
     return csvPaths
+

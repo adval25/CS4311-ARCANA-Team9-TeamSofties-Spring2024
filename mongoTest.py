@@ -6,26 +6,14 @@ from mongoengine import connect
 from project import Project
 from event import Event
 import logIngestor
-import pandas as pd
 
 connect("projects-FM")
 
-projectOne = Project(projectName = "Project1FM",analystInitals ="FM")
+projectOne = Project(projectName = "Project1FM",analystInitals ="FM",eventCollection = [])
 projectOne.save()
 
-eventsDataFrame = logIngestor.csvsToDataFrame(logIngestor.getCsvPaths(logIngestor.get_wlogs()))
-index = 1
-while index < len(eventsDataFrame):
-    event = Event(eventTimeStamp = str(eventsDataFrame["dateCreated"][index]),
-                    analystInitals = str(eventsDataFrame["initials"][index]),
-                    eventTeam = str(eventsDataFrame["team"][index]),
-                    eventDescription =str(eventsDataFrame["description"][index]), 
-                    eventLocation = str(eventsDataFrame["location"][index]),
-                    eventSourceHost = str(eventsDataFrame["sourceHost"][index]),
-                    eventTargetHost = str(eventsDataFrame["targetHost"][index]),
-                    eventVectorId = str(eventsDataFrame["vectorId"][index]),)
-    projectOne.addEvent(event)
-    index += 1
+eventDictionary = logIngestor.eventDataListToEventList(logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.get_wlogs())))
+projectOne.addEvent(eventDictionary)
 projectOne.save()
 
 

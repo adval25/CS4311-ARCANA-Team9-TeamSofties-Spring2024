@@ -12,5 +12,5 @@ class Event(mongoengine.EmbeddedDocument):
     eventDataSource = mongoengine.StringField()
 
     def getEventDescription(self):
-        return self.eventDescription
+        return self.eventDataSource
 

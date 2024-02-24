@@ -1,7 +1,8 @@
 # Ingests logs from directory and returns lists with log directories
 
 import os
-import pandas
+import csv
+from event import Event
 path = os.getcwd()
 folder_name = 'pdrr'
 file_path = os.path.join(path, folder_name)
@@ -67,16 +68,31 @@ def get_rlogs(): # Returns a list of file paths for Red team logs
 def getCsvPaths(listOfFilePaths):
     csvPaths = []
     for paths in listOfFilePaths:
-        if(paths.endswith(".csv")):
+        if(paths.endswith(".csv")): #grabs all the csvs in the found file paths
             csvPaths.append(paths)
     return csvPaths
 
-def csvsToDataFrame(csvPaths):
-    allCsvs = []
+def csvsToEventDataList(csvPaths): #turns all of the csv rows into dictionaries
+    eventAccumulator =[]
     for csvFile in csvPaths:
-        df = pandas.read_csv(csvFile, index_col=None, header=0)
-        allCsvs.append(df)
-    return pandas.concat(allCsvs,axis=0,ignore_index=True)
+        with open(csvFile) as openedCsv:
+            listOfEvents = csv.DictReader(openedCsv)
+            for event in listOfEvents:
+                event["dataSource"] = csvFile #adds datasource attribute to the eventData
+                eventAccumulator.append(event)
+    return eventAccumulator
 
-eventsDataFrame = csvsToDataFrame(getCsvPaths(get_wlogs()))
-print(eventsDataFrame.columns)
+def eventDataListToEventList(eventAccumulator): #turns all of the event data into event objects and returns a list of events
+    eventList =[]
+    for eventInfromation in eventAccumulator:
+        event = Event(eventTimeStamp = str(eventInfromation["dateCreated"]),
+                        analystInitals = str(eventInfromation["initials"]),
+                        eventTeam = str(eventInfromation["team"]),
+                        eventDescription =str(eventInfromation["description"]), 
+                        eventLocation = str(eventInfromation["location"]),
+                        eventSourceHost = str(eventInfromation["sourceHost"]),
+                        eventTargetHost = str(eventInfromation["targetHost"]),
+                        eventVectorId = str(eventInfromation["vectorId"]),
+                        eventDataSource = str(eventInfromation["dataSource"]),)                     
+        eventList.append(event)
+    return eventList

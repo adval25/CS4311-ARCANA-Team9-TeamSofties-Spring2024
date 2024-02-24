@@ -7,7 +7,7 @@ class Project(mongoengine.Document):
 
 
     def addEvent(self,event):
-        self.eventCollection.extend(event)
+        self.eventCollection.extend(event) #has to be extend it will break otherwhise
 
     def getCollection(self):
         for event in self.eventCollection:

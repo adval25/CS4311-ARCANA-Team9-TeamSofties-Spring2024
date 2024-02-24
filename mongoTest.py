@@ -17,6 +17,9 @@ projectOne.addEvent(eventDictionary)
 projectOne.save()
 
 
+
+
+#Example of grabbing something from the database and edeting it
 def getProjectFromDatabase(selectedName):
     try:
         project = Project.objects.get(projectName=selectedName)
@@ -26,8 +29,8 @@ def getProjectFromDatabase(selectedName):
     except Exception as e:
         print('An error occurred:', e)
 
-# foundProject = getProjectFromDatabase("Project1FM")
-# event2 = Event(eventDescription = "HELLO HELLO HELLO 4")
-# foundProject.addEvent(event2)
-# foundProject.getCollection()
-# foundProject.save()
+foundProject = getProjectFromDatabase("Project1FM")
+event2 = Event(eventDescription = "HELLO HELLO HELLO 4")
+foundProject.addEvent(event2)
+foundProject.getCollection()
+foundProject.save()

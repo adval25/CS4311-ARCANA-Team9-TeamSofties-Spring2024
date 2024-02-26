@@ -44,10 +44,10 @@ def generateChangeColorCard():
                                 value=1,
                                 id="radioitems-inline-input",
                                 inline=True,
-                                labelStyle={"margin-right": 60,"margin-left":80},#creates space between the two tik boxes                    
+                                labelStyle={"margin-right":"auto","margin-left":"auto"},#creates space between the two tik boxes                    
                                 ),
                         ],
-                        style={"margin-left": "450px"},
+                        style={"margin-left": "433px"},
                         ),
 
                         html.Br(),
@@ -61,7 +61,7 @@ def generateChangeColorCard():
                 ),
             ],
         
-        ), style={"height": "42vw", "width": "90vw",},className="mx-auto" #card size
+        ), style={"paddingRight": "300px"},className="mx-auto" #card size
        
     )
 )

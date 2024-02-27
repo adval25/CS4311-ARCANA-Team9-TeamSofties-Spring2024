@@ -1,4 +1,5 @@
 import mongoengine
+import pymongo
 from project import Project
 from event import Event
 
@@ -21,3 +22,11 @@ def updateProjectEvent(projectId, eventId):
 
 def deleteProjectEvent(projectId, eventId):
     return 0
+
+def getEmbeddedDocFromDb(projectId):
+    return 0
+
+def getAllProjectsFromDb(client):
+     projectDataBase = client["projectsDb"]
+     projectCollection = projectDataBase["project"]
+     return list(projectCollection.find())

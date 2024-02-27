@@ -6,14 +6,14 @@ from mongoengine import connect
 from project import Project
 from event import Event
 import logIngestor
+import dataBaseCommunicator
 
-connect("projects-FM")
-
-projectOne = Project(projectName = "Project1FM",analystInitals ="FM",eventCollection = [])
-projectOne.save()
-
+connection = connect("projectsDb")
+# print(dataBaseCommunicator.getAllProjectsFromDb(connection))
+projectOne = Project(projectName = "Project7FM",analystInitals ="FM",eventCollection = [])
 eventDictionary = logIngestor.eventDataListToEventList(logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.get_wlogs())))
 projectOne.addEvent(eventDictionary)
+print(projectOne._id)
 projectOne.save()
 
 
@@ -29,8 +29,8 @@ def getProjectFromDatabase(selectedName):
     except Exception as e:
         print('An error occurred:', e)
 
-foundProject = getProjectFromDatabase("Project1FM")
-event2 = Event(eventDescription = "HELLO HELLO HELLO 4")
-foundProject.addEvent(event2)
-foundProject.getCollection()
-foundProject.save()
+# foundProject = getProjectFromDatabase("Project1FM")
+# event2 = Event(eventDescription = "HELLO HELLO HELLO 4")
+# foundProject.addEvent(event2)
+# foundProject.getCollection()
+# foundProject.save()

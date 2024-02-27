@@ -5,6 +5,8 @@ from dash import html
 from collections import OrderedDict
 import pandas as pd
 from dash import Input, Output, State
+import dataBaseCommunicator
+from dataBaseCommunicator import dataBaseCleint
 
 
 dash.register_page(__name__, path='/manageProjects')
@@ -181,13 +183,16 @@ modal_4 = html.Div(
 )
 
 def createTable():
-    row0 = html.Tr(html.Td("Project A"),)
-    row1 = html.Tr(html.Td("Project B"),)
-    row2 = html.Tr(html.Td("Project C"),)
-    row3 = html.Tr(html.Td("Project D"),)
+    projectList = dataBaseCommunicator.getAllProjectsFromDb(client=dataBaseCleint) #temporary!!!!!!!!
+    rows = []
+    for i, dictionary in enumerate(projectList):
+        if "projectName" in dictionary:
+            project_name = dictionary["projectName"]
+            button_id = 'select-project-button'  # Unique ID for each button
+            button = html.Button('Select Project', id=button_id, value=project_name, className='btn btn-primary')
+            rows.append(html.Tr([html.Td(project_name), html.Td(button)]))
 
-    table_body = [html.Tbody([row0,row1, row2,row3])]
-    
+    table_body = html.Tbody(rows)
     return dbc.Table( table_body, bordered=True)
 
 def generateManageProjectCard():

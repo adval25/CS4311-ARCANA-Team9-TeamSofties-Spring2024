@@ -4,8 +4,8 @@ from dash import dcc
 from dash import html
 from dash import Input, Output, State
 
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],use_pages=True) #user pages = true allows it to be multipage IMPORTANT!
 
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],use_pages=True) #user pages = true allows it to be multipage IMPORTANT!
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("View Opened Project", href="/displayEvents")),
@@ -21,9 +21,10 @@ navbar = dbc.NavbarSimple(
     dark=True,
     className="fixed-top",
 )
-
+hiddenStore = dcc.Store(id='passedData')
 app.layout = html.Div([
     navbar,
+    hiddenStore,
     dash.page_container,
 ])
 

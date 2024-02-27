@@ -7,30 +7,47 @@ from project import Project
 from event import Event
 import logIngestor
 import dataBaseCommunicator
+import pymongo
+from bson.objectid import ObjectId
+
 
 connection = connect("projectsDb")
-# print(dataBaseCommunicator.getAllProjectsFromDb(connection))
-projectOne = Project(projectName = "Project7FM",analystInitals ="FM",eventCollection = [])
+# print(dataBaseCommunicator.getAllProjectsFromDb(connection)[0]["_id"])
+projectOne = Project(projectName = "Project8FM",analystInitals ="FM",eventCollection = [])
 eventDictionary = logIngestor.eventDataListToEventList(logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.get_wlogs())))
-projectOne.addEvent(eventDictionary)
-print(projectOne._id)
+dataBaseCommunicator.addEventListToProject(projectOne,eventDictionary)
 projectOne.save()
 
 
 
 
 #Example of grabbing something from the database and edeting it
-def getProjectFromDatabase(selectedName):
-    try:
-        project = Project.objects.get(projectName=selectedName)
-        return project
-    except Project.DoesNotExist:
-        print('No project found with name:', selectedName)
-    except Exception as e:
-        print('An error occurred:', e)
+# def getProjectFromDatabase(selectedName):
+#     try:
+#         project = Project.objects.get(projectName=selectedName)
+#         return project
+#     except Project.DoesNotExist:
+#         print('No project found with name:', selectedName)
+#     except Exception as e:
+#         print('An error occurred:', e)
+# project = dataBaseCommunicator.getProjectFromDb(dataBaseCommunicator.getAllProjectsFromDb(connection)[0]["_id"])
+# print(project.getEventCollection())
+# # print(dataBaseCommunicator.getEventDictionaryFromDb( ObjectId(dataBaseCommunicator.getAllProjectsFromDb(connection)[0]["_id"]),connection))
+# # foundProject = dataBaseCommunicator.getProjectFromDb( ObjectId("65dd7fd43f7ee0a383a6fcbf"))
+# event = Event(eventTimeStamp ="dateCreated",
+#                         analystInitals ="FXR",
+#                         eventTeam = str("team"),
+#                         eventDescription =str("description"), 
+#                         eventLocation = str("location"),
+#                         eventSourceHost = str("sourceHost"),
+#                         eventTargetHost = str("targetHost"),
+#                         eventVectorId = str("vectorId"),
+#                         eventDataSource = str("dataSource"),
+#                         )
+# dataBaseCommunicator.addEventToProject(project,event)
+# event2 = Event(eventDescription = "HELLO HELLO HELLO 5")
+# dataBaseCommunicator.addEventToProject(foundProject,event2)
 
-# foundProject = getProjectFromDatabase("Project1FM")
-# event2 = Event(eventDescription = "HELLO HELLO HELLO 4")
 # foundProject.addEvent(event2)
 # foundProject.getCollection()
 # foundProject.save()

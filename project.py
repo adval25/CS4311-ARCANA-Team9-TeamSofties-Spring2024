@@ -6,9 +6,12 @@ class Project(mongoengine.Document):
     eventCollection = mongoengine.ListField(mongoengine.EmbeddedDocumentField(Event))
     _id = mongoengine.ObjectIdField()
 
-    def addEvent(self,event):
+    def addEventList(self,event):
         self.eventCollection.extend(event) #has to be extend it will break otherwhise
     
+    def addEvent(self,event):
+         self.eventCollection.append(event)
+    
     def getEventCollection(self):
-        return self.eventCollection
+        return self.projectName
 

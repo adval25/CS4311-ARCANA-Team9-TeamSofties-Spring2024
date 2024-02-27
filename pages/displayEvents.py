@@ -3,15 +3,18 @@ import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html,callback,dash_table
 from .  import eventNavbar
 import pandas as pd
+import dataBaseCommunicator
+from dataBaseCommunicator import dataBaseCleint
 
 
 dash.register_page(__name__, path='/displayEvents')
-
+eventDic = dataBaseCommunicator.getEventDictionaryFromDb(dataBaseCommunicator.getAllProjectsFromDb(dataBaseCleint)[0]["_id"],dataBaseCleint)
+eventDic = [{key: value for key, value in d.items() if key != "_id"} for d in eventDic]
 
 sortDropDown = [{"label": "TimeStamp", "value": "1"},{"label": "TargetHost", "value": "2"},]
 logicDropDown = [{"label": "Logic", "value": "1"},{"label": "*", "value": "2"},]
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
+df = pd.DataFrame(eventDic)
 
 
 def dropDownMaker(menueId,menueContent,marginRight):
@@ -50,9 +53,9 @@ def generatedisplayEventCard():
                          ])
                          ),
                 dash_table.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns],style_table={'height': '300px', 'overflowY': 'auto'}),
-                html.Div(dbc.Button("+ Create Event", color="primary",href = "/addEvent",className="position-absolute bottom-0 start-0 m-3")),
                   html.Div(
                         [
+                            dbc.Button("+ Create Event", color="primary",href = "/addEvent"),
                             dbc.Button("Edit Event", color="primary",href = "/addEvent"),
                             dbc.Button("Delete Event", color="primary",href = "#"),
                         ],

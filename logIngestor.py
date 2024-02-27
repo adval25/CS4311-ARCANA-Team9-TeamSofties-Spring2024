@@ -1,8 +1,11 @@
 # Ingests logs from directory and returns lists with log directories
 
 import os
+import pymongo
 import csv
 from event import Event
+from bson.objectid import ObjectId
+
 path = os.getcwd()
 folder_name = 'pdrr'
 file_path = os.path.join(path, folder_name)
@@ -93,6 +96,7 @@ def eventDataListToEventList(eventAccumulator): #turns all of the event data int
                         eventSourceHost = str(eventInfromation["sourceHost"]),
                         eventTargetHost = str(eventInfromation["targetHost"]),
                         eventVectorId = str(eventInfromation["vectorId"]),
-                        eventDataSource = str(eventInfromation["dataSource"]),)                     
+                        eventDataSource = str(eventInfromation["dataSource"]),
+                        )                     
         eventList.append(event)
     return eventList

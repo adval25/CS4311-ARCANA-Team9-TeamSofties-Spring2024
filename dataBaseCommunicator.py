@@ -55,3 +55,15 @@ def deleteProjectEvent(projectId, eventId):
     except Exception as e:
         print('An error occurred:', e)
         return None
+    
+
+def getEmbeddedDocFromDb(projectId):
+    retrivedProject = getProjectFromDb(projectId)
+    return retrivedProject.getEventCollection()
+
+def getAllProjectsFromDb(client):
+     projectDataBase = client["projectsDb"]
+     projectCollection = projectDataBase["project"]
+     return list(projectCollection.find())
+
+

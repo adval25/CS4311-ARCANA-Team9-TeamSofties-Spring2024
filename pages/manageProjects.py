@@ -2,9 +2,11 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc,dash_table,callback
 from dash import html
+import dash_ag_grid as dag
+from dash.exceptions import PreventUpdate
 from collections import OrderedDict
 import pandas as pd
-from dash import Input, Output, State
+from dash import Input, Output, State, ALL
 import dataBaseCommunicator
 from dataBaseCommunicator import dataBaseCleint
 
@@ -183,17 +185,31 @@ modal_4 = html.Div(
 )
 
 def createTable():
-    projectList = dataBaseCommunicator.getAllProjectsFromDb(client=dataBaseCleint) #temporary!!!!!!!!
-    rows = []
-    for i, dictionary in enumerate(projectList):
-        if "projectName" in dictionary:
-            project_name = dictionary["projectName"]
-            button_id = 'select-project-button'  # Unique ID for each button
-            button = html.Button('Select Project', id=button_id, value=project_name, className='btn btn-primary')
-            rows.append(html.Tr([html.Td(project_name), html.Td(button)]))
+    projectDict = dataBaseCommunicator.getAllProjectsFromDb(client=dataBaseCleint)
+    projectList =  [{"_id": str(project["_id"]), "projectName": project["projectName"]} for project in projectDict]
+    columnDefs = [{"field": i} for i in ["projectName"]]
+    return dag.AgGrid(
+            id="row-selection-selected-rows",
+            columnDefs=columnDefs,
+            rowData=projectList,
+            columnSize="sizeToFit",
+            defaultColDef={"filter": True},
+            dashGridOptions={"rowSelection": "multiple", "animateRows": False},
+        )
 
-    table_body = html.Tbody(rows)
-    return dbc.Table( table_body, bordered=True)
+
+
+@callback(
+    [Output('selected-project-store', 'data')],
+    [Input("row-selection-selected-rows", "selectedRows")],
+    [State('selected-project-store', 'data')]
+)
+def output_selected_rows(selected_rows,current_data):
+    if selected_rows is None:
+        return (current_data,)
+    else:
+        selectedProject = [f"{project['_id']} ({project['projectName']})" for project in selected_rows]
+        return (f"You selected the project{'s' if len(selected_rows) > 1 else ''}:\n{', '.join(selectedProject)}",)
 
 def generateManageProjectCard():
    return html.Div(
@@ -203,8 +219,7 @@ def generateManageProjectCard():
             id="control-card",
             children=[
                 dbc.Col(width=1), #gives the card nice margin
-                dbc.Col(
-                    children=[
+                dbc.Col([
                         dbc.Col([
                         html.Img(
                         src=dash.get_asset_url("fileImage.png"),
@@ -219,9 +234,9 @@ def generateManageProjectCard():
                         modal_3,
                         modal_4,
                         html.Br(),
-                        
                         createTable(),
-                        ],
+                        html.P(id='placeholder')
+                ]
                 ),
                 dbc.Col(width=1)
             ],
@@ -275,7 +290,7 @@ def toggle_modal_4(n1, n2, is_open):
 
 layout = html.Div([
     dbc.Container([
-       generateManageProjectCard()
+       generateManageProjectCard(),
     ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
 ])
 

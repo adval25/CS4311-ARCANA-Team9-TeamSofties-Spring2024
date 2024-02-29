@@ -23,8 +23,8 @@ navbar = dbc.NavbarSimple(
 )
 hiddenStore = dcc.Store(id='passedData')
 app.layout = html.Div([
+    dcc.Store(id='selected-project-store', data=None),
     navbar,
-    hiddenStore,
     dash.page_container,
 ])
 

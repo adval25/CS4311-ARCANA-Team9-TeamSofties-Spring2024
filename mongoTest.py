@@ -13,14 +13,15 @@ from bson.objectid import ObjectId
 
 connection = connect("projectsDb")
 # print(dataBaseCommunicator.getAllProjectsFromDb(connection)[0]["_id"])
-projectOne = Project(projectName = "Project8FM",analystInitals ="FM",eventCollection = [])
-eventDictionary = logIngestor.eventDataListToEventList(logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.get_wlogs())))
-dataBaseCommunicator.addEventListToProject(projectOne,eventDictionary)
-projectOne.save()
+# projectOne = Project(projectName = "Project8FM",analystInitals ="FM",eventCollection = [])
+# eventDictionary = logIngestor.eventDataListToEventList(logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.get_wlogs())))
+# dataBaseCommunicator.addEventListToProject(projectOne,eventDictionary)
+# projectOne.save()
 
 
-
-
+projectDict = dataBaseCommunicator.getAllProjectsFromDb(client=connection)
+matching_values =  [{"_id": str(project["_id"]), "projectName": project["projectName"]} for project in projectDict]
+print(matching_values)
 #Example of grabbing something from the database and edeting it
 # def getProjectFromDatabase(selectedName):
 #     try:

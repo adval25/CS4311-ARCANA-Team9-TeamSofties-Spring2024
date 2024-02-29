@@ -1,6 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import Input, Output, dcc, html,callback,dash_table
+from dash import Input, Output, dcc, html,callback,dash_table,State
 from .  import eventNavbar
 import pandas as pd
 import dataBaseCommunicator
@@ -69,13 +69,29 @@ def generatedisplayEventCard():
     )
 )
 
+@callback(
+    Output('store-data-display', 'children'),
+    [Input('dummy-div', 'children')],  # Trigger callback on page load
+    [State('selected-project-store', 'data')]
+)
+def display_store_data(dummy_value, store_data):
+    return store_data or "No data available"  # R
 
+@callback(
+    Output('dummy-div', 'children'),
+    [Input('selected-project-store', 'data')]
+)
+def trigger_page_load(data):
+    return 'Page Loaded'  # Update the hidden div to trigger the page load
 
 layout = html.Div([
+    html.Div(id='dummy-div', style={'display': 'none'}),
     html.Br(),
     eventNavbar.eventSidebar,
     dbc.Container([
-       generatedisplayEventCard()
+       generatedisplayEventCard(),
+      html.Div(id='store-data-display'),
+
     ], fluid=True,  className="mx-auto") 
 ])
 

@@ -7,6 +7,7 @@ from dash import Input, Output, State
 from event import Event
 import dataBaseCommunicator
 from dataBaseCommunicator import dataBaseCleint
+from bson.objectid import ObjectId
 
 
 dash.register_page(__name__, path='/addEvent')
@@ -176,12 +177,12 @@ layout = html.Div(
     ]
 )
 
-def handle_create_button_click(n_clicks, date_value, time_value,intialsInput,locationInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,postureInput,descriptionInput):
+def handleCreateButtonClick(n_clicks, dateValue, timeValue,intialsInput,locationInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,postureInput,descriptionInput):
     if n_clicks:
-        print_input_values(date_value, time_value,intialsInput,locationInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,postureInput,descriptionInput)
+        sendEventToDb(dateValue, timeValue,intialsInput,locationInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,postureInput,descriptionInput)
 
-def print_input_values(date_value, time_value, intialsInput, locationInput, vectorIdInput, sourceHostInput, targetHostInput, teamInput,postureInput,descriptionInput):
-    event = Event(eventTimeStamp = str(date_value),
+def sendEventToDb(dateValue, timeValue, intialsInput, locationInput, vectorIdInput, sourceHostInput, targetHostInput, teamInput,postureInput,descriptionInput):
+    event = Event(eventTimeStamp = str(dateValue),
                         analystInitals = str(intialsInput),
                         eventTeam = str(teamInput),
                         eventDescription =str(descriptionInput), 

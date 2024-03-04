@@ -1,14 +1,11 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc,dash_table,callback
-from dash import html
+from dash import html,callback,Input, Output, State
 import dash_ag_grid as dag
-from dash.exceptions import PreventUpdate
-from collections import OrderedDict
-import pandas as pd
-from dash import Input, Output, State, ALL
 import dataBaseCommunicator
 from dataBaseCommunicator import dataBaseCleint
+import logIngestor
+import flask
 
 
 dash.register_page(__name__, path='/manageProjects')
@@ -23,12 +20,17 @@ modal = html.Div(
                     [
                         html.P("Project Name"),
                         dbc.Form(
-                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Name", placeholder="Project Name")),width = 12),)
+                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Name", placeholder="Project Name", id = "projectName" )),width = 12),)
                         ),
                         html.Br(),
                         html.P("Project Location"),
                         dbc.Form(
-                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Location", placeholder="Project Location")),width = 12),)
+                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Location", placeholder="Project Location", id = "projectLocation")),width = 12),)
+                        ),
+                        html.Br(),
+                        html.P("Log Location"),
+                        dbc.Form(
+                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Log Directory", placeholder="Log Directory" , id = "logDirectory")),width = 12),)
                         ),
                         html.Br(),
                         dbc.Row(
@@ -46,8 +48,9 @@ modal = html.Div(
                         html.Br(),
                         html.P("Initials"),
                         dbc.Form(
-                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Initials", placeholder="III")),width = 6),)
+                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Initials", placeholder="III", id = "analystInitals")),width = 6),)
                         ),
+                        
                         html.Br(),
                         html.Br(),
                         html.Br(),
@@ -56,7 +59,7 @@ modal = html.Div(
                         dbc.Row(
                             [
                                 dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close", className="ms-auto", n_clicks=0)),
-                                dbc.Col(dbc.Button("Create Project", size = "lg", color="primary", id="create Project", className="ms-auto", n_clicks=0)),
+                                dbc.Col(dbc.Button("Create Project", size = "lg", color="primary", id="createProject", className="ms-auto", href="/manageProjects",n_clicks=0)),
                             ]
                         ),
                     ],
@@ -195,6 +198,8 @@ def createTable():
             columnSize="sizeToFit",
             defaultColDef={"filter": True},
             dashGridOptions={"rowSelection": "multiple", "animateRows": False},
+            persistence=True,        
+            persisted_props=["data"], 
         )
 
 
@@ -228,13 +233,13 @@ def generateManageProjectCard():
                         ), 
                         html.P("Manage Projects", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
                         ]),
-
                         modal,
                         modal_2,
                         modal_3,
                         modal_4,
                         html.Br(),
                         createTable(),
+                        html.A(html.Button('Refresh Data'),href='/manageProjects'),
                         html.P(id='placeholder')
                 ]
                 ),
@@ -249,13 +254,21 @@ def generateManageProjectCard():
 
 @callback(
     Output("modal", "is_open"),
-    [Input("open", "n_clicks"), Input("close", "n_clicks")],
-    [State("modal", "is_open")],
+    [Input("open", "n_clicks"), Input("close", "n_clicks"),Input('createProject', 'n_clicks')],
+    [
+        State("modal", "is_open"),
+        State('projectName', 'value'),
+        State('analystInitals', 'value'),
+        State('logDirectory', 'value'),
+        ],
 )
-def toggle_modal(n1, n2, is_open):
+def toggle_modal(n1, n2, n3, is_open,projectName, analystInitals,logDirectory):
     if n1 or n2:
+        if n3:
+           newProject = dataBaseCommunicator.createProject(projectName,analystInitals)
+           newEventDic = logIngestor.eventDataListToEventList(logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.get_wlogs())))
+           dataBaseCommunicator.addEventListToProject(newProject,newEventDic)
         return not is_open
-    return is_open
 
 @callback(
     Output("modal_2", "is_open"),
@@ -287,11 +300,14 @@ def toggle_modal_4(n1, n2, is_open):
         return not is_open
     return is_open
 
+def serveLayout():
+    return html.Div([
+        dbc.Container([
+            html.Div(id ="dummyDivManageProject"),
+        generateManageProjectCard(),
+        ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
+    ])
 
-layout = html.Div([
-    dbc.Container([
-       generateManageProjectCard(),
-    ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
-])
+layout = serveLayout
 
 

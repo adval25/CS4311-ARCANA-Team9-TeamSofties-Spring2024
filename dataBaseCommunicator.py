@@ -6,7 +6,6 @@ from bson.objectid import ObjectId
 
 def createProject(projectName,analystInitals):
     newProject = Project(projectName = projectName,analystInitals =analystInitals,eventCollection = [])
-    newProject.save() #sends project to the database
     return newProject
 
 #TODO

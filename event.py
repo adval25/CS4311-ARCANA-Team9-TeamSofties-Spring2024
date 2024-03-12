@@ -15,6 +15,24 @@ class Event(mongoengine.EmbeddedDocument):
 
     def getEventDescription(self):
         return self.eventDataSource
+    
     def getId(self):
         return self._id
+    
+    def eventToDictionary(self):
+        return {
+        'malformed': self.malformed,
+        'eventTimeStamp': self.eventTimeStamp,
+        'analystInitals': self.analystInitals,
+        'eventTeam': self.eventTeam,
+        'eventDescription': self.eventDescription,
+        'eventLocation': self.eventLocation,
+        'eventSourceHost': self.eventSourceHost,
+        'eventTargetHost': self.eventTargetHost,
+        'eventVectorId': self.eventVectorId,
+        'eventDataSource': self.eventDataSource,
+        '_id': str(self._id)  # Convert ObjectId to string
+    }
+  
+
 

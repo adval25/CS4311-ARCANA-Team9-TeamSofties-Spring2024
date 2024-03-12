@@ -213,8 +213,8 @@ def output_selected_rows(selected_rows,current_data):
     if selected_rows is None:
         return (current_data,)
     else:
-        selectedProject = [f"{project['_id']} ({project['projectName']})" for project in selected_rows]
-        return (f"You selected the project{'s' if len(selected_rows) > 1 else ''}:\n{', '.join(selectedProject)}",)
+        selectedProject = [f"{project['_id']}" for project in selected_rows]
+        return (f"{'s' if len(selected_rows) > 1 else ''}{', '.join(selectedProject)}",)
 
 def generateManageProjectCard():
    return html.Div(

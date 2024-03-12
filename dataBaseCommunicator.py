@@ -21,7 +21,7 @@ def addEventListToProject(project,event):
 
 def getProjectFromDb(projectId):
     try:
-        project = Project.objects.get(_id=projectId)
+        project = Project.objects.get(id=projectId)
         return project
     except Project.DoesNotExist:
         print('No project found with ID:', projectId)
@@ -33,7 +33,7 @@ def getProjectFromDb(projectId):
     
 def updateProjectEvent(projectId, eventId, updatedEventDescription):
     try:
-        project = Project.objects.get(_id=projectId)
+        project = Project.objects.get(id=projectId)
         for event in project.eventCollection:         # Find the event by its ID and update its description
             if str(event.id) == eventId:
                 event.eventDescription = updatedEventDescription

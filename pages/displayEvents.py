@@ -1,21 +1,15 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import Input, Output, dcc, html,callback,dash_table,State
+from dash import Input, Output, html,callback,State
 from .  import eventNavbar
-import pandas as pd
 import dataBaseCommunicator
 from dataBaseCommunicator import dataBaseCleint
+import dash_ag_grid as dag
 
 
 dash.register_page(__name__, path='/displayEvents')
-eventDic = dataBaseCommunicator.getEventDictionaryFromDb(dataBaseCommunicator.getAllProjectsFromDb(dataBaseCleint)[0]["_id"],dataBaseCleint)
-eventDic = [{key: value for key, value in d.items() if key != "_id"} for d in eventDic]
-
 sortDropDown = [{"label": "TimeStamp", "value": "1"},{"label": "TargetHost", "value": "2"},]
 logicDropDown = [{"label": "Logic", "value": "1"},{"label": "*", "value": "2"},]
-
-df = pd.DataFrame(eventDic)
-
 
 def dropDownMaker(menueId,menueContent,marginRight):
     return dbc.Select(
@@ -52,7 +46,7 @@ def generatedisplayEventCard():
                          dbc.Button("Search", color="primary", className="me-1",size="md"),
                          ])
                          ),
-                dash_table.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns],style_table={'height': '300px', 'overflowY': 'auto'}),
+                  html.Div(id='eventtableOutput'),
                   html.Div(
                         [
                             dbc.Button("+ Create Event", color="primary",href = "/addEvent"),
@@ -70,12 +64,35 @@ def generatedisplayEventCard():
 )
 
 @callback(
-    Output('store-data-display', 'children'),
+    Output('eventtableOutput', 'children'),
     [Input('dummy-div', 'children')],  # Trigger callback on page load
     [State('selected-project-store', 'data')]
 )
-def display_store_data(dummy_value, store_data):
-    return store_data or "No data available"  # R
+def display_store_data(dummyValue, storeData):
+    if storeData != None:
+        return createEvenTable(storeData) #loads the correct events from the project
+    else:
+        return ""
+
+def createEvenTable(projectId):
+    print(projectId)
+    Selectedproject = dataBaseCommunicator.getProjectFromDb(projectId)
+    eventList = []
+    for event in Selectedproject.getEventCollection():
+        eventList.append(event.eventToDictionary())
+    columnDefsNames = ['malformed', 'eventTimeStamp', 'analystInitals', 'eventTeam', 'eventDescription', 'eventLocation', 'eventSourceHost', 'eventTargetHost', 'eventVectorId', 'eventDataSource', '_id']
+    columnDefs = [{"field": i} for i in columnDefsNames]
+    return dag.AgGrid(
+            id="SelectedRowEvent",
+            columnDefs=columnDefs,
+            rowData=eventList,
+            columnSize="sizeToFit",
+            defaultColDef={"filter": True},
+            dashGridOptions={"rowSelection": "multiple", "animateRows": False},
+            persistence=True,        
+            persisted_props=["data"], 
+        )
+
 
 @callback(
     Output('dummy-div', 'children'),
@@ -84,8 +101,22 @@ def display_store_data(dummy_value, store_data):
 def trigger_page_load(data):
     return 'Page Loaded'  # Update the hidden div to trigger the page load
 
+@callback(
+    [Output('eventStore', 'data')],
+    [Input("SelectedRowEvent", "selectedRows")],
+    [State('eventStore', 'data')]
+)
+def output_selected_rows(selected_rows,current_data): #grabs the eventId of the selected Event for saving purposes
+    if selected_rows is None:
+        return (current_data,)
+    else:
+        selectedEvent = [f"{event['_id']}" for event in selected_rows]
+        print( (f"{'s' if len(selected_rows) > 1 else ''}{', '.join(selectedEvent)}",))
+        return (f"{'s' if len(selected_rows) > 1 else ''}{', '.join(selectedEvent)}",)
+
+
 layout = html.Div([
-    html.Div(id='dummy-div', style={'display': 'none'}),
+    html.Div([dag.AgGrid(id ="SelectedRowEvent"),],id='dummy-div', style={'display': 'none'}), #this is here to prevent an error that selectedRow does not exist
     html.Br(),
     eventNavbar.eventSidebar,
     dbc.Container([

@@ -12,11 +12,11 @@ from bson.objectid import ObjectId
 
 
 connection = connect("projectsDb")
-projectOne = Project(projectName = "Project4FM",analystInitals ="FM",eventCollection = [])
-eventDictionary = logIngestor.eventDataListToEventList(logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.get_wlogs())))
-dataBaseCommunicator.addEventListToProject(projectOne,eventDictionary)
-projectOne.save()
-
+projectOne = dataBaseCommunicator.getProjectFromDb("65e52bb6a8f7f65ba51ae9f3")
+projectList = []
+for event in projectOne.getEventCollection():
+        projectList.append(event.eventToDictionary())
+        print(event.eventToDictionary())
 # projectDict = dataBaseCommunicator.getAllProjectsFromDb(client=connection)
 # matching_values =  [{"_id": str(project["_id"]), "projectName": project["projectName"]} for project in projectDict]
 # print(matching_values)

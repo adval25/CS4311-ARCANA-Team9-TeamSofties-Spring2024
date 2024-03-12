@@ -13,5 +13,5 @@ class Project(mongoengine.Document):
          self.eventCollection.append(event)
     
     def getEventCollection(self):
-        return self.projectName
+        return self.eventCollection
     

@@ -1,6 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import Input, Output, dcc, html,callback,dash_table
+from dash import  html
 from .  import eventNavbar
 import pandas as pd
 import dash_cytoscape as cyto

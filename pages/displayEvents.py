@@ -3,7 +3,6 @@ import dash_bootstrap_components as dbc
 from dash import Input, Output, html,callback,State
 from .  import eventNavbar
 import dataBaseCommunicator
-from dataBaseCommunicator import dataBaseCleint
 import dash_ag_grid as dag
 
 

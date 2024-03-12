@@ -1,13 +1,11 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc,dash_table,callback
-from dash import html
+from dash import html,callback,Input, Output, State
 from . import eventNavbar
-from dash import Input, Output, State
 from event import Event
 import dataBaseCommunicator
 from dataBaseCommunicator import dataBaseCleint
-from bson.objectid import ObjectId
+
 
 
 dash.register_page(__name__, path='/addEvent')

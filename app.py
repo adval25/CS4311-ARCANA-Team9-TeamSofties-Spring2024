@@ -2,7 +2,6 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
-from dash import Input, Output, State
 
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],use_pages=True) #user pages = true allows it to be multipage IMPORTANT!

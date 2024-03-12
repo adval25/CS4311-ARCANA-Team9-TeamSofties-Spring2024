@@ -5,7 +5,6 @@ import dash_ag_grid as dag
 import dataBaseCommunicator
 from dataBaseCommunicator import dataBaseCleint
 import logIngestor
-import flask
 
 
 dash.register_page(__name__, path='/manageProjects')

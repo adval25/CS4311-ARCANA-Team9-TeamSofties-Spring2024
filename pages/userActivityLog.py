@@ -1,6 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc,dash_table
+from dash import dash_table
 from dash import html
 from collections import OrderedDict
 import pandas as pd

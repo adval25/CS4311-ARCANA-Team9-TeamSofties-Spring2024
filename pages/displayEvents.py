@@ -4,6 +4,7 @@ from dash import Input, Output, html,callback,State
 from .  import eventNavbar
 import dataBaseCommunicator
 import dash_ag_grid as dag
+import eventManager
 
 
 dash.register_page(__name__, path='/displayEvents')
@@ -46,11 +47,12 @@ def generatedisplayEventCard():
                          ])
                          ),
                   html.Div(id='eventtableOutput'),
+                  html.A(html.Button('Refresh Data'),href='/displayEvents'),
                   html.Div(
                         [
                             dbc.Button("+ Create Event", color="primary",href = "/addEvent"),
                             dbc.Button("Edit Event", color="primary",href = "/addEvent"),
-                            dbc.Button("Delete Event", color="primary",href = "#"),
+                            dbc.Button("Delete Event", color="primary",href = "#",id = "deleteButton"),
                         ],
                         className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
                         ), 
@@ -63,12 +65,28 @@ def generatedisplayEventCard():
 )
 
 @callback(
+    Output('dummyDivEventManager', 'children'),
+    [Input('deleteButton', 'n_clicks')],
+     [State("SelectedRowEvent", "selectedRows")],
+    [State('selected-project-store', 'data')]
+)
+def deleteEvent(n_clicks,activeEventInformation,activeProjectId):
+    if n_clicks:
+        eventManager.deleteEvent(activeEventInformation[0]["_id"],activeProjectId)
+    return None
+
+@callback(
     Output('eventtableOutput', 'children'),
     [Input('dummy-div', 'children')],  # Trigger callback on page load
     [State('selected-project-store', 'data')]
 )
 def display_store_data(dummyValue, storeData):
+    print("RELOAD")
+    print(storeData)
     if storeData != None:
+        print("RELOAD TABLE")
+        print("DATA",storeData)
+
         return createEvenTable(storeData) #loads the correct events from the project
     else:
         return ""
@@ -76,15 +94,12 @@ def display_store_data(dummyValue, storeData):
 def createEvenTable(projectId):
     print(projectId)
     Selectedproject = dataBaseCommunicator.getProjectFromDb(projectId)
-    eventList = []
-    for event in Selectedproject.getEventCollection():
-        eventList.append(event.eventToDictionary())
     columnDefsNames = ['malformed', 'eventTimeStamp', 'analystInitals', 'eventTeam', 'eventDescription', 'eventLocation', 'eventSourceHost', 'eventTargetHost', 'eventVectorId', 'eventDataSource', '_id']
     columnDefs = [{"field": i} for i in columnDefsNames]
     return dag.AgGrid(
             id="SelectedRowEvent",
             columnDefs=columnDefs,
-            rowData=eventList,
+            rowData= eventManager.eventListToDictionary(Selectedproject.getEventCollection()),
             columnSize="sizeToFit",
             defaultColDef={"filter": True},
             dashGridOptions={"rowSelection": "multiple", "animateRows": False},
@@ -113,15 +128,27 @@ def output_selected_rows(selected_rows,current_data): #grabs the eventId of the 
         print( (f"{'s' if len(selected_rows) > 1 else ''}{', '.join(selectedEvent)}",))
         return (f"{'s' if len(selected_rows) > 1 else ''}{', '.join(selectedEvent)}",)
 
+@callback(
+    Output('dummyDivEventManagerReload', 'children'),
+    [Input('selected-project-store', 'data')]
+)
+def trigger_page_load(data):
+    return 'Page Loaded'
 
-layout = html.Div([
+def displayEventLayout():
+    return html.Div([
     html.Div([dag.AgGrid(id ="SelectedRowEvent"),],id='dummy-div', style={'display': 'none'}), #this is here to prevent an error that selectedRow does not exist
     html.Br(),
     eventNavbar.eventSidebar,
     dbc.Container([
+        html.Div(id ="dummyDivEventManager"),
+        html.Div(id ="dummyDivEventManagerReload"),
        generatedisplayEventCard(),
       html.Div(id='store-data-display'),
 
     ], fluid=True,  className="mx-auto") 
 ])
 
+
+
+layout = displayEventLayout

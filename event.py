@@ -11,13 +11,13 @@ class Event(mongoengine.EmbeddedDocument):
     eventTargetHost = mongoengine.StringField()
     eventVectorId = mongoengine.StringField()
     eventDataSource = mongoengine.StringField()
-    _id = mongoengine.ObjectIdField( required=True, default=ObjectId)
+    eventId = mongoengine.StringField()
 
     def getEventDescription(self):
         return self.eventDataSource
     
     def getId(self):
-        return self._id
+        return self.eventId
     
     def eventToDictionary(self):
         return {
@@ -31,7 +31,7 @@ class Event(mongoengine.EmbeddedDocument):
         'eventTargetHost': self.eventTargetHost,
         'eventVectorId': self.eventVectorId,
         'eventDataSource': self.eventDataSource,
-        '_id': str(self._id)  # Convert ObjectId to string
+        '_id': self.eventId  # Convert ObjectId to string
     }
   
 

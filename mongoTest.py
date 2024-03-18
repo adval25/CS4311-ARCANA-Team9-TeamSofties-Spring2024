@@ -11,12 +11,17 @@ import pymongo
 from bson.objectid import ObjectId
 
 
-connection = connect("projectsDb")
-projectOne = dataBaseCommunicator.getProjectFromDb("65e52bb6a8f7f65ba51ae9f3")
-projectList = []
-for event in projectOne.getEventCollection():
-        projectList.append(event.eventToDictionary())
-        print(event.eventToDictionary())
+
+        # Perform the update operation
+# connection = connect("projectsDb")
+# newProject = dataBaseCommunicator.createProject("TEST5","FXR")
+# newEventDic = logIngestor.eventDataListToEventDictionary(logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.get_wlogs())))
+# print(newEventDic)
+# dataBaseCommunicator.addEventDictionaryToProject(newProject,newEventDic)
+
+
+#Project.objects.update(pull__eventCollection___id ="65efd4bfa98a7b249ad8beb1") #delete event 
+    
 # projectDict = dataBaseCommunicator.getAllProjectsFromDb(client=connection)
 # matching_values =  [{"_id": str(project["_id"]), "projectName": project["projectName"]} for project in projectDict]
 # print(matching_values)

@@ -2,10 +2,8 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import html,callback,Input, Output, State
 import dash_ag_grid as dag
-import dataBaseCommunicator
 from dataBaseCommunicator import dataBaseCleint
-import logIngestor
-
+import projectManager
 
 dash.register_page(__name__, path='/manageProjects')
 
@@ -187,8 +185,8 @@ modal_4 = html.Div(
 )
 
 def createTable():
-    projectDict = dataBaseCommunicator.getAllProjectsFromDb(client=dataBaseCleint)
-    projectList =  [{"_id": str(project["_id"]), "projectName": project["projectName"]} for project in projectDict]
+    projectDict = projectManager.getProjectDict(client=dataBaseCleint)
+    projectList = projectManager.getAllProjectNames(projectDict) #filtering so the table can be displayed
     columnDefs = [{"field": i} for i in ["projectName"]]
     return dag.AgGrid(
             id="row-selection-selected-rows",
@@ -264,9 +262,7 @@ def generateManageProjectCard():
 def toggle_modal(n1, n2, n3, is_open,projectName, analystInitals,logDirectory):
     if n1 or n2:
         if n3:
-           newProject = dataBaseCommunicator.createProject(projectName,analystInitals)
-           newEventDic = logIngestor.eventDataListToEventList(logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.get_wlogs())))
-           dataBaseCommunicator.addEventListToProject(newProject,newEventDic)
+           projectManager.createProject()
         return not is_open
 
 @callback(

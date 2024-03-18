@@ -22,8 +22,8 @@ navbar = dbc.NavbarSimple(
 )
 hiddenStore = dcc.Store(id='passedData')
 app.layout = html.Div([
-    dcc.Store(id='selected-project-store', data=None),
-    dcc.Store(id='eventStore', data=None),
+    dcc.Store(id='selected-project-store', data=None,storage_type = 'local'),
+    dcc.Store(id='eventStore', data=None,storage_type = 'local'), # local makes it persistent
     navbar,
     dash.page_container,
 ])

@@ -14,3 +14,7 @@ class Project(mongoengine.Document):
     
     def getEventCollection(self):
         return self.eventCollection
+
+    def getEvent(self,eventId):
+        return self.eventCollection[eventId]
+    

@@ -1,6 +1,7 @@
 import projectManager
 
-def addEventToProject(project,event):
+def addEventToProject(projectId,event):
+    project = projectManager.getProject(projectId)
     project.addEvent(event)
     project.save()
     return project
@@ -16,6 +17,10 @@ def editEvent(eventId,projectId,newEventData):
     project.getEventCollection()[eventId] = newEventData
     project.save()
     return project
+
+def getEventFromProject(eventId,projectId):
+    project = projectManager.getProject(projectId)
+    return project.getEvent(eventId)
 
 def eventListToDictionary(projectEvents): #used in the GUI to display the event Table
     eventList = []

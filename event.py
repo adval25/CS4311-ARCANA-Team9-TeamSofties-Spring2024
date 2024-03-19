@@ -19,6 +19,12 @@ class Event(mongoengine.EmbeddedDocument):
     def getId(self):
         return self.eventId
     
+    def setMalformed(self,malformedInput):
+        self.malformed = malformedInput
+    
+    def getDataSource(self):
+        return self.eventDataSource
+    
     def eventToDictionary(self):
         return {
         'malformed': self.malformed,

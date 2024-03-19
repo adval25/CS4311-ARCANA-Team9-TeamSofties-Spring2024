@@ -262,7 +262,7 @@ def generateManageProjectCard():
 def toggle_modal(n1, n2, n3, is_open,projectName, analystInitals,logDirectory):
     if n1 or n2:
         if n3:
-           projectManager.createProject()
+           projectManager.createProject(projectName,analystInitals,logDirectory)
         return not is_open
 
 @callback(

@@ -4,13 +4,12 @@ from dash import html,callback,Input, Output, State
 from . import eventNavbar
 from event import Event
 import dataBaseCommunicator
+from dataBaseCommunicator import dataBaseCleint
 import eventManager
-from bson.objectid import ObjectId
 
+dash.register_page(__name__, path='/editEvent')
 
-dash.register_page(__name__, path='/addEvent')
-
-def generateCreateEvent():
+def generateEditEvent(eventDic):
     team_options = ["White", "Red", "Blue"]
     event_node_icons_options = {
         "White": "eventNodeIcon.png",
@@ -39,13 +38,13 @@ def generateCreateEvent():
                                     dbc.Col(
                                     [
                                         html.P("eventTimeStamp"),
-                                        dbc.Input(type="text", id ="eventTimeStamp"),   
+                                        dbc.Input(type="text", id ="eventTimeStamp",value=eventDic["eventTimeStamp"]),   
                                     ], width =3 
                                     ),
                                     dbc.Col(
                                     [
                                         html.P("malformed"),
-                                        dbc.Checkbox(id="malformedInputs")
+                                        dbc.Checkbox(id="malformedInputs", value=eventDic["malformed"])
                                     ], width = 3
                                     ),
                                     
@@ -54,7 +53,7 @@ def generateCreateEvent():
                                 dbc.Col(
                                 [
                                     html.P("Initials"),
-                                    dbc.Input(type="text", placeholder="|||", id = "intialsInputs"),
+                                    dbc.Input(type="text", placeholder="|||", id = "intialsInputs",value = eventDic["analystInitals"]),
                                 ], width =3 
                                   
                                   ),
@@ -67,7 +66,7 @@ def generateCreateEvent():
                                         html.P("Team*"),
                                         dbc.Select(
                                             options=[{"label": i, "value": i} for i in team_options],
-                                           value=team_options[0],
+                                            value=eventDic["eventTeam"],
                                             id = "teamInputs",
                                         ), 
                                     ], width =3 
@@ -75,7 +74,7 @@ def generateCreateEvent():
                                     dbc.Col(
                                     [
                                         html.P("eventLocation"),
-                                        dbc.Input(type="posture", id = "eventLocation"), 
+                                        dbc.Input(type="posture", id = "eventLocation", value = eventDic["eventLocation"]), 
                                           
                                     ], width = 3
                                     ),
@@ -84,20 +83,20 @@ def generateCreateEvent():
                                 ),
                                 
                                 html.P("Vector ID"),
-                                dbc.Input(type="text", placeholder="Vector ID", id = "vectorIdInputs"),
+                                dbc.Input(type="text", placeholder="Vector ID", id = "vectorIdInputs", value = eventDic["eventVectorId"]),
                                 
                                 dbc.Row(
                                 [
                                     dbc.Col(
                                     [
                                        html.P("Source Host"),
-                                        dbc.Input(type="text", placeholder="0.0.0.0", id = "sourceHostInputs"),
+                                        dbc.Input(type="text", placeholder="0.0.0.0", id = "sourceHostInputs", value = eventDic["eventSourceHost"]),
                                     ], width =3 
                                     ),
                                     dbc.Col(
                                     [   
                                         html.P("Target Host(s)"),
-                                        dbc.Input(type="text", placeholder="0.0.0.0, 0.0.0.1", id = "targetHostInputs"), 
+                                        dbc.Input(type="text", placeholder="0.0.0.0, 0.0.0.1", id = "targetHostInputs", value = eventDic["eventTargetHost"]), 
                                     ], width = 3
                                     ),  
                                     
@@ -105,7 +104,7 @@ def generateCreateEvent():
                                 ),
                                 
                                 html.P("Description*"),
-                                dbc.Textarea(placeholder="Description", style={"height": "100px"}, id ="descriptionInputs"),
+                                dbc.Textarea(placeholder="Description", style={"height": "100px"}, id ="descriptionInputs",value = eventDic["eventDescription"]),
                                 
                                 html.P("Event Node Icon*"),
                                 html.Img(
@@ -128,7 +127,7 @@ def generateCreateEvent():
                                 html.Div(
                                 [
                                     dbc.Button("Cancel", color="secondary", href = "/displayEvents"),
-                                    dbc.Button("create",  id="create-button",color="primary", href = "/displayEvents"),
+                                    dbc.Button("Edit",  id="edit-button",color="primary", href = "/displayEvents"),
                                 ],
                                 className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
                                 ), 
@@ -146,13 +145,30 @@ def generateCreateEvent():
         ),
     )
 
+@callback(
+    Output('editEventDiv', 'children'),
+    [Input('dummy-divEdit', 'children')],  # Trigger callback on page load
+    [State('eventStore', 'data')],
+    [State('selected-project-store', 'data')]
+)
+def fillValuesForEditEvent(dummyValue, eventId,projectId):
+    print(eventId)
+    if eventId != None:
+          previousEvent = eventManager.getEventFromProject(eventId,projectId)
+          eventDic = previousEvent.eventToDictionary()
+          return generateEditEvent(eventDic)
+    else:
+        return ""
+temporaryDic = {'malformed': " ",'eventTimeStamp': " ",'analystInitals': " ",'eventTeam': " ",'eventDescription':" ",'eventLocation': " ",'eventSourceHost': " ",'eventTargetHost': " ",'eventVectorId': " ",'eventDataSource': " ",'_id': " "} 
 layout = html.Div(
     [
     dbc.Container(
     [
-    html.Div(id = "dummy-divAddSend"),
+    html.Div(id = "dummy-divEdit"),
+    html.Div([generateEditEvent(temporaryDic)],id = "dummy-divEditSend"), #stops an error from a callback not being able to find values
        eventNavbar.eventSidebar,
-       generateCreateEvent(),
+       html.Div(id = "editEventDiv"),
+       html.Div(id="dummyDiv")
     ], 
     fluid=True, 
     style={"backgroundColor": "#D3D3D3", "margin": "auto", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
@@ -161,9 +177,10 @@ layout = html.Div(
 
 
 @callback(
-    Output('dummy-divAddSend', 'children'),  # Update some output div with the result of your function
-    [Input('create-button', 'n_clicks')],
+    Output('dummy-divEditSend', 'children'),  # Update some output div with the result of your function
+    [Input('edit-button', 'n_clicks')],
     [
+        State('eventStore', 'data'),
         State('selected-project-store', 'data'),
         State('eventTimeStamp', 'value'),
         State('malformedInputs', 'value'),
@@ -178,9 +195,10 @@ layout = html.Div(
     ]
 )
 
-def handleEditButtonClick(n_clicks,projectId,eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
+def handleEditButtonClick(n_clicks,eventId,projectId,eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
     if n_clicks:
-        print("ADD ADD ADD")
+        print("TEST TEST TEST")
+        previousEvent = eventManager.getEventFromProject(eventId,projectId)
         event = Event(eventTimeStamp = str(eventTimeStamp),
                         analystInitals = str(intialsInput),
                         malformed = bool(malformedInputs),
@@ -190,8 +208,8 @@ def handleEditButtonClick(n_clicks,projectId,eventTimeStamp, malformedInputs,int
                         eventSourceHost = str(sourceHostInput),
                         eventTargetHost = str(targetHostInput),
                         eventVectorId = str(vectorIdInput),
-                        eventDataSource = "",
-                        eventId = str(ObjectId())
+                        eventDataSource = previousEvent.getDataSource(),
+                        eventId = str(eventId)
                         )    
         eventManager.addEventToProject(projectId,event)
         return ""

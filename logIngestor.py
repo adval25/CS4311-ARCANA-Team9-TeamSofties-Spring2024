@@ -69,7 +69,7 @@ def get_rlogs(): # Returns a list of file paths for Red team logs
     return rlogs_dir
 
 def combineLogLists():
-   return  get_rlogs() + get_blogs() +get_wlogs()
+   return  get_wlogs()
 
 
 def getCsvPaths(listOfFilePaths):
@@ -92,6 +92,7 @@ def csvsToEventDataList(csvPaths): #turns all of the csv rows into dictionaries
 def eventDataListToEventDictionary(eventAccumulator): #turns all of the event data into event objects and returns a list of events
     eventDict ={}
     for eventInfromation in eventAccumulator:
+        print()
         event = Event(eventTimeStamp = str(eventInfromation["dateCreated"]),
                         analystInitals = str(eventInfromation["initials"]),
                         eventTeam = str(eventInfromation["team"]),

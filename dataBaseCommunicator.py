@@ -5,11 +5,16 @@ from event import Event
 from bson.objectid import ObjectId
 
 def createProjectDb(projectName,analystInitals):
-    newProject = Project(projectName = projectName,analystInitals =analystInitals,eventCollection = [])
+    newProject = Project(projectName = projectName,analystInitals =analystInitals,eventCollection = [],eventGraph = None)
     return newProject
 
-def addEventDictionaryToProject(project,event):
-    project.addEventDict(event)
+def addEventDictionaryToProject(project,eventDic):
+    project.addEventDict(eventDic)
+    project.save()
+    return project
+
+def addnodeGraphToProject(project,nodeGraph):
+    project.addNodeGraph(nodeGraph)
     project.save()
     return project
 

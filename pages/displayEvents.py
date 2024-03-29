@@ -52,7 +52,7 @@ def generatedisplayEventCard():
                         [
                             dbc.Button("+ Create Event", color="primary",href = "/addEvent"),
                             dbc.Button("Edit Event", color="primary",href = "/editEvent"),
-                            dbc.Button("Delete Event", color="primary",href = "#",id = "deleteButton"),
+                            dbc.Button("Delete Event", color="primary",href = "/displayEvents",id = "deleteButton"),
                         ],
                         className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
                         ), 

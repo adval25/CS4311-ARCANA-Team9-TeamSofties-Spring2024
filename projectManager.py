@@ -1,5 +1,6 @@
 import logIngestor
 from project import Project
+import graphManager
 import dataBaseCommunicator
 
 def getProjectDict(client):
@@ -23,5 +24,8 @@ def createProject(projectName,analystInitals,logPath):
     logData = logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.combineLogLists()))
     newEventDic = logIngestor.eventDataListToEventDictionary(logData)
     newProject = dataBaseCommunicator.addEventDictionaryToProject(newProject,newEventDic)
+    print(newProject.getEventCollection())
+    nodeGraph = graphManager.createGraph(newProject)
+    newProject = dataBaseCommunicator.addnodeGraphToProject(newProject,nodeGraph)
     return newProject
     

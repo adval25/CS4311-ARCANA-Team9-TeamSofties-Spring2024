@@ -11,13 +11,29 @@ class Event(mongoengine.EmbeddedDocument):
     eventTargetHost = mongoengine.StringField()
     eventVectorId = mongoengine.StringField()
     eventDataSource = mongoengine.StringField()
+    eventPosture = mongoengine.StringField(default = "")
     eventId = mongoengine.StringField()
 
     def getEventDescription(self):
-        return self.eventDataSource
+        return self.eventDescription
+    
+    def getEventLocation(self):
+        return self.eventLocation
+    
+    def getEventTimeStamp(self):
+        return self.eventTimeStamp
+    
+    def getEventPosture(self):
+        return self.eventPosture
     
     def getId(self):
         return self.eventId
+    
+    def getVectorId(self):
+        return self.eventVectorId
+    
+    def geteventTeam(self):
+        return self.eventTeam
     
     def setMalformed(self,malformedInput):
         self.malformed = malformedInput

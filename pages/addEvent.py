@@ -128,7 +128,7 @@ def generateCreateEvent():
                                 html.Div(
                                 [
                                     dbc.Button("Cancel", color="secondary", href = "/displayEvents"),
-                                    dbc.Button("create",  id="create-button",color="primary", href = "/displayEvents"),
+                                    dbc.Button("create",  id="create-button",color="primary"),
                                 ],
                                 className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
                                 ), 
@@ -161,7 +161,7 @@ layout = html.Div(
 
 
 @callback(
-    Output('dummy-divAddSend', 'children'),  # Update some output div with the result of your function
+    Output('location', 'href'),  #changes the location of the page
     [Input('create-button', 'n_clicks')],
     [
         State('selected-project-store', 'data'),
@@ -194,4 +194,5 @@ def handleEditButtonClick(n_clicks,projectId,eventTimeStamp, malformedInputs,int
                         eventId = str(ObjectId())
                         )    
         eventManager.addEventToProject(projectId,event)
-        return ""
+
+        return "/displayEvents" #url that is redirected too

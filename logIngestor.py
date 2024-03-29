@@ -92,7 +92,6 @@ def csvsToEventDataList(csvPaths): #turns all of the csv rows into dictionaries
 def eventDataListToEventDictionary(eventAccumulator): #turns all of the event data into event objects and returns a list of events
     eventDict ={}
     for eventInfromation in eventAccumulator:
-        print()
         event = Event(eventTimeStamp = str(eventInfromation["dateCreated"]),
                         analystInitals = str(eventInfromation["initials"]),
                         eventTeam = str(eventInfromation["team"]),
@@ -104,6 +103,5 @@ def eventDataListToEventDictionary(eventAccumulator): #turns all of the event da
                         eventDataSource = str(eventInfromation["dataSource"]),
                         eventId = str(ObjectId())
                         )    
-        print(event.getId())
         eventDict[event.getId()] = event
     return eventDict

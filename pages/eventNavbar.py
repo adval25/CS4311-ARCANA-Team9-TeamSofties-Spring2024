@@ -8,14 +8,14 @@ SIDEBAR_STYLE = {
     "top": 0,
     "left": 0,
     "bottom": 0,
-    "width": "16rem",
+    "width": "10rem",
     "padding": "2rem 1rem",
     "background-color": "#f8f9fa",
 }
 
 
 CONTENT_STYLE = {
-    "margin-left": "18rem",
+    "margin-left": "14rem",
     "margin-right": "2rem",
      "margin-top": "8rem",
     "padding": "2rem 1rem",

@@ -14,6 +14,8 @@ class Node(EmbeddedDocument):
     nodePosture = StringField()
     nodeDescription = StringField()
     nodeVectorId = StringField()
+    nodeSourceHost = StringField()
+    nodeTargetHost = StringField()
 
     
     def addConnection(self,connectingNodeId):
@@ -45,3 +47,9 @@ class Node(EmbeddedDocument):
 
     def getNodeVectorId(self):
         return self.nodeVectorId
+    
+    def getNodeLocation(self):
+        return self.nodeLocation
+    
+    def getNodeTimeStamp(self):
+        return self.nodeTimeStamp

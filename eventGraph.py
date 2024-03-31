@@ -6,3 +6,6 @@ class EventGraph(mongoengine.EmbeddedDocument):
 
     def getDictOfNodes(self):
         return self.dictOfNodes
+    
+    def getNode(self,nodeId):
+        return self.dictOfNodes.get(nodeId)

@@ -43,6 +43,8 @@ def eventsToNodes(project):
              nodePosture = event.getEventPosture(),
              nodeDescription = event.getEventDescription(),
              nodeVectorId = event.getVectorId(),
+             nodeSourceHost = event.getSourceHost(),
+             nodeTargetHost = event.getTargetHost()
              )
         dictOfNodes[node.getNodeId()] = node
     return dictOfNodes
@@ -50,3 +52,8 @@ def eventsToNodes(project):
 def createGraph(selectedProject):
     dictOfNodes = eventsToNodes(selectedProject)
     return EventGraph(dictOfNodes = dictOfNodes)
+
+def getNode(nodeId,projectId):
+    project = projectManager.getProject(projectId)
+    nodeGraph = project.getEventGraph()
+    return nodeGraph.getNode(nodeId)

@@ -41,6 +41,12 @@ class Event(mongoengine.EmbeddedDocument):
     def getDataSource(self):
         return self.eventDataSource
     
+    def getSourceHost(self):
+        return self.eventSourceHost
+        
+    def getTargetHost(self):
+        return self.eventTargetHost
+    
     def eventToDictionary(self):
         return {
         'malformed': self.malformed,

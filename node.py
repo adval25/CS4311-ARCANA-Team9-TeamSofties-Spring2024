@@ -18,7 +18,7 @@ class Node(EmbeddedDocument):
     nodeTargetHost = StringField()
 
     
-    def addConnection(self,connectingNodeId):
+    def addConnection(self,connectingNodeId): #formats the connection to easily display in the gui
         self.nodeConnections.append({'data': {'source': self.nodeId, 'target':connectingNodeId}})
 
     def getNodeConnections(self):

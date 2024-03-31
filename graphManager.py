@@ -3,7 +3,7 @@ from node import Node
 from eventGraph import EventGraph
 from bson.objectid import ObjectId
 
-def getUniuqeVectorIds(project):
+def getUniuqeVectorIds(project): #gets all unique vectorsIds in eventCollection to group nodes properly
     listOfevents = project.getEventCollection()
     uniqueVectorId = set()
     for eventId in listOfevents:
@@ -15,7 +15,7 @@ def getUniuqeVectorIds(project):
     print(uniqueVectorId)
     return uniqueVectorId
 
-def unconnectedNodePositions(uniqueVectorIds):
+def unconnectedNodePositions(uniqueVectorIds): #if nodes have no positions this is where they will be placed
     vectorIdPositionDic = {}
     positionY = 50
     for vectorId in uniqueVectorIds:
@@ -24,16 +24,16 @@ def unconnectedNodePositions(uniqueVectorIds):
     print(vectorIdPositionDic)
     return vectorIdPositionDic
 
-def eventsToNodes(project):
+def eventsToNodes(project): #turns all events into nodes and assignes them positions
     dictOfNodes = {}
     listOfevents = project.getEventCollection()
     vectorIdPositionDic = unconnectedNodePositions(getUniuqeVectorIds(project))
     for eventId in listOfevents:
         event = listOfevents[eventId]
         node = Node(
-             nodeXPosition = vectorIdPositionDic.get(event.getVectorId(), 0),
+             nodeXPosition = vectorIdPositionDic.get(event.getVectorId(), 0), #no vectorid Id found put 0
              nodeYPosition = 0,
-             nodeId =  str(ObjectId()),
+             nodeId =  str(ObjectId()), #gives all node a unique id
              eventId = event.getId(),
              nodeLabel = event.geteventTeam(),
              nodeIcon = "",

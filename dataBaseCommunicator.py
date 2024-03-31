@@ -4,11 +4,11 @@ from project import Project
 from event import Event
 from bson.objectid import ObjectId
 
-def createProjectDb(projectName,analystInitals):
+def createProjectDb(projectName,analystInitals): #makes the project object
     newProject = Project(projectName = projectName,analystInitals =analystInitals,eventCollection = [],eventGraph = None)
     return newProject
 
-def addEventDictionaryToProject(project,eventDic):
+def addEventDictionaryToProject(project,eventDic): 
     project.addEventDict(eventDic)
     project.save()
     return project
@@ -18,7 +18,7 @@ def addnodeGraphToProject(project,nodeGraph):
     project.save()
     return project
 
-def getProjectFromDb(projectId):
+def getProjectFromDb(projectId): #grabs the project using project ID
     try:
         project = Project.objects.get(id=projectId)
         return project
@@ -39,4 +39,4 @@ def getAllProjectsFromDb(client):
      return list(projectCollection.find())
 
 
-dataBaseCleint = mongoengine.connect("projectsDb")
+dataBaseCleint = mongoengine.connect("projectsDb") #connects the user to the database

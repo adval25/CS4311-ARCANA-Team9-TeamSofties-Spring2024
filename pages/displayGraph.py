@@ -76,7 +76,7 @@ def update_node_info(selected_node,projectId):
     [Input("page-content", "id")],
     [State('selected-project-store', 'data')]
 )
-def createGraphOnPageLoad(dummyData,projectId):
+def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page load put code into method FIX ME !
     print("Creating graph on page load...")
     project = projectManager.getProject(projectId)
     nodeGraph = project.getEventGraph()
@@ -95,7 +95,7 @@ def createGraphOnPageLoad(dummyData,projectId):
     [Input("exportButton", "n_clicks")],
     [State("cytoscape-two-nodes", "elements")]
 )
-def exportGraphPositions(n_clicks, elements):
+def exportGraphPositions(n_clicks, elements): #pulls all the info from the graph
     if n_clicks:
         print(elements)
     return ""
@@ -105,12 +105,12 @@ def exportGraphPositions(n_clicks, elements):
     [Input("addEdge", "n_clicks"),Input("deleteEdge", "n_clicks")],
     [State("cytoscape-two-nodes", "selectedNodeData"),State("cytoscape-two-nodes", "elements"),State("cytoscape-two-nodes", "tapEdge")] 
 )
-def add_edge(add_clicks,delete_clicks, tap_node, elements,edge):
+def edgeManager(add_clicks,delete_clicks, tap_node, elements,edge): 
     ctx = dash.callback_context
-    if not ctx.triggered:
+    if not ctx.triggered: 
         raise dash.exceptions.PreventUpdate
 
-    triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    triggered_id = ctx.triggered[0]["prop_id"].split(".")[0] #stops the input from spilling over
 
     if triggered_id == "addEdge" and add_clicks:
         if tap_node and len(tap_node) == 2:
@@ -120,8 +120,8 @@ def add_edge(add_clicks,delete_clicks, tap_node, elements,edge):
             elements.append(new_edge)
 
     elif triggered_id == "deleteEdge" and delete_clicks:
-        elements.remove({"data" :edge["data"]})
-        
+        elements.remove({"data" :edge["data"]}) #formats the edge[data] to match the data in elements
+
     return elements
 
 layout = html.Div([

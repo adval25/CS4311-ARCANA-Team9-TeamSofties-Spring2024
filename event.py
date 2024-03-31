@@ -47,7 +47,7 @@ class Event(mongoengine.EmbeddedDocument):
     def getTargetHost(self):
         return self.eventTargetHost
     
-    def eventToDictionary(self):
+    def eventToDictionary(self): #creates events to a dictionary to display in the gui
         return {
         'malformed': self.malformed,
         'eventTimeStamp': self.eventTimeStamp,

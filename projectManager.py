@@ -20,12 +20,11 @@ def deleteProject():
     return
 
 def createProject(projectName,analystInitals,logPath):
-    newProject = dataBaseCommunicator.createProjectDb(projectName,analystInitals)
-    logData = logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.combineLogLists()))
-    newEventDic = logIngestor.eventDataListToEventDictionary(logData)
-    newProject = dataBaseCommunicator.addEventDictionaryToProject(newProject,newEventDic)
-    print(newProject.getEventCollection())
-    nodeGraph = graphManager.createGraph(newProject)
-    newProject = dataBaseCommunicator.addnodeGraphToProject(newProject,nodeGraph)
+    newProject = dataBaseCommunicator.createProjectDb(projectName,analystInitals) #creates the project object
+    logData = logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.combineLogLists())) #grabs all the docs
+    newEventDic = logIngestor.eventDataListToEventDictionary(logData) #creates event dictionary from docs
+    newProject = dataBaseCommunicator.addEventDictionaryToProject(newProject,newEventDic) 
+    nodeGraph = graphManager.createGraph(newProject) 
+    newProject = dataBaseCommunicator.addnodeGraphToProject(newProject,nodeGraph) #adds the graph to the project
     return newProject
     

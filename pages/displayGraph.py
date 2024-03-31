@@ -5,6 +5,8 @@ from .  import eventNavbar
 import dash_cytoscape as cyto
 from dash import Input, Output, html,callback,State
 import projectManager
+import graphManager
+
 
 
 
@@ -36,11 +38,12 @@ def generateSyncCard():
                          dbc.Input(id="input", placeholder="Type something...", type="text",size="md",style={'display': 'inline-block',"width" : "30rem","margin-left" : "15rem"}),
                          dbc.Button("Export Event Graph", color="primary", className="me-1",size="md", id = "exportButton"),
                          dbc.Button("Add Edge", color="primary", className="me-1",size="md", id = "addEdge"),
+                          dbc.Button("Delete Edge", color="primary", className="me-1",size="md", id = "deleteEdge"),
                          ])
                          ),
                           html.Div([cyto.Cytoscape(id='cytoscape-two-nodes',layout={'name': 'preset'},style={'width': '100%', 'height': '400px'},elements=[])],id = "graphDisplayer"),
 
-                dbc.Col([html.Div(html.P("",id = "node-info"))],width=4),
+                dbc.Col([html.Div(id = "node-info")],width=12),
 
             
 
@@ -53,11 +56,18 @@ def generateSyncCard():
 )
 @callback(
     Output("node-info", "children"),
-    [Input("cytoscape-two-nodes", "tapNode")]
+    [Input("cytoscape-two-nodes", "tapNode")],
+    [State('selected-project-store', 'data')]
+
 )
-def update_node_info(selected_node):
+def update_node_info(selected_node,projectId):
     if selected_node:
-        return f"Selected Node: {selected_node['data']['label']}"
+        node = graphManager.getNode(selected_node['data']['id'],projectId)
+        return [html.P(f"Node: {selected_node['data']['label']} TimeStamp: {node.getNodeTimeStamp()}"),
+                html.P(f"Vector Id: {node.getNodeVectorId()}  Location: {node.getNodeLocation()}"),
+                html.P(f"Description: {node.getNodeDescription()}")
+                 
+                 ]
     else:
         return "No node selected"
 
@@ -92,19 +102,27 @@ def exportGraphPositions(n_clicks, elements):
 
 @callback(
     Output("cytoscape-two-nodes", "elements"),
-    [Input("addEdge", "n_clicks")],
-    [State("cytoscape-two-nodes", "selectedNodeData"),State("cytoscape-two-nodes", "elements")] 
+    [Input("addEdge", "n_clicks"),Input("deleteEdge", "n_clicks")],
+    [State("cytoscape-two-nodes", "selectedNodeData"),State("cytoscape-two-nodes", "elements"),State("cytoscape-two-nodes", "tapEdge")] 
 )
-def add_edge(n_clicks, tap_node, elements):
-    print("IM TRIGGERED")
-    if n_clicks and tap_node and len(tap_node) == 2:
-        node1_id = tap_node[0]['id']
-        node2_id = tap_node[1]['id']
-        new_edge = {'data': {'source': node1_id, 'target': node2_id}}
-        elements.append(new_edge)
-        return elements
-    return dash.no_update #makes it so that elemets isint wiped on reload
- 
+def add_edge(add_clicks,delete_clicks, tap_node, elements,edge):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        raise dash.exceptions.PreventUpdate
+
+    triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+    if triggered_id == "addEdge" and add_clicks:
+        if tap_node and len(tap_node) == 2:
+            node1_id = tap_node[0]["id"]
+            node2_id = tap_node[1]["id"]
+            new_edge = {"data": {"source": node1_id, "target": node2_id}}
+            elements.append(new_edge)
+
+    elif triggered_id == "deleteEdge" and delete_clicks:
+        elements.remove({"data" :edge["data"]})
+        
+    return elements
 
 layout = html.Div([
     html.Div(id = "export-message"),

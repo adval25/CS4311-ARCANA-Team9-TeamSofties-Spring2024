@@ -2,6 +2,7 @@ import projectManager
 from node import Node
 from eventGraph import EventGraph
 from bson.objectid import ObjectId
+from datetime import datetime
 
 def getUniuqeVectorIds(project): #gets all unique vectorsIds in eventCollection to group nodes properly
     listOfevents = project.getEventCollection()
@@ -48,6 +49,39 @@ def eventsToNodes(project): #turns all events into nodes and assignes them posit
              )
         dictOfNodes[node.getNodeId()] = node
     return dictOfNodes
+
+def parseTimestamp(timestamp_str): #time stamps have two 
+    formats_to_try = ['%m/%d/%Y %H:%M', '%m/%d/%Y %H:%M:%S']
+    for format_str in formats_to_try:
+        try:
+            return datetime.strptime(timestamp_str, format_str)
+        except ValueError:
+            pass
+    return datetime.max #if there is no timeStamp place it at the end of the list
+
+def edgeCreator(dictOfNodes):
+    sortedNodes = sorted(dictOfNodes.values(), key=lambda x: parseTimestamp(x.getNodeTimeStamp()))
+    for count,parentNode in enumerate(sortedNodes):
+         for childNode in sortedNodes[count+1:]:
+             if (parentNode.getNodeVectorId() == childNode.getNodeVectorId() and (parentNode.getNodeVectorId() != "" or parentNode.getNodeVectorId() != " ")) and (parentNode.getNodeLocation() == childNode.getNodeLocation()):
+                 if parentNode.getTargerHost() == childNode.getSourceHost():
+                     parentNode.addConnection(childNode)
+    for nodes in dictOfNodes:
+        print(dictOfNodes[nodes].getNodeConnections())
+             
+    return dictOfNodes
+
+def createGraphElements(dictOfNodes,nodeDictConnections):
+    graphElementList = []
+    for nodeId in dictOfNodes:
+        node = dictOfNodes[nodeId]
+        graphElement = {'data': {'id': node.getNodeId(), 'label': node.getNodeLabel()}, 'position': {'x': node.getNodeXPosition(), 'y': node.getNodeYPosition()}}
+        graphElementList.append(graphElement)
+    for connection in nodeDictConnections.values():
+        connections = connection.getNodeConnections()
+        if connections:  # Check if connections list is not empty
+            graphElementList.extend(connections)
+    return graphElementList
 
 def createGraph(selectedProject):
     dictOfNodes = eventsToNodes(selectedProject)

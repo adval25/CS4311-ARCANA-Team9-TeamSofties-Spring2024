@@ -1,21 +1,42 @@
-#https://www.mongodb.com/try/download/community
-#pip install pymongo
-#pip install mongoengine
-import mongoengine
-from mongoengine import connect
-from project import Project
-from node import Node
-from event import Event
+from dash import Dash, html
+import dash_cytoscape as cyto
 
-import projectManager
-import dataBaseCommunicator
-import pymongo
-from bson.objectid import ObjectId
+app = Dash(__name__)
 
-# node = Node(50,75,"Name1","title1","")
+directed_edges = [
+    {'data': {'id': src+tgt, 'source': src, 'target': tgt}}
+    for src, tgt in ['BA', 'BC', 'CD', 'DA']
+]
 
-connection = connect("projectsDb")
-projectOne = projectManager.getProject("6600f0c4df5e2b59b4db56e4")
-event = projectOne.getEvent("6600f0c4df5e2b59b4db56c4")
-node = Node(50,75,"Name1","title1","",event)
-print(node.getNodeDescription())
+directed_elements = [{'data': {'id': id_}} for id_ in 'ABCD'] + directed_edges
+print(directed_edges)
+
+app.layout = html.Div([
+    cyto.Cytoscape(
+        id='cytoscape-styling-9',
+        layout={'name': 'circle'},
+        style={'width': '100%', 'height': '400px'},
+        elements=directed_elements,
+        stylesheet=[
+            {
+                'selector': 'node',
+                'style': {
+                    'label': 'data(id)'
+                    
+                }
+            },
+            {
+                'selector': 'edge',
+                'style': {
+                    'line-color': 'red',  # Apply the same line color to all edges
+                    'target-arrow-color': 'blue',  # Apply arrow color
+                    'target-arrow-shape': 'triangle',  # Apply arrow shape
+                    'curve-style': 'bezier'  # Adjust curve style if needed
+                }
+            }
+        ]
+    )
+])
+
+if __name__ == '__main__':
+    app.run(debug=True)

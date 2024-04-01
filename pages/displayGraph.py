@@ -65,7 +65,8 @@ def update_node_info(selected_node,projectId):
         node = graphManager.getNode(selected_node['data']['id'],projectId)
         return [html.P(f"Node: {selected_node['data']['label']} TimeStamp: {node.getNodeTimeStamp()}"),
                 html.P(f"Vector Id: {node.getNodeVectorId()}  Location: {node.getNodeLocation()}"),
-                html.P(f"Description: {node.getNodeDescription()}")
+                html.P(f"Description: {node.getNodeDescription()}"),
+                 html.P(f"Source Host: {node.getSourceHost()} Target Host:{node.getTargerHost()}")
                  
                  ]
     else:
@@ -81,13 +82,27 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
     project = projectManager.getProject(projectId)
     nodeGraph = project.getEventGraph()
     nodeDict = nodeGraph.getDictOfNodes()
-    graphElementList = []
-    for nodeId in nodeDict:
-        node = nodeDict[nodeId]
-        graphElement = {'data': {'id': node.getNodeId(), 'label': node.getNodeLabel()}, 'position': {'x': node.getNodeXPosition(), 'y': node.getNodeYPosition()}}
-        graphElementList.append(graphElement)
+    nodeDictConnections = graphManager.edgeCreator(nodeDict)
+    graphElementList = graphManager.createGraphElements(nodeDict,nodeDictConnections)
     return [cyto.Cytoscape(id='cytoscape-two-nodes',layout={'name': 'preset'},style={'width': '100%', 'height': '400px'},
-                           elements = graphElementList)
+                           elements = graphElementList, stylesheet=[
+            {
+                'selector': 'node',
+                'style': {
+                    'label': 'data(label)'
+                    
+                }
+            },
+            {
+                'selector': 'edge',
+                'style': {
+                    'line-color': 'red',  # Apply the same line color to all edges
+                    'target-arrow-color': 'blue',  # Apply arrow color
+                    'target-arrow-shape': 'triangle',  # Apply arrow shape
+                    'curve-style': 'bezier'  # Adjust curve style if needed
+                }
+            }
+            ])
             ]
 
 @callback(

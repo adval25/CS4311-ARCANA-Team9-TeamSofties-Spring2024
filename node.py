@@ -18,8 +18,8 @@ class Node(EmbeddedDocument):
     nodeTargetHost = StringField()
 
     
-    def addConnection(self,connectingNodeId): #formats the connection to easily display in the gui
-        self.nodeConnections.append({'data': {'source': self.nodeId, 'target':connectingNodeId}})
+    def addConnection(self,childNode): #formats the connection to easily display in the gui
+        self.nodeConnections.append({'data': {'source': self.nodeId, 'target':childNode.getNodeId()}})
 
     def getNodeConnections(self):
         return self.nodeConnections
@@ -53,3 +53,9 @@ class Node(EmbeddedDocument):
     
     def getNodeTimeStamp(self):
         return self.nodeTimeStamp
+    
+    def getSourceHost(self):
+        return self.nodeSourceHost
+    
+    def getTargerHost(self):
+        return self.nodeTargetHost

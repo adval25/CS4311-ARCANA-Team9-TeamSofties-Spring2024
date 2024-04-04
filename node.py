@@ -4,10 +4,9 @@ class Node(EmbeddedDocument):
     nodeXPosition = IntField()
     nodeYPosition = IntField()
     nodeId = StringField()
-    eventId = StringField()
     nodeLabel = StringField()
     nodeIcon = StringField()
-    nodeConnections = ListField(StringField())
+    nodeConnections = ListField(default=[])
     nodeLocation = StringField()
     nodeTimeStamp = StringField()
     nodeDataSource = StringField()
@@ -18,8 +17,20 @@ class Node(EmbeddedDocument):
     nodeTargetHost = StringField()
 
     
-    def addConnection(self,childNode): #formats the connection to easily display in the gui
-        self.nodeConnections.append({'data': {'source': self.nodeId, 'target':childNode.getNodeId()}})
+    def addConnection(self,targetNodeId): #formats the connection to easily display in the gui
+        if self.nodeConnections == []: #weird bug with listFields this fixes it
+            self.nodeConnections = []
+        self.nodeConnections.append({'data': {'source': self.nodeId, 'target':targetNodeId}})
+    
+    def deleteOneConnection(self, targetNodeId):
+        for connection in self.nodeConnections:
+            if connection['data']['target'] == targetNodeId:
+                self.nodeConnections.remove(connection)
+                return True
+        return False  
+    
+    def deleteAllTargetConnections(self,targetNodeId):
+         self.nodeConnections = [connection for connection in self.nodeConnections if connection.get('data', {}).get('target') != targetNodeId]
 
     def getNodeConnections(self):
         return self.nodeConnections

@@ -11,3 +11,9 @@ class EventGraph(mongoengine.EmbeddedDocument):
     
     def getNode(self,nodeId):
         return self.dictOfNodes.get(nodeId)
+    
+    def addEvent(self,node):
+        self.dictOfNodes[node.getId()] = node
+    
+    def getVectorIdPositions(self):
+        return self.vectorIdPositions

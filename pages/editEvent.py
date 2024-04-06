@@ -197,19 +197,7 @@ layout = html.Div(
 
 def handleEditButtonClick(n_clicks,eventId,projectId,eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
     if n_clicks:
-        print("TEST TEST TEST")
         previousEvent = eventManager.getEventFromProject(eventId,projectId)
-        event = Event(eventTimeStamp = str(eventTimeStamp),
-                        analystInitals = str(intialsInput),
-                        malformed = bool(malformedInputs),
-                        eventTeam = str(teamInput),
-                        eventDescription =str(descriptionInput), 
-                        eventLocation = str(eventLocation),
-                        eventSourceHost = str(sourceHostInput),
-                        eventTargetHost = str(targetHostInput),
-                        eventVectorId = str(vectorIdInput),
-                        eventDataSource = previousEvent.getDataSource(),
-                        eventId = str(eventId)
-                        )    
+        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,previousEvent.getDataSource(),eventId)
         eventManager.addEventToProject(projectId,event)
         return ""

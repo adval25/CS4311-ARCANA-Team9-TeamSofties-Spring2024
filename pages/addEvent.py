@@ -180,19 +180,6 @@ layout = html.Div(
 
 def handleEditButtonClick(n_clicks,projectId,eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
     if n_clicks:
-        print("ADD ADD ADD")
-        event = Event(eventTimeStamp = str(eventTimeStamp),
-                        analystInitals = str(intialsInput),
-                        malformed = bool(malformedInputs),
-                        eventTeam = str(teamInput),
-                        eventDescription =str(descriptionInput), 
-                        eventLocation = str(eventLocation),
-                        eventSourceHost = str(sourceHostInput),
-                        eventTargetHost = str(targetHostInput),
-                        eventVectorId = str(vectorIdInput),
-                        eventDataSource = "",
-                        eventId = str(ObjectId())
-                        )    
+        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,"")
         eventManager.addEventToProject(projectId,event)
-
         return "/displayEvents" #url that is redirected too

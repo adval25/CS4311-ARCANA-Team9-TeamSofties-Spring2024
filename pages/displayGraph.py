@@ -64,7 +64,7 @@ addNodeModal = html.Div(
                         dbc.Row(
                             [
                                 dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="closeNodeModalButton", className="ms-auto", n_clicks=0)),
-                                dbc.Col(dbc.Button("Create Project", size = "lg", color="primary", id="createProject", className="ms-auto", href="/manageProjects",n_clicks=0)),
+                                dbc.Col(dbc.Button("Create Project", size = "lg", color="primary", id="createNodeModal", className="ms-auto",n_clicks=0)),
                             ]
                         ),
                     ],
@@ -201,7 +201,7 @@ def exportGraphPositions(n_clicks, elements): #pulls all the info from the graph
 
 @callback(
     Output("cytoscape-two-nodes", "elements"),
-    [Input("addEdge", "n_clicks"),Input("deleteEdge", "n_clicks"),Input("deleteNode", "n_clicks"),Input("addNode", "n_clicks")],
+    [Input("addEdge", "n_clicks"),Input("deleteEdge", "n_clicks"),Input("deleteNode", "n_clicks"),Input("createNodeModal", "n_clicks")],
     [State("cytoscape-two-nodes", "selectedNodeData"),State("cytoscape-two-nodes", "elements"),State("cytoscape-two-nodes", "tapEdge"),State('selected-project-store', 'data')] 
 )
 def edgeManager(add_clicks,deleteEdgeclicks,deleteNode,addNode,tap_node, elements,edge,projectId): 
@@ -213,26 +213,20 @@ def edgeManager(add_clicks,deleteEdgeclicks,deleteNode,addNode,tap_node, element
 
     if triggered_id == "addEdge" and add_clicks:
         if tap_node and len(tap_node) == 2:
-            node1_id = tap_node[0]["id"]
-            node2_id = tap_node[1]["id"]
-            new_edge = {"data": {"source": node1_id, "target": node2_id}}
-            elements.append(new_edge)
+            newEdge = nodeManager.addEdgeToGui(tap_node[0]["id"],tap_node[1]["id"])
+            elements.append(newEdge)
             nodeManager.addEdgeToNode(projectId,tap_node[0]["id"],tap_node[1]["id"])
 
     elif triggered_id == "deleteEdge" and deleteEdgeclicks:
         elements.remove({"data" :edge["data"]}) #formats the edge[data] to match the data in elements
-        print(edge["data"])
         nodeManager.deleteEdge(projectId,edge["data"]["source"],edge["data"]["target"])
     
     elif triggered_id == "deleteNode" and deleteNode:
         if tap_node and len(tap_node) == 1:
-            node_id = tap_node[0]["id"]
-            elements = [e for e in elements if "source" not in e["data"] or e["data"]["source"] != node_id]
-            elements = [e for e in elements if "target" not in e["data"] or e["data"]["target"] != node_id]
-            elements = [e for e in elements if e.get("data", {}).get("id") != node_id]
-            nodeManager.deleteNode(projectId,node_id)
+            elements = nodeManager.deleteNodeFromGui(elements,tap_node[0]["id"])
+            nodeManager.deleteNode(projectId,tap_node[0]["id"])
     
-    elif triggered_id == "addNode" and addNode:
+    elif triggered_id == "createNodeModal" and addNode:
         #new_node_id = str(uuid.uuid4())
         new_node = {"data": {"id": "TSA", "label": "New Node"}}
         elements.append(new_node)

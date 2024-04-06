@@ -1,4 +1,22 @@
 import projectManager
+from bson.objectid import ObjectId
+from event import Event
+
+def createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,eventDataSource,eventId=str(ObjectId())):
+    event = Event(eventTimeStamp = str(eventTimeStamp),
+                analystInitals = str(intialsInput),
+                malformed = bool(malformedInputs),
+                eventTeam = str(teamInput),
+                eventDescription =str(descriptionInput), 
+                eventLocation = str(eventLocation),
+                eventSourceHost = str(sourceHostInput),
+                eventTargetHost = str(targetHostInput),
+                eventVectorId = str(vectorIdInput),
+                eventDataSource = str(eventDataSource),
+                eventId = str(eventId)
+                )
+    return event
+
 
 def addEventToProject(projectId,event):
     project = projectManager.getProject(projectId)

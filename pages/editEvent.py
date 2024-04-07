@@ -2,10 +2,9 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import html,callback,Input, Output, State
 from . import eventNavbar
-from event import Event
-import dataBaseCommunicator
-from dataBaseCommunicator import dataBaseCleint
 import eventManager
+from datetime import datetime
+
 
 dash.register_page(__name__, path='/editEvent')
 
@@ -16,7 +15,11 @@ def generateEditEvent(eventDic):
         "Red": "eventNodeIcon.png",
         "Blue": "eventNodeIcon.png",
     }
-    
+    eventTimeStamp = eventDic["eventTimeStamp"]
+    if len(eventTimeStamp) == 15:  # Check if the string has no seconds
+        eventTimeStamp += ":00"  # Add seconds
+
+    eventTimeStamp = datetime.strptime(eventTimeStamp,'%m/%d/%Y %H:%M:%S')
     return html.Div(
         dbc.Card(
             dbc.Row(
@@ -38,7 +41,12 @@ def generateEditEvent(eventDic):
                                     dbc.Col(
                                     [
                                         html.P("eventTimeStamp"),
-                                        dbc.Input(type="text", id ="eventTimeStamp",value=eventDic["eventTimeStamp"]),   
+                                        dbc.Input(type="date", id ="eventTimeStamp",value=eventTimeStamp.date()),
+                                        dbc.Row([
+                                                    dbc.Col(dbc.Input(id='nodehour', type="number", min=0, max=24, placeholder='Hour',value=eventTimeStamp.hour ,style={"margin-bottom": "10px"}), width=3),
+                                                    dbc.Col(dbc.Input(id='nodeminute', type='number', min=0, max=60, placeholder='Minute',value=eventTimeStamp.minute ,style={"margin-bottom": "10px"}), width=3),
+                                                    dbc.Col(dbc.Input(id='nodesecond', type='number', min=0, max=59, placeholder='Second',value=eventTimeStamp.second, style={"margin-bottom": "10px"}), width=3)
+                                                ])
                                     ], width =3 
                                     ),
                                     dbc.Col(
@@ -159,7 +167,7 @@ def fillValuesForEditEvent(dummyValue, eventId,projectId):
           return generateEditEvent(eventDic)
     else:
         return ""
-temporaryDic = {'malformed': " ",'eventTimeStamp': " ",'analystInitals': " ",'eventTeam': " ",'eventDescription':" ",'eventLocation': " ",'eventSourceHost': " ",'eventTargetHost': " ",'eventVectorId': " ",'eventDataSource': " ",'_id': " "} 
+temporaryDic = {'malformed': " ",'eventTimeStamp': "1/16/2024 22:21",'analystInitals': " ",'eventTeam': " ",'eventDescription':" ",'eventLocation': " ",'eventSourceHost': " ",'eventTargetHost': " ",'eventVectorId': " ",'eventDataSource': " ",'_id': " "} 
 layout = html.Div(
     [
     dbc.Container(
@@ -183,6 +191,9 @@ layout = html.Div(
         State('eventStore', 'data'),
         State('selected-project-store', 'data'),
         State('eventTimeStamp', 'value'),
+        State('nodehour', 'value'),
+        State('nodeminute', 'value'),
+        State('nodesecond', 'value'),
         State('malformedInputs', 'value'),
         State('intialsInputs', 'value'),
         State('vectorIdInputs', 'value'),
@@ -195,8 +206,10 @@ layout = html.Div(
     ]
 )
 
-def handleEditButtonClick(n_clicks,eventId,projectId,eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
+def handleEditButtonClick(n_clicks,eventId,projectId,eventDate,nodeHour,nodeminute,nodesecond, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
     if n_clicks:
+        eventDateTime = datetime.strptime(f"{eventDate} {nodeHour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S')
+        eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
         previousEvent = eventManager.getEventFromProject(eventId,projectId)
         event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,previousEvent.getDataSource(),eventId)
         eventManager.addEventToProject(projectId,event)

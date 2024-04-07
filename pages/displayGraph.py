@@ -15,49 +15,88 @@ dash.register_page(__name__, path='/displayGraph')
 
 sortDropDown = [{"label": "TimeStamp", "value": "1"},{"label": "TargetHost", "value": "2"},]
 logicDropDown = [{"label": "Logic", "value": "1"},{"label": "*", "value": "2"},]
-
-addNodeModal = html.Div(
+def addNodeModal():
+    team_options = ["White", "Red", "Blue"]
+    event_node_icons_options = {
+        "White": "eventNodeIcon.png",
+        "Red": "eventNodeIcon.png",
+        "Blue": "eventNodeIcon.png",
+    }
+    return  html.Div(
     [
         dbc.Modal(
             [
-                dbc.ModalHeader(dbc.ModalTitle("Create Project")),
+                dbc.ModalHeader(dbc.ModalTitle("Create Node")),
                 dbc.ModalBody(
                     [
-                        html.P("Project Name"),
+                        html.P("eventTimeStamp"),
                         dbc.Form(
-                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Name", placeholder="Project Name", id = "projectName" )),width = 12),)
-                        ),
-                        html.Br(),
-                        html.P("Project Location"),
-                        dbc.Form(
-                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="datetime-local", placeholder=":", id = "projectLocation")),width = 12),)
-                        ),
-                        html.Br(),
-                        html.P("Log Location"),
-                        dbc.Form(
-                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Log Directory", placeholder="Log Directory" , id = "logDirectory")),width = 12),)
-                        ),
+                        [
+                        dbc.Input(type="date", id="nodeTimeStamp"),
+                        dbc.Row([
+                            dbc.Col(dbc.Input(id='nodehour', type="number", min=0, max=24, placeholder='Hour', style={"margin-bottom": "10px"}), width=3),
+                            dbc.Col(dbc.Input(id='nodeminute', type='number', min=0, max=60, placeholder='Minute', style={"margin-bottom": "10px"}), width=3),
+                            dbc.Col(dbc.Input(id='nodesecond', type='number', min=0, max=59, placeholder='Second', style={"margin-bottom": "10px"}), width=3)
+                            ])
+                        ]),
                         html.Br(),
                         dbc.Row(
-                            [
-                                dbc.Col(html.P("Start Date")),
-                                dbc.Col(html.P("End Date")),
-                            ]
-                        ),
-                        dbc.Row(
-                            [
-                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Start Date", placeholder="mm/dd/yyyy")))))),
-                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="End Date", placeholder="mm/dd/yyyy")))))),
-                            ]
-                        ),
-                        html.Br(),
-                        html.P("Initials"),
-                        dbc.Form(
-                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Initials", placeholder="III", id = "analystInitals")),width = 6),)
-                        ),
+                        [
+                        dbc.Col([html.P("Team*"),dbc.Select(options=[{"label": i, "value": i} for i in team_options],value=team_options[0],id = "teamInputs",),], width =3 ),
+                        dbc.Col([html.P("eventLocation"),dbc.Input(type="posture", id = "eventLocation"),], width = 3),
+                        dbc.Col([html.P("malformed"),dbc.Checkbox(id="malformedInputs"),], width = 3),
+                        
+                        ], className="g-3"),
                         
                         html.Br(),
+                        dbc.Row(
+                            [
+                                dbc.Col(html.P("Source Host")),
+                                dbc.Col(html.P("Target Host")),
+                            ]
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Text", placeholder="0.0.0.0",id = "sourceHostInputs")))))),
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Text", placeholder="0.0.0.0", id = "targetHostInputs")))))),
+                            ]
+                        ),
                         html.Br(),
+                         dbc.Row(
+                            [
+                                dbc.Col(html.P("Intials")),
+                                dbc.Col(html.P("Vector Id")),
+                            ]
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Text", placeholder="|||",id = "intialsInputs")),width =8)))),
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Text", placeholder="", id = "vectorIdInputs")))))),
+                            ]
+                        ),
+
+                        html.Br(),
+                         dbc.Row(
+                            [
+                                dbc.Col(html.P("Description")),
+                            ]
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(placeholder="",id = "descriptionInputs",style={"height": "100px"})),)))),
+                            ]
+                        ),
+                        html.Br(),
+                         dbc.Row(
+                            [
+                                dbc.Col(html.P("Node Icon")),
+                            ]
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Text", placeholder="",id="nodeIcon")),)))),
+                            ]
+                        ),
                         html.Br(),
                         html.Br(),
                         html.Br(),
@@ -79,8 +118,8 @@ addNodeModal = html.Div(
             is_open = False,
         ),
     ]
-    
-)
+   
+    )
 
 def dropDownMaker(menueId,menueContent,marginRight):
     return dbc.Select(
@@ -127,9 +166,9 @@ def generateSyncCard():
 @callback(
     Output("addNodeModal", "is_open"),
     [Input("addNode", "n_clicks"), Input("closeNodeModalButton", "n_clicks")],
-    [State("addNodeModal", "is_open")]
+    [State("addNodeModal", "is_open"),State('selected-project-store', 'data')]
 )
-def toggle_modal(add_node_clicks, close_clicks, is_open):
+def toggle_modal(add_node_clicks, close_clicks, is_open,projectId):
     ctx = dash.callback_context
     if ctx.triggered:
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
@@ -167,7 +206,7 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
     project = projectManager.getProject(projectId)
     nodeGraph = project.getEventGraph()
     nodeDict = nodeGraph.getDictOfNodes()
-    graphElementList = graphManager.createGraphElements(nodeDict)
+    graphElementList = graphManager.createGraphGUIElements(nodeDict)
     return [cyto.Cytoscape(id='cytoscape-two-nodes',layout={'name': 'preset'},style={'width': '100%', 'height': '400px'},
                            elements = graphElementList, stylesheet=[
             {
@@ -190,9 +229,10 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
             ]
 
 @callback(
-    Output("export-message", "children"),
+    Output("export-message", "children", allow_duplicate=True),
     [Input("exportButton", "n_clicks")],
-    [State("cytoscape-two-nodes", "elements")]
+    [State("cytoscape-two-nodes", "elements")],
+    prevent_initial_call=True
 )
 def exportGraphPositions(n_clicks, elements): #pulls all the info from the graph
     if n_clicks:
@@ -200,42 +240,68 @@ def exportGraphPositions(n_clicks, elements): #pulls all the info from the graph
     return ""
 
 @callback(
-    Output("cytoscape-two-nodes", "elements"),
-    [Input("addEdge", "n_clicks"),Input("deleteEdge", "n_clicks"),Input("deleteNode", "n_clicks"),Input("createNodeModal", "n_clicks")],
-    [State("cytoscape-two-nodes", "selectedNodeData"),State("cytoscape-two-nodes", "elements"),State("cytoscape-two-nodes", "tapEdge"),State('selected-project-store', 'data')] 
+    Output("cytoscape-two-nodes", "elements", allow_duplicate=True),
+    [Input("addEdge", "n_clicks")],
+    [State("cytoscape-two-nodes", "selectedNodeData"), State("cytoscape-two-nodes", "elements"), State('selected-project-store', 'data')],
+    prevent_initial_call=True
 )
-def edgeManager(add_clicks,deleteEdgeclicks,deleteNode,addNode,tap_node, elements,edge,projectId): 
-    ctx = dash.callback_context
-    if not ctx.triggered: 
+def add_edge(add_clicks, tap_node, elements, projectId):
+    if not add_clicks or not tap_node or len(tap_node) != 2:
         raise dash.exceptions.PreventUpdate
 
-    triggered_id = ctx.triggered[0]["prop_id"].split(".")[0] #stops the input from spilling over
-
-    if triggered_id == "addEdge" and add_clicks:
-        if tap_node and len(tap_node) == 2:
-            newEdge = nodeManager.addEdgeToGui(tap_node[0]["id"],tap_node[1]["id"])
-            elements.append(newEdge)
-            nodeManager.addEdgeToNode(projectId,tap_node[0]["id"],tap_node[1]["id"])
-
-    elif triggered_id == "deleteEdge" and deleteEdgeclicks:
-        elements.remove({"data" :edge["data"]}) #formats the edge[data] to match the data in elements
-        nodeManager.deleteEdge(projectId,edge["data"]["source"],edge["data"]["target"])
-    
-    elif triggered_id == "deleteNode" and deleteNode:
-        if tap_node and len(tap_node) == 1:
-            elements = nodeManager.deleteNodeFromGui(elements,tap_node[0]["id"])
-            nodeManager.deleteNode(projectId,tap_node[0]["id"])
-    
-    elif triggered_id == "createNodeModal" and addNode:
-        #new_node_id = str(uuid.uuid4())
-        new_node = {"data": {"id": "TSA", "label": "New Node"}}
-        elements.append(new_node)
+    new_edge = nodeManager.addEdgeToGui(tap_node[0]["id"], tap_node[1]["id"])
+    elements.append(new_edge)
+    nodeManager.addEdgeToNode(projectId, tap_node[0]["id"], tap_node[1]["id"])
 
     return elements
 
+@callback(
+    Output("cytoscape-two-nodes", "elements", allow_duplicate=True),
+    [Input("deleteEdge", "n_clicks")],
+    [State("cytoscape-two-nodes", "elements"), State("cytoscape-two-nodes", "tapEdge"), State('selected-project-store', 'data')],
+    prevent_initial_call=True
+)
+def delete_edge(delete_clicks, elements, tap_edge, projectId):
+    if not delete_clicks or not tap_edge:
+        raise dash.exceptions.PreventUpdate
+
+    elements.remove({"data": tap_edge["data"]})
+    nodeManager.deleteEdge(projectId, tap_edge["data"]["source"], tap_edge["data"]["target"])
+
+    return elements
+
+@callback(
+    Output("cytoscape-two-nodes", "elements", allow_duplicate=True),
+    [Input("deleteNode", "n_clicks")],
+    [State("cytoscape-two-nodes", "elements"), State("cytoscape-two-nodes", "selectedNodeData"), State('selected-project-store', 'data')],
+    prevent_initial_call=True
+)
+def delete_node(delete_clicks, elements, tap_node, projectId):
+    if delete_clicks:
+        elements = nodeManager.deleteNodeFromGui(elements, tap_node[0]["id"])
+        nodeManager.deleteNode(projectId, tap_node[0]["id"])
+        return elements
+    return dash.exceptions.PreventUpdate
+
+@callback(
+    Output("cytoscape-two-nodes", "elements",allow_duplicate=True),
+    [Input("createNodeModal", "n_clicks")],
+    [State("cytoscape-two-nodes", "elements")],
+    prevent_initial_call=True
+)
+def add_node_modal(create_clicks, elements,):
+    if not create_clicks:
+        raise dash.exceptions.PreventUpdate
+
+    new_node = {"data": {"id": "TSA", "label": "New Node"}}
+    elements.append(new_node)
+
+    return elements
+
+
 layout = html.Div([
     html.Div(id = "export-message"),
-    addNodeModal,
+    addNodeModal(),
     html.Br(),
     eventNavbar.eventSidebar,
     generateSyncCard()

@@ -2,10 +2,9 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import html,callback,Input, Output, State
 from . import eventNavbar
-from event import Event
-import dataBaseCommunicator
 import eventManager
-from bson.objectid import ObjectId
+from datetime import datetime
+
 
 
 dash.register_page(__name__, path='/addEvent')
@@ -39,7 +38,12 @@ def generateCreateEvent():
                                     dbc.Col(
                                     [
                                         html.P("eventTimeStamp"),
-                                        dbc.Input(type="text", id ="eventTimeStamp"),   
+                                        dbc.Input(type="date", id ="eventTimeStamp"),
+                                        dbc.Row([
+                                                    dbc.Col(dbc.Input(id='nodehour', type="number", min=0, max=24, placeholder='Hour' ,style={"margin-bottom": "10px"}), width=3),
+                                                    dbc.Col(dbc.Input(id='nodeminute', type='number', min=0, max=60, placeholder='Minute',style={"margin-bottom": "10px"}), width=3),
+                                                    dbc.Col(dbc.Input(id='nodesecond', type='number', min=0, max=59, placeholder='Second', style={"margin-bottom": "10px"}), width=3)
+                                                ])
                                     ], width =3 
                                     ),
                                     dbc.Col(
@@ -97,7 +101,7 @@ def generateCreateEvent():
                                     dbc.Col(
                                     [   
                                         html.P("Target Host(s)"),
-                                        dbc.Input(type="text", placeholder="0.0.0.0, 0.0.0.1", id = "targetHostInputs"), 
+                                        dbc.Input(type="text", placeholder="0.0.0.1", id = "targetHostInputs"), 
                                     ], width = 3
                                     ),  
                                     
@@ -166,6 +170,9 @@ layout = html.Div(
     [
         State('selected-project-store', 'data'),
         State('eventTimeStamp', 'value'),
+        State('nodehour', 'value'),
+        State('nodeminute', 'value'),
+        State('nodesecond', 'value'),
         State('malformedInputs', 'value'),
         State('intialsInputs', 'value'),
         State('vectorIdInputs', 'value'),
@@ -178,8 +185,10 @@ layout = html.Div(
     ]
 )
 
-def handleEditButtonClick(n_clicks,projectId,eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
+def handleEditButtonClick(n_clicks,projectId,eventDate,nodehour,nodeminute,nodesecond, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
     if n_clicks:
+        eventDateTime = datetime.strptime(f"{eventDate} {nodehour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S') #date passes back as YMD we need it as MDY
+        eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
         event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,"")
         eventManager.addEventToProject(projectId,event)
         return "/displayEvents" #url that is redirected too

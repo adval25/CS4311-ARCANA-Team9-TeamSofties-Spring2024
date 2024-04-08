@@ -39,8 +39,19 @@ def saveNodePositions(elements,projectId):
     project = projectManager.getProject(projectId)
     dictOfNodes = project.getEventGraph().getDictOfNodes()
     for element in elements:
-        if len(element) == 2:
+        if len(element) == 2: #skips edge data
             node = dictOfNodes.get(element["data"]["id"])
             node.changeNodeXPosition(element["position"]["x"])
             node.changeNodeYPosition(element["position"]["y"])
     project.save()
+
+def updateNodeLabel(elements,previousLabel,newLabel,nodeId):
+    if previousLabel == newLabel:
+        return elements
+    else:
+        for element in elements:
+            if len(element) == 2: #skips edge data
+                if element["data"]["id"] == nodeId: #finds the changed node
+                    element["data"]["label"] = newLabel #updates the graph
+                    return elements #id is unique so we return
+            

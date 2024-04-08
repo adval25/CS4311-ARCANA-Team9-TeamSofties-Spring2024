@@ -266,17 +266,18 @@ def generateSyncCard():
                          dropDownMaker("sortDropDown",sortDropDown,"4rem"),
                          dbc.Switch(id="standalone-switch",label="Filter",value=False,style={'display': 'inline-block'}),
                          dbc.Input(id="input", placeholder="Type something...", type="text",size="md",style={'display': 'inline-block',"width" : "30rem","margin-left" : "15rem"}),
-                         dbc.Button("Export Event Graph", color="primary", className="me-1",size="md", id = "exportButton"),
+                         dbc.Button("Save Event Graph", color="primary", className="me-1",size="md", id = "exportButton"),
                          dbc.Button("Add Edge", color="primary", className="me-1",size="md", id = "addEdge"),
                          dbc.Button("Delete Edge", color="primary", className="me-1",size="md", id = "deleteEdge"),
                          dbc.Button("Delete Node", color="primary", className="me-1",size="md", id = "deleteNode"),
                          dbc.Button("Add Node", color="primary", className="me-1",size="md", id = "addNode"),
                          dbc.Button("Edit Node", color="primary", className="me-1",size="md", id = "editNode"),
+                         dbc.Button("Export Graph", color="primary", className="me-1",size="md", id = "exportGraph"),
 
 
                          ])
                          ),
-                          html.Div([cyto.Cytoscape(id='cytoscape-two-nodes',layout={'name': 'preset'},style={'width': '100%', 'height': '400px'},elements=[])],id = "graphDisplayer"),
+                          html.Div([cyto.Cytoscape(id='eventGraphGui',layout={'name': 'preset'},style={'width': '100%', 'height': '400px'},elements=[])],id = "graphDisplayer"),
 
                 dbc.Col([html.Div(id = "node-info")],width=12),
 
@@ -307,7 +308,7 @@ def toggle_modal(add_node_clicks, close_clicks, is_open,projectId):
 
 @callback(
     Output("node-info", "children"),
-    [Input("cytoscape-two-nodes", "tapNode")],
+    [Input("eventGraphGui", "tapNode")],
     [State('selected-project-store', 'data')]
 
 )
@@ -334,7 +335,7 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
     nodeGraph = project.getEventGraph()
     nodeDict = nodeGraph.getDictOfNodes()
     graphElementList = graphManager.createGraphGUIElements(nodeDict)
-    return [cyto.Cytoscape(id='cytoscape-two-nodes',layout={'name': 'preset'},style={'width': '100%', 'height': '400px'},
+    return [cyto.Cytoscape(id='eventGraphGui',layout={'name': 'preset'},style={'width': '100%', 'height': '400px'},
                            elements = graphElementList, stylesheet=[
             {
                 'selector': 'node',
@@ -358,7 +359,7 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
 @callback(
     Output("export-message", "children", allow_duplicate=True),
     [Input("exportButton", "n_clicks")],
-    [State("cytoscape-two-nodes", "elements"),State('selected-project-store', 'data')],
+    [State("eventGraphGui", "elements"),State('selected-project-store', 'data')],
     prevent_initial_call=True
 )
 def exportGraphPositions(n_clicks, elements,projectId): #pulls all the info from the graph
@@ -367,9 +368,9 @@ def exportGraphPositions(n_clicks, elements,projectId): #pulls all the info from
     return ""
 
 @callback(
-    Output("cytoscape-two-nodes", "elements", allow_duplicate=True),
+    Output("eventGraphGui", "elements", allow_duplicate=True),
     [Input("addEdge", "n_clicks")],
-    [State("cytoscape-two-nodes", "selectedNodeData"), State("cytoscape-two-nodes", "elements"), State('selected-project-store', 'data')],
+    [State("eventGraphGui", "selectedNodeData"), State("eventGraphGui", "elements"), State('selected-project-store', 'data')],
     prevent_initial_call=True
 )
 def add_edge(add_clicks, tap_node, elements, projectId):
@@ -383,9 +384,9 @@ def add_edge(add_clicks, tap_node, elements, projectId):
     return elements
 
 @callback(
-    Output("cytoscape-two-nodes", "elements", allow_duplicate=True),
+    Output("eventGraphGui", "elements", allow_duplicate=True),
     [Input("deleteEdge", "n_clicks")],
-    [State("cytoscape-two-nodes", "elements"), State("cytoscape-two-nodes", "tapEdge"), State('selected-project-store', 'data')],
+    [State("eventGraphGui", "elements"), State("eventGraphGui", "tapEdge"), State('selected-project-store', 'data')],
     prevent_initial_call=True
 )
 def delete_edge(delete_clicks, elements, tap_edge, projectId):
@@ -398,9 +399,9 @@ def delete_edge(delete_clicks, elements, tap_edge, projectId):
     return elements
 
 @callback(
-    Output("cytoscape-two-nodes", "elements", allow_duplicate=True),
+    Output("eventGraphGui", "elements", allow_duplicate=True),
     [Input("deleteNode", "n_clicks")],
-    [State("cytoscape-two-nodes", "elements"), State("cytoscape-two-nodes", "selectedNodeData"), State('selected-project-store', 'data')],
+    [State("eventGraphGui", "elements"), State("eventGraphGui", "selectedNodeData"), State('selected-project-store', 'data')],
     prevent_initial_call=True
 )
 def delete_node(delete_clicks, elements, tap_node, projectId):
@@ -411,10 +412,10 @@ def delete_node(delete_clicks, elements, tap_node, projectId):
     return dash.exceptions.PreventUpdate
 
 @callback(
-    Output("cytoscape-two-nodes", "elements",allow_duplicate=True),
+    Output("eventGraphGui", "elements",allow_duplicate=True),
     [Input("createNodeModal", "n_clicks")],
     [
-        State("cytoscape-two-nodes", "elements"),
+        State("eventGraphGui", "elements"),
         State('selected-project-store', 'data'),
         State('nodeTimeStamp', 'value'),
         State('nodehour', 'value'),
@@ -465,7 +466,7 @@ def add_node_modal(create_clicks, elements,projectId,eventDate,nodehour,nodeminu
      Output("nodeId","value")
      ],
     [Input("editNode", "n_clicks"),Input("editCloseNodeModalButton", "n_clicks")],
-    [State("cytoscape-two-nodes", "selectedNodeData"), State('selected-project-store', 'data')],
+    [State("eventGraphGui", "selectedNodeData"), State('selected-project-store', 'data')],
      prevent_initial_call=True
 
 )
@@ -493,9 +494,10 @@ def toggleEditmodal(edit_clicks, close_clicks,selectedNode,projectId):
     raise dash.exceptions.PreventUpdate
 
 @callback(
-    Output('dummy-divNodeSend', 'children'),
+     Output("eventGraphGui", "elements",allow_duplicate=True),
     [Input("editNodeModalButton", "n_clicks")],
-    [State('selected-project-store', 'data'),
+    [State("eventGraphGui", "elements"),
+     State('selected-project-store', 'data'),
      State('nodeId', 'value'),
      State("editnodeTimeStamp", "value"),
      State("editnodehour", "value"),
@@ -509,20 +511,46 @@ def toggleEditmodal(edit_clicks, close_clicks,selectedNode,projectId):
      State("editteamInputs", "value"),
      State("editdescriptionInputs", "value"),
      State("editeventLocation", "value"),
-
      ],
+     prevent_initial_call=True
     
     )
-def editNode(editNode,projectId,nodeId,nodeDate,nodehour,nodeminute,nodesecond, malformedInputs,sourceHostInput,targetHostInput,intialsInput,vectorIdInput,teamInput,descriptionInput,nodeLocation):
+def editNode(editNode,elements,projectId,nodeId,nodeDate,nodehour,nodeminute,nodesecond, malformedInputs,sourceHostInput,targetHostInput,intialsInput,vectorIdInput,teamInput,descriptionInput,nodeLocation):
     if(editNode):
-        eventDateTime = datetime.strptime(f"{nodeDate} {nodehour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S')
-        eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
+        if(nodeDate == None or nodehour == None or nodeminute == None):
+            eventTimeStamp = ""
+        else:
+            eventDateTime = datetime.strptime(f"{nodeDate} {nodehour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S')
+            eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
         previousEvent = eventManager.getEventFromProject(nodeId,projectId)
         event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,nodeLocation,previousEvent.getDataSource(),nodeId)
         eventManager.addEventToProject(projectId,event)
         node = nodeManager.createNode(projectId,event)
         graphManager.addNodeToGraph(node,projectId)
-    return ""
+        elements = graphManager.updateNodeLabel(elements,previousEvent,teamInput,nodeId)
+        return elements
+    raise dash.exceptions.PreventUpdate
+
+
+@callback(
+    Output("eventGraphGui", "generateImage"),
+    [
+        Input("exportGraph", "n_clicks"),
+    ])
+def get_image(exportGraph):
+
+    ctx = dash.callback_context
+    if ctx.triggered:
+        if ctx.triggered_id == "exportGraph":
+            print("OOOO IMAGE OUT")
+            action = "download"
+            type = "jpg"
+            return {
+                'type':type,
+                'action': action
+                }
+    raise dash.exceptions.PreventUpdate
+
 
 layout = html.Div([
     html.Div(id = "dummy-divNodeSend"),

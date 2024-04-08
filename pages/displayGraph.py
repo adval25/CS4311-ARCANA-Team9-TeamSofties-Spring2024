@@ -363,15 +363,7 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
 )
 def exportGraphPositions(n_clicks, elements,projectId): #pulls all the info from the graph
     if n_clicks:
-        project = projectManager.getProject(projectId)
-        dictOfNodes = project.getEventGraph().getDictOfNodes()
-        print(len(elements))
-        for element in elements:
-            if len(element) == 2:
-                node = dictOfNodes.get(element["data"]["id"])
-                node.changeNodeXPosition(element["position"]["x"])
-                node.changeNodeYPosition(element["position"]["y"])
-        project.save()
+        graphManager.saveNodePositions(elements,projectId)
     return ""
 
 @callback(

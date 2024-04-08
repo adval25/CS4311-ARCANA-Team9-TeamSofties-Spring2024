@@ -34,3 +34,13 @@ def addNodeToGraph(node,projectId):
     graph = project.getEventGraph()
     graph.addNode(node)
     project.save()
+
+def saveNodePositions(elements,projectId):
+    project = projectManager.getProject(projectId)
+    dictOfNodes = project.getEventGraph().getDictOfNodes()
+    for element in elements:
+        if len(element) == 2:
+            node = dictOfNodes.get(element["data"]["id"])
+            node.changeNodeXPosition(element["position"]["x"])
+            node.changeNodeYPosition(element["position"]["y"])
+    project.save()

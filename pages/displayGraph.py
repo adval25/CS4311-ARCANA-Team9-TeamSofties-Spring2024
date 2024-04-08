@@ -358,12 +358,20 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
 @callback(
     Output("export-message", "children", allow_duplicate=True),
     [Input("exportButton", "n_clicks")],
-    [State("cytoscape-two-nodes", "elements")],
+    [State("cytoscape-two-nodes", "elements"),State('selected-project-store', 'data')],
     prevent_initial_call=True
 )
-def exportGraphPositions(n_clicks, elements): #pulls all the info from the graph
+def exportGraphPositions(n_clicks, elements,projectId): #pulls all the info from the graph
     if n_clicks:
-        print(elements)
+        project = projectManager.getProject(projectId)
+        dictOfNodes = project.getEventGraph().getDictOfNodes()
+        print(len(elements))
+        for element in elements:
+            if len(element) == 2:
+                node = dictOfNodes.get(element["data"]["id"])
+                node.changeNodeXPosition(element["position"]["x"])
+                node.changeNodeYPosition(element["position"]["y"])
+        project.save()
     return ""
 
 @callback(

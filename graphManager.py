@@ -28,3 +28,9 @@ def getNode(nodeId,projectId):
 def getGraph(projectId):
     project = projectManager.getProject(projectId)
     return project.getEventGraph()
+
+def addNodeToGraph(node,projectId):
+    project = projectManager.getProject(projectId)
+    graph = project.getEventGraph()
+    graph.addNode(node)
+    project.save()

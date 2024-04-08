@@ -16,7 +16,6 @@ def generateCreateEvent():
         "Red": "eventNodeIcon.png",
         "Blue": "eventNodeIcon.png",
     }
-    
     return html.Div(
         dbc.Card(
             dbc.Row(

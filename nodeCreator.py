@@ -37,7 +37,10 @@ def eventsToNodes(project,vectorIdPositionDic): #turns all events into nodes and
              nodeDescription = event.getEventDescription(),
              nodeVectorId = event.getVectorId(),
              nodeSourceHost = event.getSourceHost(),
-             nodeTargetHost = event.getTargetHost()
+             nodeTargetHost = event.getTargetHost(),
+             nodeInitals = event.getInitals(),
+             nodeMalformed = event.getMalformed()
+
              )
         dictOfNodes[eventId] = node
     return dictOfNodes

@@ -1,5 +1,6 @@
-from mongoengine import StringField, ListField,EmbeddedDocument,IntField
+from mongoengine import StringField, ListField,EmbeddedDocument,IntField,BooleanField
 from bson.objectid import ObjectId
+from datetime import datetime
 class Node(EmbeddedDocument):
     nodeXPosition = IntField()
     nodeYPosition = IntField()
@@ -15,6 +16,8 @@ class Node(EmbeddedDocument):
     nodeVectorId = StringField()
     nodeSourceHost = StringField()
     nodeTargetHost = StringField()
+    nodeInitals = StringField()
+    nodeMalformed = BooleanField()
 
     
     def addConnection(self,targetNodeId): #formats the connection to easily display in the gui
@@ -70,3 +73,33 @@ class Node(EmbeddedDocument):
     
     def getTargerHost(self):
         return self.nodeTargetHost
+    
+    def converTimeStampToDateTime(self):
+        if self.nodeTimeStamp.isspace() or self.nodeTimeStamp == "":
+            return None
+        temporaryTimeStamp = self.nodeTimeStamp
+        if len(self.nodeTimeStamp) <= 15:  # Check if the string has no seconds
+            temporaryTimeStamp += ":00"  # Add seconds
+        return datetime.strptime(temporaryTimeStamp,'%m/%d/%Y %H:%M:%S')
+
+    
+    def nodeTodict(self):
+        node_dict = {
+            "nodeXPosition": self.nodeXPosition,
+            "nodeYPosition": self.nodeYPosition,
+            "nodeId": self.nodeId,
+            "nodeLabel": self.nodeLabel,
+            "nodeIcon": self.nodeIcon,
+            "nodeConnections": self.nodeConnections,
+            "nodeLocation": self.nodeLocation,
+            "nodeTimeStamp": self.nodeTimeStamp,
+            "nodeDataSource": self.nodeDataSource,
+            "nodePosture": self.nodePosture,
+            "nodeDescription": self.nodeDescription,
+            "nodeVectorId": self.nodeVectorId,
+            "nodeSourceHost": self.nodeSourceHost,
+            "nodeTargetHost": self.nodeTargetHost,
+             "nodeInitals": self.nodeInitals,
+             "nodeMalformed":self.nodeMalformed
+            }
+        return node_dict

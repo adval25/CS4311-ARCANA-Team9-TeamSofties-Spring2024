@@ -56,7 +56,7 @@ modal = html.Div(
                         dbc.Row(
                             [
                                 dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close", className="ms-auto", n_clicks=0)),
-                                dbc.Col(dbc.Button("Create Project", size = "lg", color="primary", id="createProject", className="ms-auto", href="/manageProjects",n_clicks=0)),
+                                dbc.Col(dbc.Button("Create Project", size = "lg", color="primary", id="createProject", className="ms-auto",n_clicks=0)),
                             ]
                         ),
                     ],

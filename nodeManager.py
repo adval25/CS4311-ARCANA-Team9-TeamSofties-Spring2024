@@ -18,7 +18,10 @@ def createNode(projectId,event):
         nodeDescription = event.getEventDescription(),
         nodeVectorId = event.getVectorId(),
         nodeSourceHost = event.getSourceHost(),
-        nodeTargetHost = event.getTargetHost()
+        nodeTargetHost = event.getTargetHost(),
+        nodeInitals = event.getInitals(),
+        nodeMalformed = event.getMalformed()
+
     )
     return node
 

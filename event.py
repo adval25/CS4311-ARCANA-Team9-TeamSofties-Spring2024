@@ -1,5 +1,6 @@
 import mongoengine
 from bson.objectid import ObjectId
+from datetime import datetime
 class Event(mongoengine.EmbeddedDocument):
     malformed = mongoengine.BooleanField(default=False)
     eventTimeStamp = mongoengine.StringField()
@@ -32,11 +33,17 @@ class Event(mongoengine.EmbeddedDocument):
     def getVectorId(self):
         return self.eventVectorId
     
+    def getInitals(self):
+        return self.analystInitals
+    
     def geteventTeam(self):
         return self.eventTeam
     
     def setMalformed(self,malformedInput):
         self.malformed = malformedInput
+    
+    def getMalformed(self):
+        return self.malformed
     
     def getDataSource(self):
         return self.eventDataSource
@@ -46,6 +53,14 @@ class Event(mongoengine.EmbeddedDocument):
         
     def getTargetHost(self):
         return self.eventTargetHost
+    
+    def converTimeStampToDateTime(self):
+            if self.eventTimeStamp.isspace() or self.eventTimeStamp == "":
+                return None
+            temporaryTimeStamp = self.eventTimeStamp
+            if len(self.eventTimeStamp) <= 15:  # Check if the string has no seconds
+                temporaryTimeStamp += ":00"  # Add seconds
+            return datetime.strptime(temporaryTimeStamp,'%m/%d/%Y %H:%M:%S')
     
     def eventToDictionary(self): #creates events to a dictionary to display in the gui
         return {

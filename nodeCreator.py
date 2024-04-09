@@ -8,16 +8,24 @@ def getUniuqeVectorIds(project): #gets all unique vectorsIds in eventCollection 
         eventVectoriD = listOfevents[eventId].getVectorId()
         if eventVectoriD != None and not eventVectoriD.isspace() and eventVectoriD != "": #filtering out invalidVectorIds
             uniqueVectorId.add(eventVectoriD)
-    print(uniqueVectorId)
     return uniqueVectorId
 
 def unconnectedNodePositions(uniqueVectorIds): #if nodes have no positions this is where they will be placed
-    vectorIdPositionDic = {}
+    vectorIdXPositionDic = {}
+    positionX = 50
+    for vectorId in uniqueVectorIds:
+        vectorIdXPositionDic[vectorId] = positionX
+        positionX = positionX + 200
+    print(vectorIdXPositionDic)
+    return vectorIdXPositionDic
+
+def nodeYpositions(uniqueVectorIds):
+    vectorIdYPositionDic = {}
     positionY = 50
     for vectorId in uniqueVectorIds:
-        vectorIdPositionDic[vectorId] = positionY
-        positionY = positionY + 200
-    return vectorIdPositionDic
+        vectorIdYPositionDic[vectorId] = positionY
+    return vectorIdYPositionDic
+
 
 def eventsToNodes(project,vectorIdPositionDic): #turns all events into nodes and assignes them positions
     dictOfNodes = {}
@@ -54,11 +62,16 @@ def parseTimestamp(timestamp_str): #time stamps have two
             pass
     return datetime.max #if there is no timeStamp place it at the end of the list
 
-def edgeCreator(dictOfNodes):
+def edgeCreator(dictOfNodes,uniqueVectorIds):
+    vectorIdsYPosition = nodeYpositions(uniqueVectorIds)
     sortedNodes = sorted(dictOfNodes.values(), key=lambda x: parseTimestamp(x.getNodeTimeStamp()))
     for count,parentNode in enumerate(sortedNodes):
          for childNode in sortedNodes[count+1:]:
-             if (parentNode.getNodeVectorId() == childNode.getNodeVectorId() and (parentNode.getNodeVectorId() != "" or parentNode.getNodeVectorId() != " ")) and (parentNode.getNodeLocation() == childNode.getNodeLocation()):
-                 if parentNode.getTargerHost() == childNode.getSourceHost():
+             if (parentNode.getNodeVectorId() == childNode.getNodeVectorId() and (not parentNode.getNodeVectorId().isspace() and parentNode.getNodeVectorId() != "")) and (parentNode.getNodeLocation() == childNode.getNodeLocation()):
                      parentNode.addConnection(childNode.getNodeId())
+                     parentNode.incrementNodeYPosition(20)
+                     childYPosition = vectorIdsYPosition[parentNode.getNodeVectorId()]
+                     childNode.incrementNodeYPosition(childYPosition)
+                     vectorIdsYPosition[parentNode.getNodeVectorId()] =childYPosition + 80
+                     break
     return dictOfNodes

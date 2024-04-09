@@ -17,7 +17,7 @@ def createGraphGUIElements(dictOfNodes):
 def createGraph(selectedProject):
     vectorIdPositions = nodeCreator.unconnectedNodePositions(nodeCreator.getUniuqeVectorIds(selectedProject))
     dictOfNodes = nodeCreator.eventsToNodes(selectedProject,vectorIdPositions)
-    nodeCreator.edgeCreator(dictOfNodes)
+    nodeCreator.edgeCreator(dictOfNodes,vectorIdPositions)
     return EventGraph(dictOfNodes = dictOfNodes, vectorIdPositions = vectorIdPositions)
 
 def getNode(nodeId,projectId):

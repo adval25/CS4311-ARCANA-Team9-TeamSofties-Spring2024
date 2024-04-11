@@ -1,57 +1,274 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc
+from dash import dcc,callback,Output,State,Input
 from dash import html
-
+import dash_ag_grid as dag
+import projectManager
+import dataBaseCommunicator
 dash.register_page(__name__, path='/syncMenue')
 
-def menueCardCreator(title,icon):
-    card = html.Div(
-        dbc.Card(
-            dbc.Row(
-                [
-                    dbc.Col(
-                        html.Img(
-                            src= dash.get_asset_url(icon),
-                            className="img-fluid rounded-start",
-                            style={"width": "150px", "height": "90px"},
+modal = html.Div(
+    [
+        dbc.Button("Connect To remote Db", color="primary", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3", id = "openConnectModal", n_clicks=0),
+        dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("Get Projects from Ip")),
+                dbc.ModalBody(
+                    [
+                        html.P("Enter Ip Adress"),
+                        dbc.Form(
+                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Name", placeholder="0.0.0.0", id = "hostAdress" )),width = 12),)
                         ),
-                        className="col-md-4",
-                    ),
-                    dbc.Col(
-                        dbc.CardBody(
+                        html.Br(),
+                        dbc.Row(
                             [
-                                html.H5(title, className=title,style={"fontSize": "40px"}),
+                                dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close", className="ms-auto", n_clicks=0)),
+                                dbc.Col(dbc.Button("Connect", size = "lg", color="primary", id="connect", className="ms-auto",n_clicks=0)),
                             ]
                         ),
-                        className="col-md-8",
-                    ),
-                ],
-                className="g-0 d-flex align-items-center", justify="center"), #centers the card
-            className="w-75 mb-3 mx-auto clickable-card", #makes it clickable and sets its width
-            style={"height": "100px"}  # Adjust maxWidth and height for card size
+                    ],
+                ),
+                dbc.ModalFooter(
+                    [
+                        
+                    ]
+                ),
+            ],
+            id = "ipdConnectInput",
+            is_open = False,
+        ),
+    ]
+    
+)
 
+modal_2 = html.Div(
+    [
+        html.Div(
+            [
+                dbc.Button("Ingest Logs", color="primary",id = "open modal_2"),
+                dbc.Button("Delete Project", color="primary",href = "#"),
+                dbc.Button("Open Project", color="primary",href = "#"),
+            ],
+            className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
+        ), 
+        dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("Ingest Logs")),
+                dbc.ModalBody(
+                    [
+                        html.P("Select a directory to ingest logs from."),
+                        html.P("Log directory", style={"font-size": "20px",'display': 'inline-block'}),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Log Directory", placeholder="ex. /Location/folder"))))), width = 9),
+                                dbc.Col(dbc.Button("Browse", color="primary",id = "Browse")),
+                            ]
+                        ),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close modal_2", className="ms-auto", n_clicks=0)),
+                                dbc.Col(dbc.Button("Ingest Logs", size = "lg", color="primary", id="create Project", className="ms-auto", n_clicks=0)),
+                            ]
+                        ),
+                    ]
+                ),
+                dbc.ModalFooter(),
+            ],
+            id = "modal_2",
+            is_open = False,
+        ),
+    ]
+    
+)
+
+modal_3 = html.Div(
+    [
+        html.Div(
+            [
+                dbc.Button("Delete Project", color="primary",id = "open modal_3"),
+                dbc.Button("Open Project", color="primary"),
+            ],
+            className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
+        ), 
+        dbc.Modal(
+            [
+                dbc.ModalHeader(),
+                dbc.ModalBody(
+                    [
+                        html.P("Are you sure you want to delete Project D?", style={"font-size": "40px", "margin-left": "10px", 'display': 'inline-block'}),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close modal_3", className="ms-auto", n_clicks=0)),
+                                dbc.Col(dbc.Button("Delete", size = "lg", color="primary", id="delete Project", className="ms-auto", n_clicks=0)),
+                            ]
+                        ),
+                    ]
+                ),
+                dbc.ModalFooter(),
+            ],
+            id = "modal_3",
+            is_open = False,
+        ),
+    ]
+    
+)
+
+modal_4 = html.Div(
+    [
+        html.Div(
+            [
+                dbc.Button("Open Project", color="primary",id = "open modal_4",href="/displayEvents"),
+            ],
+            className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
+        ), 
+        dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("Open Project")),
+                dbc.ModalBody("This is the content of the modal"),
+                dbc.ModalFooter(
+                    dbc.Button("Close", id="close modal_4", className="ms-auto", n_clicks=0)
+                ),
+            ],
+            id = "modal_4",
+            is_open = False,
+        ),
+    ]
+    
+)
+
+def createTable(projectList):
+    # projectList = dataBaseCommunicator.getAllProjectsFromSeprateDb("projectsDB2","1.192.160.78")
+    # projectList = projectManager.projectObjectListToName(projectList) #filtering so the table can be displayed
+    columnDefs = [{"field": i} for i in ["projectName"]]
+    return dag.AgGrid(
+            id="row-selection-selected-rows",
+            columnDefs=columnDefs,
+            rowData=projectList,
+            columnSize="sizeToFit",
+            defaultColDef={"filter": True},
+            dashGridOptions={"rowSelection": "multiple", "animateRows": False},
+            persistence=True,        
+            persisted_props=["data"], 
         )
-    )
-    return card
 
-menueTitle =  html.Div(
-    dbc.Row(
-        dbc.Col(html.H5("Sync Menue",style={"fontSize": "40px","margin-left": 100,"margin-bottom" : "5%","color": "black"}),
-  style={"fontSize": "30px", "color": "white", "fontFamily": "Arial, sans-serif", "marginRight": "100px",} 
-         )
+
+
+# @callback(
+#     [Output('selected-project-store', 'data')],
+#     [Input("row-selection-selected-rows", "selectedRows")],
+#     [State('selected-project-store', 'data')]
+# )
+# def output_selected_rows(selected_rows,current_data):
+#     if selected_rows is None:
+#         return (current_data,)
+#     else:
+#         selectedProject = [f"{project['_id']}" for project in selected_rows]
+#         return (f"{'s' if len(selected_rows) > 1 else ''}{', '.join(selectedProject)}",)
+
+def generateManageProjectCard():
+   return html.Div(
+    dbc.Card(
+        
+        dbc.Row(
+            id="control-card",
+            children=[
+                dbc.Col(width=1), #gives the card nice margin
+                dbc.Col([
+                        dbc.Col([
+                        html.Img(
+                        src=dash.get_asset_url("fileImage.png"),
+                        className="img-fluid rounded-start",
+                        style={"width": "90px", "height": "90px","margin-right": 0, "margin-bottom" : "0%", "padding-top" : "0%"}, #inline alows for the html to stack on one line
+                        ), 
+                        html.P("Sync Projects", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
+                        ]),
+                        modal,
+                        modal_2,
+                        modal_3,
+                        modal_4,
+                        html.Br(),
+                        html.Div(id = "syncTable",children =[createTable([])]),
+                        html.A(html.Button('Refresh Data'),href='/manageProjects'),
+                        html.P(id='placeholder')
+                ]
+                ),
+                dbc.Col(width=1)
+            ],
+        
+        ), style={"height": "42vw", "width": "90vw",},className="mx-auto"
+        
+       
     )
 )
 
-layout = html.Div([
-    dbc.Container([
-       menueTitle,
-    dcc.Link(menueCardCreator("Create Sync Requests","syncIcon.png"), href="/syncRequest"),
-    html.Br(),
-    html.Br(),
-    html.Br(),
-    html.Br(),
-    dcc.Link(menueCardCreator("View Sync Requests","fileImage.png"), href="/syncView"),#set href to were the card redirects
+@callback(
+    Output("ipdConnectInput", "is_open"),
+    [Input("openConnectModal", "n_clicks"), Input("close", "n_clicks"),Input('connect', 'n_clicks')],
+    [
+        State("ipdConnectInput", "is_open"),
+        State('hostAdress', 'value'),
+        ],
+)
+def toggle_modal(n1, n2, n3, is_open,projectName):
+    if n1 or n2:
+        if n3:
+           #projectManager.createProject(projectName,analystInitals,logDirectory)
+           print("HELLO")
+        return not is_open
 
-    ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) #justifyContent sets the content in the center of the screen
-])
+# @callback(
+#     Output("modal_2", "is_open"),
+#     [Input("open modal_2", "n_clicks"), Input("close modal_2", "n_clicks")],
+#     [State("modal_2", "is_open")],
+# )
+# def toggle_modal_2(n1, n2, is_open):
+#     if n1 or n2:
+#         return not is_open
+#     return is_open
+
+# @callback(
+#     Output("modal_3", "is_open"),
+#     [Input("open modal_3", "n_clicks"), Input("close modal_3", "n_clicks")],
+#     [State("modal_3", "is_open")],
+# )
+# def toggle_modal_3(n1, n2, is_open):
+#     if n1 or n2:
+#         return not is_open
+#     return is_open
+
+# @callback(
+#     Output("modal_4", "is_open"),
+#     [Input("open modal_4", "n_clicks"), Input("close modal_4", "n_clicks")],
+#     [State("modal_4", "is_open")],
+# )
+# def toggle_modal_4(n1, n2, is_open):
+#     if n1 or n2:
+#         return not is_open
+#     return is_open
+
+def serveLayout():
+    return html.Div([
+        dbc.Container([
+            html.Div(id ="dummyDivManageProject"),
+        generateManageProjectCard(),
+        ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
+    ])
+
+layout = serveLayout
+
+

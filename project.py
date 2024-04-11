@@ -26,3 +26,8 @@ class Project(mongoengine.Document):
     def getEventGraph(self):
         return self.eventGraph
     
+    def getProjectName(self):
+        return self.projectName
+    
+    def getAnalystInitals(self):
+        return self.analystInitals

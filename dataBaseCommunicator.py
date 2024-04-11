@@ -3,6 +3,8 @@ import pymongo
 from project import Project
 from event import Event
 from bson.objectid import ObjectId
+from mongoengine.context_managers import switch_db
+
 
 def createProjectDb(projectName,analystInitals): #makes the project object
     newProject = Project(projectName = projectName,analystInitals =analystInitals,eventCollection = [],eventGraph = None)
@@ -38,5 +40,20 @@ def getAllProjectsFromDb(client):
      projectCollection = projectDataBase["project"]
      return list(projectCollection.find())
 
+def getAllProjectsFromSeprateDb(dataBaseName,host):
+    mongoengine.connect(dataBaseName, alias="syncedProject")
+    database = mongoengine.get_connection("syncedProject")
+    allProjects = Project.objects.using("syncedProject")[:]
+    mongoengine.disconnect(alias="syncedProject")
+    return allProjects
 
-dataBaseCleint = mongoengine.connect("projectsDb") #connects the user to the database
+
+
+def addProjectFromSerpateDb(projectName,analystInitals,eventCollection,eventGraph):
+    project = Project(projectName = projectName, analystInitals = analystInitals,
+             eventCollection = eventCollection, eventGraph = eventGraph)
+    project.save()
+    
+
+
+dataBaseCleint = mongoengine.connect("projectsDb", alias="default") #connects the user to the database

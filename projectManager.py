@@ -15,6 +15,9 @@ def getAllProjectNames(projectDict): #grabbing the project name and associating 
     projectList =  [{"_id": str(project["_id"]), "projectName": project["projectName"]} for project in projectDict]
     return projectList
 
+def projectObjectListToName(projectList):
+     projectList =  [{"_id": str(project.id), "projectName": str(project.getProjectName())} for project in projectList]
+     return projectList
 
 def deleteProject():
     return

@@ -59,6 +59,9 @@ class Node(EmbeddedDocument):
     def changeNodeYPosition(self,newy):
         self.nodeYPosition = newy
 
+    def incrementNodeYPosition(self,increment):
+        self.nodeYPosition += increment
+
     def getNodeVectorId(self):
         return self.nodeVectorId
     

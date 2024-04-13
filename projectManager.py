@@ -19,8 +19,19 @@ def projectObjectListToName(projectList):
      projectList =  [{"_id": str(project.id), "projectName": str(project.getProjectName())} for project in projectList]
      return projectList
 
-def deleteProject():
+def deleteProject(projectId):
+    dataBaseCommunicator.deleteProjectFromDb(projectId)
     return
+
+def checkIfProjectExists(projectId):
+    if projectId == {}:
+        return False
+    return not (Project.objects.with_id(object_id=projectId) == None)
+
+
+def getProjectName(projectId):
+    project = dataBaseCommunicator.getProjectFromDb(projectId)
+    return project.getProjectName()
 
 def createProject(projectName,analystInitals,logPath):
     newProject = dataBaseCommunicator.createProjectDb(projectName,analystInitals) #creates the project object

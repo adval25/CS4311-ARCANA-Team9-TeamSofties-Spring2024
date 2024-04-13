@@ -164,7 +164,7 @@ layout = html.Div(
 
 
 @callback(
-    Output('location', 'href'),  #changes the location of the page
+    Output('location', 'href',allow_duplicate=True),  #changes the location of the page
     [Input('create-button', 'n_clicks')],
     [
         State('selected-project-store', 'data'),
@@ -180,8 +180,8 @@ layout = html.Div(
         State('teamInputs','value'),
         State('descriptionInputs','value'),
         State('eventLocation', 'value')
-
-    ]
+    ],
+    prevent_initial_call=True
 )
 
 def handleEditButtonClick(n_clicks,projectId,eventDate,nodehour,nodeminute,nodesecond, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):

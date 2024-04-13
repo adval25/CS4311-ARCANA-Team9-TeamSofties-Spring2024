@@ -20,34 +20,15 @@ modal = html.Div(
                             dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Name", placeholder="Project Name", id = "projectName" )),width = 12),)
                         ),
                         html.Br(),
-                        html.P("Project Location"),
-                        dbc.Form(
-                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Project Location", placeholder="Project Location", id = "projectLocation")),width = 12),)
-                        ),
-                        html.Br(),
                         html.P("Log Location"),
                         dbc.Form(
                             dbc.Row(dbc.Col(html.Div(dbc.Input(type="Log Directory", placeholder="Log Directory" , id = "logDirectory")),width = 12),)
-                        ),
-                        html.Br(),
-                        dbc.Row(
-                            [
-                                dbc.Col(html.P("Start Date")),
-                                dbc.Col(html.P("End Date")),
-                            ]
-                        ),
-                        dbc.Row(
-                            [
-                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Start Date", placeholder="mm/dd/yyyy")))))),
-                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="End Date", placeholder="mm/dd/yyyy")))))),
-                            ]
                         ),
                         html.Br(),
                         html.P("Initials"),
                         dbc.Form(
                             dbc.Row(dbc.Col(html.Div(dbc.Input(type="Initials", placeholder="III", id = "analystInitals")),width = 6),)
                         ),
-                        
                         html.Br(),
                         html.Br(),
                         html.Br(),
@@ -74,56 +55,6 @@ modal = html.Div(
     
 )
 
-modal_2 = html.Div(
-    [
-        html.Div(
-            [
-                dbc.Button("Ingest Logs", color="primary",id = "open modal_2"),
-                dbc.Button("Delete Project", color="primary",href = "#"),
-                dbc.Button("Open Project", color="primary",href = "#"),
-            ],
-            className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
-        ), 
-        dbc.Modal(
-            [
-                dbc.ModalHeader(dbc.ModalTitle("Ingest Logs")),
-                dbc.ModalBody(
-                    [
-                        html.P("Select a directory to ingest logs from."),
-                        html.P("Log directory", style={"font-size": "20px",'display': 'inline-block'}),
-                        dbc.Row(
-                            [
-                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Log Directory", placeholder="ex. /Location/folder"))))), width = 9),
-                                dbc.Col(dbc.Button("Browse", color="primary",id = "Browse")),
-                            ]
-                        ),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        dbc.Row(
-                            [
-                                dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close modal_2", className="ms-auto", n_clicks=0)),
-                                dbc.Col(dbc.Button("Ingest Logs", size = "lg", color="primary", id="create Project", className="ms-auto", n_clicks=0)),
-                            ]
-                        ),
-                    ]
-                ),
-                dbc.ModalFooter(),
-            ],
-            id = "modal_2",
-            is_open = False,
-        ),
-    ]
-    
-)
-
 modal_3 = html.Div(
     [
         html.Div(
@@ -138,16 +69,19 @@ modal_3 = html.Div(
                 dbc.ModalHeader(),
                 dbc.ModalBody(
                     [
-                        html.P("Are you sure you want to delete Project D?", style={"font-size": "40px", "margin-left": "10px", 'display': 'inline-block'}),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
+                        html.P("Are you sure you want to delete Project D?", style={"font-size": "40px", "margin-left": "10px", 'display': 'inline-block'}, id = "deleteMessage"),
                         html.Br(),
                         html.Br(),
                         dbc.Row(
                             [
-                                dbc.Col(dbc.Button("Cancel", size = "lg", color="secondary", id="close modal_3", className="ms-auto", n_clicks=0)),
-                                dbc.Col(dbc.Button("Delete", size = "lg", color="primary", id="delete Project", className="ms-auto", n_clicks=0)),
+                                dbc.Col(
+                                    dbc.Button("Delete", size="lg", color="primary", id="deleteProject", className="ms-auto", n_clicks=0),
+                                    width={"size": 6, "order": 2}  # Positions in the opposite corner
+                                ),
+                                dbc.Col(
+                                    dbc.Button("Cancel", size="lg", color="secondary", id="closemodal_3", className="me-auto", n_clicks=0),
+                                    width={"size": 6, "order": 1}  # Positions in the opposite corner
+                                ),
                             ]
                         ),
                     ]
@@ -165,7 +99,7 @@ modal_4 = html.Div(
     [
         html.Div(
             [
-                dbc.Button("Open Project", color="primary",id = "open modal_4",href="/displayEvents"),
+                dbc.Button("Open Project", color="primary",id = "openProject"),
             ],
             className="d-grid gap-2 d-md-flex justify-content-md-end position-absolute bottom-0 end-0 m-3",
         ), 
@@ -202,13 +136,14 @@ def createTable():
 
 
 @callback(
-    [Output('selected-project-store', 'data')],
+    [Output('selected-project-store', 'data', allow_duplicate=True)],
     [Input("row-selection-selected-rows", "selectedRows")],
-    [State('selected-project-store', 'data')]
+    [State('selected-project-store', 'data')],
+    prevent_initial_call=True
 )
 def output_selected_rows(selected_rows,current_data):
     if selected_rows is None:
-        return (current_data,)
+        raise dash.exceptions.PreventUpdate
     else:
         selectedProject = [f"{project['_id']}" for project in selected_rows]
         return (f"{'s' if len(selected_rows) > 1 else ''}{', '.join(selectedProject)}",)
@@ -231,7 +166,6 @@ def generateManageProjectCard():
                         html.P("Manage Projects", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
                         ]),
                         modal,
-                        modal_2,
                         modal_3,
                         modal_4,
                         html.Br(),
@@ -250,55 +184,66 @@ def generateManageProjectCard():
 )
 
 @callback(
-    Output("modal", "is_open"),
+    [Output("modal", "is_open"),Output('location', 'href',allow_duplicate=True)],
     [Input("open", "n_clicks"), Input("close", "n_clicks"),Input('createProject', 'n_clicks')],
     [
         State("modal", "is_open"),
         State('projectName', 'value'),
         State('analystInitals', 'value'),
         State('logDirectory', 'value'),
-        ],
+    ],
+     prevent_initial_call=True
 )
 def toggle_modal(n1, n2, n3, is_open,projectName, analystInitals,logDirectory):
     if n1 or n2:
         if n3:
            projectManager.createProject(projectName,analystInitals,logDirectory)
-        return not is_open
+           return not is_open,"/manageProjects"
+        return not is_open, dash.no_update
+    return is_open, dash.no_update
 
 @callback(
-    Output("modal_2", "is_open"),
-    [Input("open modal_2", "n_clicks"), Input("close modal_2", "n_clicks")],
-    [State("modal_2", "is_open")],
+    [Output("modal_3", "is_open", allow_duplicate=True), Output("deleteMessage", "children")],
+    [Input("open modal_3", "n_clicks"), Input("closemodal_3", "n_clicks")],
+    [State("modal_3", "is_open"), State('selected-project-store', 'data')],
+    prevent_initial_call=True
 )
-def toggle_modal_2(n1, n2, is_open):
-    if n1 or n2:
-        return not is_open
-    return is_open
+def toggle_modal_3(n1, n2, is_open,selectedProect):
+    if (n1 or n2) and (selectedProect != None and selectedProect != {}):
+        print(selectedProect)
+        return not is_open, [html.P("Are you sure you want to delete " + projectManager.getProjectName(selectedProect) + "?", style={"font-size": "15px", "margin-left": "10px", 'display': 'inline-block'}, id = "deleteMessage"),html.Br(),]
+    return is_open, html.P("TEST", style={"font-size": "40px", "margin-left": "10px", 'display': 'inline-block'}, id = "deleteMessage")
 
 @callback(
-    Output("modal_3", "is_open"),
-    [Input("open modal_3", "n_clicks"), Input("close modal_3", "n_clicks")],
-    [State("modal_3", "is_open")],
+      [Output('selected-project-store', 'data', allow_duplicate=True),Output("modal_3", "is_open", allow_duplicate=True),Output('location', 'href',allow_duplicate=True),],
+      Input("deleteProject", "n_clicks"),
+      State('selected-project-store', 'data'),
+      prevent_initial_call=True
 )
-def toggle_modal_3(n1, n2, is_open):
-    if n1 or n2:
-        return not is_open
-    return is_open
+def deleteProject(n_click,selectedProject):
+    if n_click:
+        projectManager.deleteProject(selectedProject)
+        return {},False,"/manageProjects"
+    raise dash.exceptions.PreventUpdate
 
 @callback(
-    Output("modal_4", "is_open"),
-    [Input("open modal_4", "n_clicks"), Input("close modal_4", "n_clicks")],
-    [State("modal_4", "is_open")],
+        Output('location', 'href',allow_duplicate=True),
+        Input("openProject","n_clicks"),
+        State('selected-project-store', 'data'),
+        prevent_initial_call=True
 )
-def toggle_modal_4(n1, n2, is_open):
-    if n1 or n2:
-        return not is_open
-    return is_open
+def checkIfProjectExists(n_clicks,selectedProject):
+    if n_clicks:
+        if projectManager.checkIfProjectExists(selectedProject):
+            print("THING " + selectedProject)
+            return "/displayEvents"
+    raise dash.exceptions.PreventUpdate
 
 def serveLayout():
     return html.Div([
         dbc.Container([
             html.Div(id ="dummyDivManageProject"),
+            html.Div(id ="dummyDivRedirectProject"),
         generateManageProjectCard(),
         ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
     ])

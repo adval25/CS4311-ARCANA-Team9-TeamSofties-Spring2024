@@ -47,7 +47,9 @@ def getAllProjectsFromSeprateDb(dataBaseName,host):
     mongoengine.disconnect(alias="syncedProject")
     return allProjects
 
-
+def deleteProjectFromDb(projectId):
+    project = getProjectFromDb(projectId)
+    project.delete()
 
 def addProjectFromSerpateDb(projectName,analystInitals,eventCollection,eventGraph):
     project = Project(projectName = projectName, analystInitals = analystInitals,

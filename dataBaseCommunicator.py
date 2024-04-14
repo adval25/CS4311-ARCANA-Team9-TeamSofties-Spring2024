@@ -47,13 +47,24 @@ def getAllProjectsFromSeprateDb(dataBaseName,host):
     mongoengine.disconnect(alias="syncedProject")
     return allProjects
 
+def getProjectByIDFromSeprateDb(dataBaseName, host, projectId):
+    mongoengine.connect(dataBaseName,alias="syncedProject")
+    
+    try:
+        project = Project.objects.using("syncedProject").get(id=projectId)
+        return project
+    except Project.DoesNotExist:
+        return None
+    finally:
+        mongoengine.disconnect(alias="syncedProject")
+
 def deleteProjectFromDb(projectId):
     project = getProjectFromDb(projectId)
     project.delete()
 
-def addProjectFromSerpateDb(projectName,analystInitals,eventCollection,eventGraph):
-    project = Project(projectName = projectName, analystInitals = analystInitals,
-             eventCollection = eventCollection, eventGraph = eventGraph)
+def addProjectFromSerpateDb(project):
+    project = Project(projectName = project.getProjectName(), analystInitals = project.getAnalystInitals(),
+             eventCollection = project.getEventCollection(), eventGraph = project.getEventGraph())
     project.save()
     
 

@@ -1,6 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import html,callback,Input, Output, State
+from dash import html,callback,Input, Output, State,dcc
 import dash_ag_grid as dag
 from dataBaseCommunicator import dataBaseCleint
 import projectManager
@@ -9,7 +9,7 @@ dash.register_page(__name__, path='/manageProjects')
 
 modal = html.Div(
     [
-        dbc.Button("+ Create Project", color="primary", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3", id = "open", n_clicks=0),
+        dbc.Button("+ Create Project", color="primary", style={'display': 'inline-block'} , className="position-absolute top-0 end-0 m-3", id = "openProjectButton", n_clicks=0),
         dbc.Modal(
             [
                 dbc.ModalHeader(dbc.ModalTitle("Create Project")),
@@ -184,8 +184,8 @@ def generateManageProjectCard():
 )
 
 @callback(
-    [Output("modal", "is_open"),Output('location', 'href',allow_duplicate=True)],
-    [Input("open", "n_clicks"), Input("close", "n_clicks"),Input('createProject', 'n_clicks')],
+    [Output("modal", "is_open"),Output('location', 'href',allow_duplicate=True),Output('NoLog', 'displayed')],
+    [Input("openProjectButton", "n_clicks"), Input("close", "n_clicks"),Input('createProject', 'n_clicks')],
     [
         State("modal", "is_open"),
         State('projectName', 'value'),
@@ -197,10 +197,14 @@ def generateManageProjectCard():
 def toggle_modal(n1, n2, n3, is_open,projectName, analystInitals,logDirectory):
     if n1 or n2:
         if n3:
-           projectManager.createProject(projectName,analystInitals,logDirectory)
-           return not is_open,"/manageProjects"
-        return not is_open, dash.no_update
-    return is_open, dash.no_update
+           if logDirectory == None:
+               print("TESTLOG")
+               return dash.no_update,dash.no_update,True
+           else:
+            projectManager.createProject(projectName,analystInitals,logDirectory)
+            return not is_open,"/manageProjects",dash.no_update
+        return not is_open, dash.no_update,dash.no_update
+    return is_open, dash.no_update,dash.no_update
 
 @callback(
     [Output("modal_3", "is_open", allow_duplicate=True), Output("deleteMessage", "children")],
@@ -242,6 +246,7 @@ def checkIfProjectExists(n_clicks,selectedProject):
 def serveLayout():
     return html.Div([
         dbc.Container([
+            dcc.ConfirmDialog(id='NoLog',message='NO LOG INPUT',),
             html.Div(id ="dummyDivManageProject"),
             html.Div(id ="dummyDivRedirectProject"),
         generateManageProjectCard(),

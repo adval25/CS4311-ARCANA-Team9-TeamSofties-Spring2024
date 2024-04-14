@@ -11,7 +11,7 @@ folder_name = 'pdrr'
 file_path = os.path.join(path, folder_name)
 
 
-def get_wlogs(): # Returns a list of file paths for White team logs
+def get_wlogs(file_path): # Returns a list of file paths for White team logs
     wlogs_dir = [] # final list that will be returned with directories of all white team logs
     white_sd_list = [] # contains a list of sub-directories for folders labeled "white"
 
@@ -30,7 +30,7 @@ def get_wlogs(): # Returns a list of file paths for White team logs
 
     return wlogs_dir
 
-def get_blogs(): # Returns a list of file paths for Blue team logs
+def get_blogs(file_path): # Returns a list of file paths for Blue team logs
     blogs_dir = [] # final list that will be returned with directories of all blue team logs
     blue_sd_list = [] # contains a list of sub-directories for folders labeled "blue"
 
@@ -49,7 +49,7 @@ def get_blogs(): # Returns a list of file paths for Blue team logs
 
     return blogs_dir
 
-def get_rlogs(): # Returns a list of file paths for Red team logs
+def get_rlogs(file_path): # Returns a list of file paths for Red team logs
     rlogs_dir = [] # final list that will be returned with directories of all red team logs
     red_sd_list = [] # contains a list of sub-directories for folders labeled "red"
 
@@ -68,8 +68,8 @@ def get_rlogs(): # Returns a list of file paths for Red team logs
 
     return rlogs_dir
 
-def combineLogLists():
-   return  get_wlogs()
+def combineLogLists(logPath):
+   return  get_wlogs(logPath) +  get_rlogs(file_path) + get_blogs(file_path)
 
 
 def getCsvPaths(listOfFilePaths):
@@ -92,6 +92,8 @@ def csvsToEventDataList(csvPaths): #turns all of the csv rows into dictionaries
 def eventDataListToEventDictionary(eventAccumulator): #turns all of the event data into event objects and returns a list of events
     eventDict ={}
     for eventInfromation in eventAccumulator:
+        if eventInfromation.get("dateCreated") == None:
+            break
         event = Event(eventTimeStamp = str(eventInfromation["dateCreated"]),
                         analystInitals = str(eventInfromation["initials"]),
                         eventTeam = str(eventInfromation["team"]),

@@ -35,7 +35,7 @@ def getProjectName(projectId):
 
 def createProject(projectName,analystInitals,logPath):
     newProject = dataBaseCommunicator.createProjectDb(projectName,analystInitals) #creates the project object
-    logData = logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.combineLogLists())) #grabs all the docs
+    logData = logIngestor.csvsToEventDataList(logIngestor.getCsvPaths(logIngestor.combineLogLists(logPath))) #grabs all the docs
     newEventDic = logIngestor.eventDataListToEventDictionary(logData) #creates event dictionary from docs
     newProject = dataBaseCommunicator.addEventDictionaryToProject(newProject,newEventDic) 
     nodeGraph = graphManager.createGraph(newProject) 

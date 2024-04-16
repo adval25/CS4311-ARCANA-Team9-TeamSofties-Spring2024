@@ -347,8 +347,8 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
             {
                 'selector': 'edge',
                 'style': {
-                    'line-color': 'red',  # Apply the same line color to all edges
-                    'target-arrow-color': 'blue',  # Apply arrow color
+                    'line-color': 'gray',  # Apply the same line color to all edges
+                    'target-arrow-color': 'gray',  # Apply arrow color
                     'target-arrow-shape': 'triangle',  # Apply arrow shape
                     'curve-style': 'bezier'  # Adjust curve style if needed
                 }

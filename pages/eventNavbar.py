@@ -31,7 +31,7 @@ eventSidebar = html.Div(
             [
                 dbc.NavLink("Events", href="/displayEvents", active="exact"),
                 dbc.NavLink("Event Graph", href="/displayGraph", active="exact"),
-                dbc.NavLink("Icon Library", href="/page-2", active="exact"),
+                dbc.NavLink("Icon Library", href="/iconLibrary", active="exact"),
                 dbc.NavLink("Save Project", href="/page-2", active="exact"),
 
             ],

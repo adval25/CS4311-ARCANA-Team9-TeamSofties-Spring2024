@@ -7,6 +7,7 @@ class Project(mongoengine.Document):
     analystInitals = mongoengine.StringField(max_length=5)
     eventCollection = mongoengine.DictField(mongoengine.EmbeddedDocumentField(Event))
     eventGraph = mongoengine.EmbeddedDocumentField(EventGraph)
+    #nodeIconList = mongoengine.ListField(mongoengine.DictField())
 
     def addEventDict(self,eventDic):
         self.eventCollection = eventDic#has to be extend it will break otherwhise
@@ -31,3 +32,10 @@ class Project(mongoengine.Document):
     
     def getAnalystInitals(self):
         return self.analystInitals
+
+    # def getNodeIconList(self):
+    #     return self.nodeIconList
+    
+    # def appendIconList(self,imageName,ImageData):
+    #     image_entry = {"name": imageName, "data": ImageData}
+    #     self.nodeIconList.append(image_entry)

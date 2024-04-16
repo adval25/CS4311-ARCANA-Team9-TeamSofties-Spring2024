@@ -2,7 +2,10 @@ import projectManager
 from bson.objectid import ObjectId
 from event import Event
 
-def createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,eventDataSource,eventId=str(ObjectId())):
+def createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,eventDataSource,eventId=None):
+    if eventId is None:
+        eventId = str(ObjectId())
+    print("EVENTID" +eventId)
     event = Event(eventTimeStamp = str(eventTimeStamp),
                 analystInitals = str(intialsInput),
                 malformed = bool(malformedInputs),

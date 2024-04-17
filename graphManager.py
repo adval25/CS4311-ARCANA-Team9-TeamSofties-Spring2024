@@ -6,7 +6,7 @@ def createGraphGUIElements(dictOfNodes):
     graphElementList = []
     for nodeId in dictOfNodes:
         node = dictOfNodes[nodeId]
-        graphElement = {'data': {'id': node.getNodeId(), 'label': node.getNodeLabel()}, 'position': {'x': node.getNodeXPosition(), 'y': node.getNodeYPosition()}}
+        graphElement = {'data': {'id': node.getNodeId(), 'label': node.getNodeLabel(),'url': 'url(/assets/NodeIcons/'+node.getNodeIcon()+')'}, 'position': {'x': node.getNodeXPosition(), 'y': node.getNodeYPosition()}}
         graphElementList.append(graphElement)
     for connection in dictOfNodes.values():
         connections = connection.getNodeConnections()
@@ -45,7 +45,7 @@ def saveNodePositions(elements,projectId):
             node.changeNodeYPosition(element["position"]["y"])
     project.save()
 
-def updateNodeLabel(elements,previousLabel,newLabel,nodeId):
+def updateNodeLabel(elements,previousLabel,newLabel,nodeId,nodeIcon):
     if previousLabel == newLabel:
         return elements
     else:
@@ -53,5 +53,6 @@ def updateNodeLabel(elements,previousLabel,newLabel,nodeId):
             if len(element) == 2: #skips edge data
                 if element["data"]["id"] == nodeId: #finds the changed node
                     element["data"]["label"] = newLabel #updates the graph
+                    element["data"]["url"] = 'url(/assets/NodeIcons/'+nodeIcon+')'
                     return elements #id is unique so we return
             

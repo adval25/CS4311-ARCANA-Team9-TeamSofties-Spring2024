@@ -188,6 +188,6 @@ def handleEditButtonClick(n_clicks,projectId,eventDate,nodehour,nodeminute,nodes
     if n_clicks:
         eventDateTime = datetime.strptime(f"{eventDate} {nodehour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S') #date passes back as YMD we need it as MDY
         eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
-        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,"")
+        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,"","eventIcon")
         eventManager.addEventToProject(projectId,event)
         return "/displayEvents" #url that is redirected too

@@ -217,6 +217,6 @@ def handleEditButtonClick(n_clicks,eventId,projectId,eventDate,eventhour,eventmi
         eventDateTime = datetime.strptime(f"{eventDate} {eventhour}:{eventminute}:{eventsecond}", '%Y-%m-%d %H:%M:%S')
         eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
         previousEvent = eventManager.getEventFromProject(eventId,projectId)
-        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,previousEvent.getDataSource(),eventId)
+        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,previousEvent.getDataSource(),"eventIcon",eventId)
         eventManager.addEventToProject(projectId,event)
         return ""

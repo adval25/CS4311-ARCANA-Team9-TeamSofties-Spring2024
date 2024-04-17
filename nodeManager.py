@@ -10,7 +10,7 @@ def createNode(projectId,event):
         nodeYPosition = 0,
         nodeId = event.getId(), #makes node and associated event Id the same
         nodeLabel = event.geteventTeam(),
-        nodeIcon = "",
+        nodeIcon = event.getEventIcon(),
         nodeLocation = event.getEventLocation(),
         nodeTimeStamp = event.getEventTimeStamp(),
         nodeDataSource = event.getDataSource(),

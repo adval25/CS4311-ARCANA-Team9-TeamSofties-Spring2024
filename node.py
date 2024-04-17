@@ -84,6 +84,9 @@ class Node(EmbeddedDocument):
         if len(self.nodeTimeStamp) <= 15:  # Check if the string has no seconds
             temporaryTimeStamp += ":00"  # Add seconds
         return datetime.strptime(temporaryTimeStamp,'%m/%d/%Y %H:%M:%S')
+    
+    def getNodeIcon(self):
+        return self.nodeIcon
 
     
     def nodeTodict(self):

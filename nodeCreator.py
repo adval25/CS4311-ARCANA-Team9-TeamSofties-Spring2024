@@ -37,7 +37,7 @@ def eventsToNodes(project,vectorIdPositionDic): #turns all events into nodes and
              nodeYPosition = 0,
              nodeId = eventId, #makes node and associated event Id the same
              nodeLabel = event.geteventTeam(),
-             nodeIcon = "",
+             nodeIcon = event.getEventIcon(),
              nodeLocation = event.getEventLocation(),
              nodeTimeStamp = event.getEventTimeStamp(),
              nodeDataSource = event.getDataSource(),
@@ -69,9 +69,9 @@ def edgeCreator(dictOfNodes,uniqueVectorIds):
          for childNode in sortedNodes[count+1:]:
              if (parentNode.getNodeVectorId() == childNode.getNodeVectorId() and (not parentNode.getNodeVectorId().isspace() and parentNode.getNodeVectorId() != "")) and (parentNode.getNodeLocation() == childNode.getNodeLocation()):
                      parentNode.addConnection(childNode.getNodeId())
-                     parentNode.incrementNodeYPosition(20)
+                     parentNode.incrementNodeYPosition(180)
                      childYPosition = vectorIdsYPosition[parentNode.getNodeVectorId()]
                      childNode.incrementNodeYPosition(childYPosition)
-                     vectorIdsYPosition[parentNode.getNodeVectorId()] =childYPosition + 80
+                     vectorIdsYPosition[parentNode.getNodeVectorId()] =childYPosition + 180
                      break
     return dictOfNodes

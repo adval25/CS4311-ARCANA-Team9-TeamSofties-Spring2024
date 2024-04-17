@@ -89,6 +89,17 @@ def csvsToEventDataList(csvPaths): #turns all of the csv rows into dictionaries
                 eventAccumulator.append(event)
     return eventAccumulator
 
+def defaultEventIcon(eventTeam):
+    match eventTeam:
+        case "Blue":
+            return "BlueTeam_Activity.png"
+        case 'Red':
+            return "RedTeam_Activity.png"
+        case "White":
+            return "Whitecard.png"
+        case _:
+            return ""
+
 def eventDataListToEventDictionary(eventAccumulator): #turns all of the event data into event objects and returns a list of events
     eventDict ={}
     for eventInfromation in eventAccumulator:
@@ -103,7 +114,8 @@ def eventDataListToEventDictionary(eventAccumulator): #turns all of the event da
                         eventTargetHost = str(eventInfromation["targetHost"]),
                         eventVectorId = str(eventInfromation["vectorId"]),
                         eventDataSource = str(eventInfromation["dataSource"]),
-                        eventId = str(ObjectId())
+                        eventId = str(ObjectId()),
+                        eventIcon = defaultEventIcon(str(eventInfromation["team"]))
                         )    
         eventDict[event.getId()] = event
     return eventDict

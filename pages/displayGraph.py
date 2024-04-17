@@ -9,6 +9,7 @@ import eventManager
 import graphManager
 import nodeManager
 from datetime import datetime
+import nodeIconDropDown
 
 
 
@@ -104,7 +105,7 @@ def editNodeModal(eventDic = {}):
                         ),
                         dbc.Row(
                             [
-                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Text", placeholder="",id="editnodeIcon",value=eventDic.get("nodeIcon"," "))),)))),
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(nodeIconDropDown.nodeIconDropDownMaker('graphNodeIconDropDown')),)))),
                                 html.Div(dbc.Input(id='nodeId', type='text', value=""),style={'display': 'none'})
 
                             ]
@@ -219,7 +220,7 @@ def addNodeModal(eventDic = {}):
                         ),
                         dbc.Row(
                             [
-                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(dbc.Input(type="Text", placeholder="",id="nodeIcon",value=eventDic.get("nodeIcon"," "))),)))),
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(nodeIconDropDown.nodeIconDropDownMaker('addGraphNodeIconDropDown')),)))),
                             ]
                         ),
                         html.Br(),
@@ -340,7 +341,13 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
             {
                 'selector': 'node',
                 'style': {
-                    'label': 'data(label)'
+                    'label': 'data(label)',
+                    'width': 90,
+                    'height': 80,
+                    'background-fit': 'cover',
+                    'background-image': 'data(url)',
+                    'border-color': '#000',
+                    'border-width': 1
                     
                 }
             },
@@ -352,7 +359,14 @@ def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page loa
                     'target-arrow-shape': 'triangle',  # Apply arrow shape
                     'curve-style': 'bezier'  # Adjust curve style if needed
                 }
-            }
+            },
+                {
+                'selector': 'node:selected',
+                'style': {
+                    'overlay-color': 'blue',
+                    'overlay-opacity': 0.5
+                }
+            },
             ])
             ]
 
@@ -412,7 +426,7 @@ def delete_node(delete_clicks, elements, tap_node, projectId):
     return dash.exceptions.PreventUpdate
 
 @callback(
-    Output("eventGraphGui", "elements",allow_duplicate=True),
+    [Output("eventGraphGui", "elements",allow_duplicate=True),Output("addNodeModal", "is_open",allow_duplicate=True)],
     [Input("createNodeModal", "n_clicks")],
     [
         State("eventGraphGui", "elements"),
@@ -428,26 +442,27 @@ def delete_node(delete_clicks, elements, tap_node, projectId):
         State('targetHostInputs', 'value'),
         State('teamInputs','value'),
         State('descriptionInputs','value'),
-        State('eventLocation', 'value')
+        State('eventLocation', 'value'),
+        State("addGraphNodeIconDropDown", "value"),
      ]
     
     ,
     prevent_initial_call=True
 )
-def add_node_modal(create_clicks, elements,projectId,eventDate,nodehour,nodeminute,nodesecond, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
+def add_node_modal(create_clicks, elements,projectId,eventDate,nodehour,nodeminute,nodesecond, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,eventIcon):
     if not create_clicks:
         raise dash.exceptions.PreventUpdate
     
     eventDateTime = datetime.strptime(f"{eventDate} {nodehour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S') #date passes back as YMD we need it as MDY
     eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
-    event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,"")
+    event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,"",eventIcon)
     eventManager.addEventToProject(projectId,event)
     node = nodeManager.createNode(projectId,event)
     graphManager.addNodeToGraph(node,projectId)
-    new_node = {"data": {"id": node.getNodeId(), "label": node.getNodeLabel()}}
+    new_node = {"data": {"id": node.getNodeId(), "label": node.getNodeLabel(),'url': 'url(/assets/NodeIcons/'+node.getNodeIcon()+')'}}
     elements.append(new_node)
 
-    return elements
+    return elements,False
 @callback(
     [Output("editNodeModal", "is_open",allow_duplicate=True),
      Output("editnodeTimeStamp", "value"),
@@ -462,7 +477,7 @@ def add_node_modal(create_clicks, elements,projectId,eventDate,nodehour,nodeminu
      Output("editintialsInputs", "value"),
      Output("editvectorIdInputs", "value"),
      Output("editdescriptionInputs", "value"),
-     Output("editnodeIcon", "value"),
+     Output("graphNodeIconDropDown", "value"),
      Output("nodeId","value")
      ],
     [Input("editNode", "n_clicks"),Input("editCloseNodeModalButton", "n_clicks")],
@@ -485,7 +500,6 @@ def toggleEditmodal(edit_clicks, close_clicks,selectedNode,projectId):
                 hour = nodeTimeStamp.hour if nodeTimeStamp else None
                 minute = nodeTimeStamp.minute if nodeTimeStamp else None
                 second = nodeTimeStamp.second if nodeTimeStamp else None
-
                 return ( 
                 True, date, hour,minute,second, node_info.get("nodeLabel", None),
                 node_info.get("nodeLocation", None), node_info.get("nodeMalformed", None), node_info.get("nodeSourceHost", None), node_info.get("nodeTargetHost", None), 
@@ -494,7 +508,7 @@ def toggleEditmodal(edit_clicks, close_clicks,selectedNode,projectId):
     raise dash.exceptions.PreventUpdate
 
 @callback(
-     Output("eventGraphGui", "elements",allow_duplicate=True),
+    [Output("eventGraphGui", "elements",allow_duplicate=True),Output("editNodeModal", "is_open",allow_duplicate=True)],
     [Input("editNodeModalButton", "n_clicks")],
     [State("eventGraphGui", "elements"),
      State('selected-project-store', 'data'),
@@ -511,11 +525,13 @@ def toggleEditmodal(edit_clicks, close_clicks,selectedNode,projectId):
      State("editteamInputs", "value"),
      State("editdescriptionInputs", "value"),
      State("editeventLocation", "value"),
+     State("graphNodeIconDropDown", "value"),
+
      ],
      prevent_initial_call=True
     
     )
-def editNode(editNode,elements,projectId,nodeId,nodeDate,nodehour,nodeminute,nodesecond, malformedInputs,sourceHostInput,targetHostInput,intialsInput,vectorIdInput,teamInput,descriptionInput,nodeLocation):
+def editNode(editNode,elements,projectId,nodeId,nodeDate,nodehour,nodeminute,nodesecond, malformedInputs,sourceHostInput,targetHostInput,intialsInput,vectorIdInput,teamInput,descriptionInput,nodeLocation,nodeIcon):
     if(editNode):
         if(nodeDate == None or nodehour == None or nodeminute == None):
             eventTimeStamp = ""
@@ -523,12 +539,12 @@ def editNode(editNode,elements,projectId,nodeId,nodeDate,nodehour,nodeminute,nod
             eventDateTime = datetime.strptime(f"{nodeDate} {nodehour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S')
             eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
         previousEvent = eventManager.getEventFromProject(nodeId,projectId)
-        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,nodeLocation,previousEvent.getDataSource(),nodeId)
+        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,nodeLocation,previousEvent.getDataSource(),nodeIcon,nodeId)
         eventManager.addEventToProject(projectId,event)
         node = nodeManager.createNode(projectId,event)
         graphManager.addNodeToGraph(node,projectId)
-        elements = graphManager.updateNodeLabel(elements,previousEvent,teamInput,nodeId)
-        return elements
+        elements = graphManager.updateNodeLabel(elements,previousEvent,teamInput,nodeId,nodeIcon)
+        return elements,False
     raise dash.exceptions.PreventUpdate
 
 

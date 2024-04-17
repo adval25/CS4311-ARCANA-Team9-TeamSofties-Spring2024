@@ -14,6 +14,7 @@ class Event(mongoengine.EmbeddedDocument):
     eventDataSource = mongoengine.StringField()
     eventPosture = mongoengine.StringField(default = "")
     eventId = mongoengine.StringField()
+    eventIcon = mongoengine.StringField()
 
     def getEventDescription(self):
         return self.eventDescription
@@ -35,6 +36,9 @@ class Event(mongoengine.EmbeddedDocument):
     
     def getInitals(self):
         return self.analystInitals
+    
+    def getEventIcon(self):
+        return self.eventIcon
     
     def geteventTeam(self):
         return self.eventTeam

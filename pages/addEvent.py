@@ -4,7 +4,9 @@ from dash import html,callback,Input, Output, State
 from . import eventNavbar
 import eventManager
 from datetime import datetime
-
+import nodeIconDropDown
+import nodeManager
+import graphManager
 
 
 dash.register_page(__name__, path='/addEvent')
@@ -16,6 +18,7 @@ def generateCreateEvent():
         "Red": "eventNodeIcon.png",
         "Blue": "eventNodeIcon.png",
     }
+    nodeTimeStamp = datetime.now()
     return html.Div(
         dbc.Card(
             dbc.Row(
@@ -30,18 +33,18 @@ def generateCreateEvent():
                                     className="img-fluid rounded-start",
                                     style={"width": "60px", "height": "60px","margin-right": 0,'display': 'inline-block', "margin-bottom" : "0%"},
                                 ), 
-                                html.P("Edit Event", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
+                                html.P("Add Event", style={"font-size": "40px","margin-left": 0,'display': 'inline-block' ,'padding-left': '20px'}),
                                 
                                 dbc.Row(
                                 [
                                     dbc.Col(
                                     [
                                         html.P("eventTimeStamp"),
-                                        dbc.Input(type="date", id ="eventTimeStamp"),
+                                        dbc.Input(type="date", id ="eventTimeStamp",value = nodeTimeStamp.date()),
                                         dbc.Row([
-                                                    dbc.Col(dbc.Input(id='nodehour', type="number", min=0, max=24, placeholder='Hour' ,style={"margin-bottom": "10px"}), width=3),
-                                                    dbc.Col(dbc.Input(id='nodeminute', type='number', min=0, max=60, placeholder='Minute',style={"margin-bottom": "10px"}), width=3),
-                                                    dbc.Col(dbc.Input(id='nodesecond', type='number', min=0, max=59, placeholder='Second', style={"margin-bottom": "10px"}), width=3)
+                                                    dbc.Col(dbc.Input(id='nodehour', type="number", min=0, max=24, placeholder='Hour',value=nodeTimeStamp.hour ,style={"margin-bottom": "10px"}), width=3),
+                                                    dbc.Col(dbc.Input(id='nodeminute', type='number', min=0, max=60, placeholder='Minute',value=nodeTimeStamp.minute,style={"margin-bottom": "10px"}), width=3),
+                                                    dbc.Col(dbc.Input(id='nodesecond', type='number', min=0, max=59, placeholder='Second',value=nodeTimeStamp.second, style={"margin-bottom": "10px"}), width=3)
                                                 ])
                                     ], width =3 
                                     ),
@@ -111,11 +114,7 @@ def generateCreateEvent():
                                 dbc.Textarea(placeholder="Description", style={"height": "100px"}, id ="descriptionInputs"),
                                 
                                 html.P("Event Node Icon*"),
-                                html.Img(
-                                    src=dash.get_asset_url("eventNodeIcon.png"),
-                                    className="img-fluid rounded-start",
-                                    style={"width": "60px", "height": "60px","margin-right": 0,'display': 'inline-block', "margin-bottom" : "0%"},
-                                ), 
+                                nodeIconDropDown.nodeIconDropDownMaker('addEventIconDropDown'),
                                 html.P("White Team Activity"),
                                 # dbc.Select(
                                 #     options=[{"label": i, "value": i} for i in event_node_icons_options.keys()],
@@ -179,15 +178,20 @@ layout = html.Div(
         State('targetHostInputs', 'value'),
         State('teamInputs','value'),
         State('descriptionInputs','value'),
-        State('eventLocation', 'value')
+        State('eventLocation', 'value'),
+        State('addEventIconDropDown','value')
     ],
     prevent_initial_call=True
 )
 
-def handleEditButtonClick(n_clicks,projectId,eventDate,nodehour,nodeminute,nodesecond, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
+def handleEditButtonClick(n_clicks,projectId,eventDate,nodehour,nodeminute,nodesecond, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,eventIcon):
     if n_clicks:
         eventDateTime = datetime.strptime(f"{eventDate} {nodehour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S') #date passes back as YMD we need it as MDY
         eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
-        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,"","eventIcon")
+        if eventIcon == None:
+            eventIcon =""
+        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,"",eventIcon)
         eventManager.addEventToProject(projectId,event)
+        node = nodeManager.createNode(projectId,event)
+        graphManager.addNodeToGraph(node,projectId)
         return "/displayEvents" #url that is redirected too

@@ -4,7 +4,9 @@ from dash import html,callback,Input, Output, State
 from . import eventNavbar
 import eventManager
 from datetime import datetime
-
+import nodeIconDropDown
+import nodeManager
+import graphManager
 
 dash.register_page(__name__, path='/editEvent')
 
@@ -121,11 +123,7 @@ def generateEditEvent(eventDic,previousEvent = None):
                                 dbc.Textarea(placeholder="Description", style={"height": "100px"}, id ="descriptionInputs",value = eventDic["eventDescription"]),
                                 
                                 html.P("Event Node Icon*"),
-                                html.Img(
-                                    src=dash.get_asset_url("eventNodeIcon.png"),
-                                    className="img-fluid rounded-start",
-                                    style={"width": "60px", "height": "60px","margin-right": 0,'display': 'inline-block', "margin-bottom" : "0%"},
-                                ), 
+                                nodeIconDropDown.nodeIconDropDownMaker('editEventIconDropDown'),
                                 html.P("White Team Activity"),
                                 # dbc.Select(
                                 #     options=[{"label": i, "value": i} for i in event_node_icons_options.keys()],
@@ -160,7 +158,7 @@ def generateEditEvent(eventDic,previousEvent = None):
     )
 
 @callback(
-    Output('editEventDiv', 'children'),
+    [Output('editEventDiv', 'children'),Output('editEventIconDropDown','value')],
     [Input('dummy-divEdit', 'children')],  # Trigger callback on page load
     [State('eventStore', 'data')],
     [State('selected-project-store', 'data')]
@@ -170,9 +168,9 @@ def fillValuesForEditEvent(dummyValue, eventId,projectId):
     if eventId != None:
           previousEvent = eventManager.getEventFromProject(eventId,projectId)
           eventDic = previousEvent.eventToDictionary()
-          return generateEditEvent(eventDic,previousEvent)
+          return generateEditEvent(eventDic,previousEvent),eventDic['eventIcon']
     else:
-        return ""
+        return "",None
 temporaryDic = {'malformed': " ",'eventTimeStamp': "1/01/9999 1:01:01",'analystInitals': " ",'eventTeam': " ",'eventDescription':" ",'eventLocation': " ",'eventSourceHost': " ",'eventTargetHost': " ",'eventVectorId': " ",'eventDataSource': " ",'_id': " "} 
 layout = html.Div(
     [
@@ -207,16 +205,21 @@ layout = html.Div(
         State('targetHostInputs', 'value'),
         State('teamInputs','value'),
         State('descriptionInputs','value'),
-        State('eventLocation', 'value')
+        State('eventLocation', 'value'),
+        State('editEventIconDropDown','value')
 
     ]
 )
 
-def handleEditButtonClick(n_clicks,eventId,projectId,eventDate,eventhour,eventminute,eventsecond, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation):
+def handleEditButtonClick(n_clicks,eventId,projectId,eventDate,eventhour,eventminute,eventsecond, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,eventIcon):
     if n_clicks:
         eventDateTime = datetime.strptime(f"{eventDate} {eventhour}:{eventminute}:{eventsecond}", '%Y-%m-%d %H:%M:%S')
         eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
         previousEvent = eventManager.getEventFromProject(eventId,projectId)
-        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,previousEvent.getDataSource(),"eventIcon",eventId)
+        if eventIcon == None:
+            eventIcon =""
+        event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,previousEvent.getDataSource(),eventIcon,eventId)
         eventManager.addEventToProject(projectId,event)
+        node = nodeManager.createNode(projectId,event)
+        graphManager.addNodeToGraph(node,projectId)
         return ""

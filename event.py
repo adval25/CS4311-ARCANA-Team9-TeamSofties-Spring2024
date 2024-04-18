@@ -78,6 +78,7 @@ class Event(mongoengine.EmbeddedDocument):
         'eventTargetHost': self.eventTargetHost,
         'eventVectorId': self.eventVectorId,
         'eventDataSource': self.eventDataSource,
+        'eventIcon': self.eventIcon,
         '_id': self.eventId  # Convert ObjectId to string
     }
   

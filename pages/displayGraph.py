@@ -455,6 +455,8 @@ def add_node_modal(create_clicks, elements,projectId,eventDate,nodehour,nodeminu
     
     eventDateTime = datetime.strptime(f"{eventDate} {nodehour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S') #date passes back as YMD we need it as MDY
     eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
+    if eventIcon == None:
+            eventIcon = ""
     event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,"",eventIcon)
     eventManager.addEventToProject(projectId,event)
     node = nodeManager.createNode(projectId,event)
@@ -538,6 +540,8 @@ def editNode(editNode,elements,projectId,nodeId,nodeDate,nodehour,nodeminute,nod
         else:
             eventDateTime = datetime.strptime(f"{nodeDate} {nodehour}:{nodeminute}:{nodesecond}", '%Y-%m-%d %H:%M:%S')
             eventTimeStamp = eventDateTime.strftime('%m/%d/%Y %H:%M:%S')
+        if nodeIcon == None:
+            nodeIcon = ""
         previousEvent = eventManager.getEventFromProject(nodeId,projectId)
         event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,nodeLocation,previousEvent.getDataSource(),nodeIcon,nodeId)
         eventManager.addEventToProject(projectId,event)

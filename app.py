@@ -2,8 +2,10 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
+import mongoengine
 
-
+mongoengine.connect("projectsDb", alias="default", host="mongodb", port=27017)
+# mongoengine.connect("projectsDb", alias="default") # for local hosting testing
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],use_pages=True) #user pages = true allows it to be multipage IMPORTANT!
 navbar = dbc.NavbarSimple(
     children=[
@@ -32,4 +34,5 @@ app.layout = html.Div([
 ])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True) #for local hosting testing
+    app.run(debug=True, host='0.0.0.0', port=9000)

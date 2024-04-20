@@ -35,10 +35,14 @@ def getEmbeddedDocFromDb(projectId):
     retrivedProject = getProjectFromDb(projectId)
     return retrivedProject.getEventCollection()
 
-def getAllProjectsFromDb(client):
-     projectDataBase = client["projectsDb"]
-     projectCollection = projectDataBase["project"]
-     return list(projectCollection.find())
+def getAllProjectsFromDb():
+    try:
+        projectList = Project.objects.all()
+        print(projectList)
+        return projectList
+    except Exception as e:
+        print("An error occurred while retrieving projects:", str(e))
+        return None
 
 def getAllProjectsFromSeprateDb(dataBaseName,host):
     mongoengine.connect(dataBaseName, alias="syncedProject")
@@ -69,4 +73,3 @@ def addProjectFromSerpateDb(project):
     
 
 
-dataBaseCleint = mongoengine.connect("projectsDb", alias="default") #connects the user to the database

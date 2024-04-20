@@ -3,10 +3,11 @@ from project import Project
 import graphManager
 import dataBaseCommunicator
 
-def getProjectDict(client):
-    projectDataBase = client["projectsDb"]
-    projectCollection = projectDataBase["project"]
-    return list(projectCollection.find())
+def getProjectDict():
+    projectList = dataBaseCommunicator.getAllProjectsFromDb()
+    return projectList
+
+
 
 def getProject(projectId):
     return dataBaseCommunicator.getProjectFromDb(projectId)
@@ -16,8 +17,8 @@ def getAllProjectNames(projectDict): #grabbing the project name and associating 
     return projectList
 
 def projectObjectListToName(projectList):
-     projectList =  [{"_id": str(project.id), "projectName": str(project.getProjectName())} for project in projectList]
-     return projectList
+    projectList =  [{"_id": str(project.id), "projectName": str(project.getProjectName())} for project in projectList]
+    return projectList
 
 def deleteProject(projectId):
     dataBaseCommunicator.deleteProjectFromDb(projectId)

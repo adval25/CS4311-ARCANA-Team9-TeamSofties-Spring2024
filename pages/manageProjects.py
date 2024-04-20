@@ -2,7 +2,6 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import html,callback,Input, Output, State,dcc
 import dash_ag_grid as dag
-from dataBaseCommunicator import dataBaseCleint
 import projectManager
 
 dash.register_page(__name__, path='/manageProjects')
@@ -119,8 +118,8 @@ modal_4 = html.Div(
 )
 
 def createTable():
-    projectDict = projectManager.getProjectDict(client=dataBaseCleint)
-    projectList = projectManager.getAllProjectNames(projectDict) #filtering so the table can be displayed
+    projectDict = projectManager.getProjectDict()
+    projectList = projectManager.projectObjectListToName(projectDict) #filtering so the table can be displayed
     columnDefs = [{"field": i} for i in ["projectName"]]
     return dag.AgGrid(
             id="row-selection-selected-rows",

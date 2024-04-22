@@ -18,10 +18,16 @@ def addUserActivity(activityLog):
      userActivityLogger.save()
      return
 
-def clearLog():
+def clearLogs():
     userActivityLogger = getUserActivityLogger()
     userActivityLogger.clearLog()
     userActivityLogger.save()
+
+def getUserLogs():
+    userActivityLogger = getUserActivityLogger()
+    return userActivityLogger.getUserLogs()
+
+
 
 
 

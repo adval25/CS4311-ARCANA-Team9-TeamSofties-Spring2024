@@ -6,7 +6,7 @@ class UserActivityLogger(mongoengine.Document):
     def appendToDebugList(self,debugInfo):
         self.userDebugLog.append(debugInfo)
 
-    def getUserDebugList(self):
+    def getUserLogs(self):
         return self.userDebugLog
 
     def clearLog(self):

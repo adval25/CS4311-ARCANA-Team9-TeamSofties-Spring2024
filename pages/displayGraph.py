@@ -105,7 +105,7 @@ def editNodeModal(eventDic = {}):
                         ),
                         dbc.Row(
                             [
-                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(nodeIconDropDown.nodeIconDropDownMaker('graphNodeIconDropDown')),)))),
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(nodeIconDropDown.nodeIconDropDownMaker('graphNodeIconDropDown'),id="editNodeIconDiv"),)))),
                                 html.Div(dbc.Input(id='nodeId', type='text', value=""),style={'display': 'none'})
 
                             ]
@@ -220,7 +220,7 @@ def addNodeModal(eventDic = {}):
                         ),
                         dbc.Row(
                             [
-                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(nodeIconDropDown.nodeIconDropDownMaker('addGraphNodeIconDropDown')),)))),
+                                dbc.Col(dbc.Form(dbc.Row(dbc.Col(html.Div(nodeIconDropDown.nodeIconDropDownMaker('addGraphNodeIconDropDown'),id="addNodeIconDiv"),)))),
                             ]
                         ),
                         html.Br(),
@@ -554,9 +554,7 @@ def editNode(editNode,elements,projectId,nodeId,nodeDate,nodehour,nodeminute,nod
 
 @callback(
     Output("eventGraphGui", "generateImage"),
-    [
-        Input("exportGraph", "n_clicks"),
-    ])
+    [Input("exportGraph", "n_clicks"),])
 def get_image(exportGraph):
 
     ctx = dash.callback_context
@@ -570,11 +568,18 @@ def get_image(exportGraph):
                 'action': action
                 }
     raise dash.exceptions.PreventUpdate
+@callback(
+    [Output("editNodeIconDiv","children"),Output("addNodeIconDiv","children")],
+    Input("updateDropDowns", "id"),
+)
+def updateIconDropDowns(dummy):
+    return nodeIconDropDown.nodeIconDropDownMaker('graphNodeIconDropDown'),nodeIconDropDown.nodeIconDropDownMaker('addGraphNodeIconDropDown')
 
 
 layout = html.Div([
     html.Div(id = "dummy-divNodeSend"),
     html.Div(id = "export-message"),
+    html.Div(id="updateDropDowns"),
     addNodeModal(),
     editNodeModal(),
     html.Br(),

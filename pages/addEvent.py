@@ -114,7 +114,7 @@ def generateCreateEvent():
                                 dbc.Textarea(placeholder="Description", style={"height": "100px"}, id ="descriptionInputs"),
                                 
                                 html.P("Event Node Icon*"),
-                                nodeIconDropDown.nodeIconDropDownMaker('addEventIconDropDown'),
+                                html.Div(nodeIconDropDown.nodeIconDropDownMaker('addEventIconDropDown'),id="addEventIconDiv"),
                                 html.P("White Team Activity"),
                                 # dbc.Select(
                                 #     options=[{"label": i, "value": i} for i in event_node_icons_options.keys()],
@@ -153,6 +153,7 @@ layout = html.Div(
     dbc.Container(
     [
     html.Div(id = "dummy-divAddSend"),
+    html.Div(id = "updateAddEventIconDropDown"),
        eventNavbar.eventSidebar,
        generateCreateEvent(),
     ], 
@@ -195,3 +196,10 @@ def handleEditButtonClick(n_clicks,projectId,eventDate,nodehour,nodeminute,nodes
         node = nodeManager.createNode(projectId,event)
         graphManager.addNodeToGraph(node,projectId)
         return "/displayEvents" #url that is redirected too
+    
+@callback(
+    Output('addEventIconDiv','children'),
+    Input('updateAddEventIconDropDown','id'),
+)
+def updateIconDropDown(id):
+    return nodeIconDropDown.nodeIconDropDownMaker('addEventIconDropDown')

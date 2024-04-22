@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import html,callback,Input, Output, State,dcc
 import dash_ag_grid as dag
 import projectManager
+import os
 
 dash.register_page(__name__, path='/manageProjects')
 
@@ -20,8 +21,10 @@ modal = html.Div(
                         ),
                         html.Br(),
                         html.P("Log Location"),
-                        dbc.Form(
-                            dbc.Row(dbc.Col(html.Div(dbc.Input(type="Log Directory", placeholder="Log Directory" , id = "logDirectory")),width = 12),)
+                        dcc.Dropdown(
+                            id="logDirectory",
+                            options=[],
+                            placeholder="Select a log file",
                         ),
                         html.Br(),
                         html.P("Initials"),
@@ -197,10 +200,9 @@ def toggle_modal(n1, n2, n3, is_open,projectName, analystInitals,logDirectory):
     if n1 or n2:
         if n3:
            if logDirectory == None:
-               print("TESTLOG")
                return dash.no_update,dash.no_update,True
            else:
-            projectManager.createProject(projectName,analystInitals,logDirectory)
+            projectManager.createProject(projectName,analystInitals,"../logRepository/"+logDirectory)
             return not is_open,"/manageProjects",dash.no_update
         return not is_open, dash.no_update,dash.no_update
     return is_open, dash.no_update,dash.no_update
@@ -251,6 +253,23 @@ def serveLayout():
         generateManageProjectCard(),
         ], fluid=True, style={"backgroundColor": "#D3D3D3", "margin": "auto", "height": "100vh", "display": "flex", "flexDirection": "column", "justifyContent": "center"}) 
     ])
+
+def get_log_files():
+    log_directory = '../logRepository'
+    return [f for f in os.listdir(log_directory)]
+
+
+@callback(
+    Output("logDirectory", "options"),
+    [Input("modal", "is_open")],
+    prevent_initial_call=True
+)
+def update_log_files_dropdown(is_open):
+    if is_open:
+        log_files = get_log_files()
+        print(log_files)
+        return [{'label': f, 'value': f} for f in log_files]
+    raise dash.exceptions.PreventUpdate
 
 layout = serveLayout
 

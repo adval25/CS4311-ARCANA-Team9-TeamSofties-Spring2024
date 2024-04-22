@@ -1,5 +1,6 @@
 import projectManager
 from node import Node
+import loggerManager    
 
 def createNode(projectId,event):
     project = projectManager.getProject(projectId)
@@ -46,6 +47,7 @@ def deleteEdge(projectId,eventId,targetId):
     project = projectManager.getProject(projectId)
     nodeDictionary = project.getEventGraph().getDictOfNodes()
     nodeDictionary[eventId].deleteOneConnection(targetId)
+    loggerManager.addUserActivity("User has deleted an edge and has been removed from node with nodeId"+nodeDictionary[eventId]+" updated in project Named:"+ project.getProjectName())
     project.save()
 
 def deleteNode(projectId,eventId):
@@ -54,6 +56,7 @@ def deleteNode(projectId,eventId):
     for nodeId in nodeDictionary:
         nodeDictionary[nodeId].deleteAllTargetConnections(eventId)
     del nodeDictionary[eventId]
+    loggerManager.addUserActivity("User has deleted a node with id:" +eventId+" updated in project Named:"+ project.getProjectName())
     project.save()
 
     

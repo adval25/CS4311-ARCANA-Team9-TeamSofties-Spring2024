@@ -195,6 +195,7 @@ def handleEditButtonClick(n_clicks,projectId,eventDate,nodehour,nodeminute,nodes
         eventManager.addEventToProject(projectId,event)
         node = nodeManager.createNode(projectId,event)
         graphManager.addNodeToGraph(node,projectId)
+        
         return "/displayEvents" #url that is redirected too
     
 @callback(

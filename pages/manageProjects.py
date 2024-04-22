@@ -272,5 +272,3 @@ def update_log_files_dropdown(is_open):
     raise dash.exceptions.PreventUpdate
 
 layout = serveLayout
-
-

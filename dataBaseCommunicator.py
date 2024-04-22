@@ -70,6 +70,7 @@ def addProjectFromSerpateDb(project):
     project = Project(projectName = project.getProjectName(), analystInitals = project.getAnalystInitals(),
              eventCollection = project.getEventCollection(), eventGraph = project.getEventGraph())
     project.save()
+
     
 
 

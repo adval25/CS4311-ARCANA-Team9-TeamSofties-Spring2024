@@ -6,6 +6,7 @@ import dash_ag_grid as dag
 import base64
 import os
 import nodeIconDropDown
+import loggerManager
 
 
 dash.register_page(__name__, path='/iconLibrary')
@@ -127,7 +128,7 @@ def displayEventLayout():
 
 layout = displayEventLayout
 
-@callback([Output('output-image-upload', 'children'),Output('fileListDropDown','children')],
+@callback([Output('fileListDropDown','children')],
               Input('upload-image', 'contents'),
               State('upload-image', 'filename'),
               State('upload-image', 'last_modified'))
@@ -138,9 +139,9 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             zip(list_of_contents, list_of_names, list_of_dates)]
         
         for content, filename in zip(list_of_contents, list_of_names):
-            save_image(content, filename)
-        return children,nodeIconDropDown.nodeIconDropDownMaker('nodeIconDropDown')
-    return dash.no_update,dash.no_update
+            save_image(content, filename)        
+        return nodeIconDropDown.nodeIconDropDownMaker('nodeIconDropDown')
+    return dash.no_update
     
 
 
@@ -153,6 +154,8 @@ def save_image(content, filename):
 
     with open(os.path.join(node_icons_directory, filename), 'wb') as f:
         f.write(image_data)
+    loggerManager.addUserActivity("User has added an Icon with fileName:" + filename)
+
 
 
 @callback(Output('displayDropDownImage','children'),

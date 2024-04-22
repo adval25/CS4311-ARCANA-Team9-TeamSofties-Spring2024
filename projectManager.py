@@ -2,6 +2,7 @@ import logIngestor
 from project import Project
 import graphManager
 import dataBaseCommunicator
+import loggerManager
 
 def getProjectDict():
     projectList = dataBaseCommunicator.getAllProjectsFromDb()
@@ -41,5 +42,6 @@ def createProject(projectName,analystInitals,logPath):
     newProject = dataBaseCommunicator.addEventDictionaryToProject(newProject,newEventDic) 
     nodeGraph = graphManager.createGraph(newProject) 
     newProject = dataBaseCommunicator.addnodeGraphToProject(newProject,nodeGraph) #adds the graph to the project
+    loggerManager.addUserActivity("User has created " + projectName + "its logs are from the " + logPath + "its intials are set as" + analystInitals)
     return newProject
     

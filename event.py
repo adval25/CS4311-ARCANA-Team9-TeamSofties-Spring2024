@@ -4,7 +4,7 @@ from datetime import datetime
 class Event(mongoengine.EmbeddedDocument):
     malformed = mongoengine.BooleanField(default=False)
     eventTimeStamp = mongoengine.StringField()
-    analystInitals = mongoengine.StringField(max_length=5)
+    analystInitals = mongoengine.StringField()
     eventTeam = mongoengine.StringField()
     eventDescription = mongoengine.StringField()
     eventLocation = mongoengine.StringField()

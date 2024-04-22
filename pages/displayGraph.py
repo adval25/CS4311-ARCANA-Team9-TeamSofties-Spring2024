@@ -10,6 +10,7 @@ import graphManager
 import nodeManager
 from datetime import datetime
 import nodeIconDropDown
+import loggerManager
 
 
 
@@ -168,7 +169,7 @@ def addNodeModal(eventDic = {}):
                         html.Br(),
                         dbc.Row(
                         [
-                        dbc.Col([html.P("Team*"),dbc.Select(options=[{"label": i, "value": i} for i in team_options],value=eventDic.get("nodeTeam"," "),id = "teamInputs",),], width =3 ),
+                        dbc.Col([html.P("Team*"),dbc.Select(options=[{"label": i, "value": i} for i in team_options],value=eventDic.get("nodeTeam","White"),id = "teamInputs",),], width =3 ),
                         dbc.Col([html.P("eventLocation"),dbc.Input(type="posture", id = "eventLocation",value=eventDic.get("nodePosture"," ")),], width = 3),
                         dbc.Col([html.P("malformed"),dbc.Checkbox(id="malformedInputs", value=eventDic.get("malformed"," ")),], width = 3),
                         
@@ -461,10 +462,51 @@ def add_node_modal(create_clicks, elements,projectId,eventDate,nodehour,nodeminu
     eventManager.addEventToProject(projectId,event)
     node = nodeManager.createNode(projectId,event)
     graphManager.addNodeToGraph(node,projectId)
+    loggerManager.addUserActivity("User has added a Node and added it to project with an id of"+projectId)
     new_node = {"data": {"id": node.getNodeId(), "label": node.getNodeLabel(),'url': 'url(/assets/NodeIcons/'+node.getNodeIcon()+')'}}
     elements.append(new_node)
 
     return elements,False
+
+@callback(
+    [Output("nodeTimeStamp", "value"),
+     Output("nodehour", "value"),
+     Output("nodeminute", "value"),
+     Output("nodesecond", "value"),
+     Output("teamInputs", "value"),
+     Output("eventLocation", "value"),
+     Output("malformedInputs", "value"),
+     Output("sourceHostInputs", "value"),
+     Output("targetHostInputs", "value"),
+     Output("intialsInputs", "value"),
+     Output("vectorIdInputs", "value"),
+     Output("descriptionInputs", "value")],
+    [Input("closeNodeModalButton", "n_clicks"),Input("createNodeModal","n_clicks")],
+    prevent_initial_call=True
+)
+def clear_inputs_on_cancel(closeClicks,addClick):
+    # Return default values for inputs when cancel button is clicked
+    if closeClicks or addClick:
+        default_nodeTimeStamp = datetime.now().date()
+        default_nodehour = datetime.now().hour
+        default_nodeminute = datetime.now().minute
+        default_nodesecond = datetime.now().second
+        default_teamInputs = "White"
+        default_eventLocation = ""
+        default_malformedInputs = False
+        default_sourceHostInputs = ""
+        default_targetHostInputs = ""
+        default_intialsInputs = ""
+        default_vectorIdInputs = ""
+        default_descriptionInputs = ""
+    
+        return (default_nodeTimeStamp, default_nodehour, default_nodeminute, default_nodesecond,
+                default_teamInputs, default_eventLocation, default_malformedInputs,
+                default_sourceHostInputs, default_targetHostInputs, default_intialsInputs,
+                default_vectorIdInputs, default_descriptionInputs)
+    
+    raise dash.exceptions.PreventUpdate
+
 @callback(
     [Output("editNodeModal", "is_open",allow_duplicate=True),
      Output("editnodeTimeStamp", "value"),
@@ -547,6 +589,7 @@ def editNode(editNode,elements,projectId,nodeId,nodeDate,nodehour,nodeminute,nod
         eventManager.addEventToProject(projectId,event)
         node = nodeManager.createNode(projectId,event)
         graphManager.addNodeToGraph(node,projectId)
+        loggerManager.addUserActivity("User has edited a Node and added it to project with an id of"+projectId)
         elements = graphManager.updateNodeLabel(elements,previousEvent,teamInput,nodeId,nodeIcon)
         return elements,False
     raise dash.exceptions.PreventUpdate

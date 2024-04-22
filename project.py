@@ -4,7 +4,7 @@ from eventGraph import EventGraph
 from bson.objectid import ObjectId
 class Project(mongoengine.Document):
     projectName = mongoengine.StringField()
-    analystInitals = mongoengine.StringField(max_length=5)
+    analystInitals = mongoengine.StringField()
     eventCollection = mongoengine.DictField(mongoengine.EmbeddedDocumentField(Event))
     eventGraph = mongoengine.EmbeddedDocumentField(EventGraph)
     #nodeIconList = mongoengine.ListField(mongoengine.DictField())

@@ -82,6 +82,7 @@ def generatedisplayIconCard():
             id="nodeIconContent",
             children=[
                 dbc.Col(width=1), #gives the card nice margin
+                dbc.Alert( "Image Sucesfully added to Node Icons!", id="iconAddedAlert", is_open=False, duration=4000,),
                 dbc.Col(
                     children=[
                         html.Img(
@@ -128,11 +129,12 @@ def displayEventLayout():
 
 layout = displayEventLayout
 
-@callback([Output('fileListDropDown','children')],
+@callback([Output('fileListDropDown','children'),Output("iconAddedAlert", "is_open"),],
               Input('upload-image', 'contents'),
               State('upload-image', 'filename'),
-              State('upload-image', 'last_modified'))
-def update_output(list_of_contents, list_of_names, list_of_dates):
+              State('upload-image', 'last_modified'),
+              State("iconAddedAlert", "is_open"))
+def update_output(list_of_contents, list_of_names, list_of_dates,iconAlert):
     if list_of_contents is not None:
         children = [
             parse_contents(c, n, d) for c, n, d in
@@ -140,8 +142,8 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
         
         for content, filename in zip(list_of_contents, list_of_names):
             save_image(content, filename)        
-        return nodeIconDropDown.nodeIconDropDownMaker('nodeIconDropDown')
-    return dash.no_update
+        return [nodeIconDropDown.nodeIconDropDownMaker('nodeIconDropDown')],not iconAlert
+    return dash.no_update,iconAlert
     
 
 
@@ -149,12 +151,12 @@ def save_image(content, filename):
     _, content_string = content.split(',')
     image_data = base64.b64decode(content_string)
     node_icons_directory = os.path.join("assets", "NodeIcons")
+    loggerManager.addUserActivity("User has added an Icon with fileName:" + filename)
     if not os.path.exists(node_icons_directory):
         os.makedirs(node_icons_directory)
 
     with open(os.path.join(node_icons_directory, filename), 'wb') as f:
         f.write(image_data)
-    loggerManager.addUserActivity("User has added an Icon with fileName:" + filename)
 
 
 

@@ -1,5 +1,6 @@
 import mongoengine
 import pymongo
+from pymongo import MongoClient
 from project import Project
 from event import Event
 from bson.objectid import ObjectId
@@ -45,9 +46,13 @@ def getAllProjectsFromDb():
         return None
 
 def getAllProjectsFromSeprateDb(dataBaseName,host):
+    client = MongoClient(host, 27017)
     mongoengine.connect(dataBaseName, alias="syncedProject")
     database = mongoengine.get_connection("syncedProject")
-    allProjects = Project.objects.using("syncedProject")[:]
+    # Access database and collection
+    db = client.mydatabase
+    allProjects = db.mycollection
+    # allProjects = Project.objects.using("syncedProject")[:]
     mongoengine.disconnect(alias="syncedProject")
     return allProjects
 

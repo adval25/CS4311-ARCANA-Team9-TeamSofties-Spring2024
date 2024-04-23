@@ -11,8 +11,8 @@ Using dash_cytoscope, the graph now displays nodes that you can manipulate in sp
 The program supports edge creation, deletion, and manipulation between nodes in the graph.
 
 Update Description (4/22/24):
-Added loggin to all major user activity.
+Added logging to all major user activity.
 Fixed add node funtion.
-Added Dcoker functionality
-Added aility to access databse of other achine using docker (Sync function)
-Fixed various GUI bugs
+Added Dcoker functionality.
+Added ability to access database of other machine using docker (Sync function).
+Fixed various GUI bugs.

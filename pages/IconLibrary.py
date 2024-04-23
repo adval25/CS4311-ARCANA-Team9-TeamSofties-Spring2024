@@ -148,6 +148,7 @@ def update_output(list_of_contents, list_of_names, list_of_dates,iconAlert):
 
 
 def save_image(content, filename):
+    filename = filename.replace(' ', '')#if the file name has spaces things break
     _, content_string = content.split(',')
     image_data = base64.b64decode(content_string)
     node_icons_directory = os.path.join("assets", "NodeIcons")

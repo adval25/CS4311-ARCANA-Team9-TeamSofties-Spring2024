@@ -332,7 +332,6 @@ def update_node_info(selected_node,projectId):
     [State('selected-project-store', 'data')]
 )
 def createGraphOnPageLoad(dummyData,projectId): #loads all the graph on page load put code into method FIX ME !
-    print("Creating graph on page load...")
     project = projectManager.getProject(projectId)
     nodeGraph = project.getEventGraph()
     nodeDict = nodeGraph.getDictOfNodes()
@@ -463,9 +462,8 @@ def add_node_modal(create_clicks, elements,projectId,eventDate,nodehour,nodeminu
     node = nodeManager.createNode(projectId,event)
     graphManager.addNodeToGraph(node,projectId)
     loggerManager.addUserActivity("User has added a Node and added it to project with an id of"+projectId)
-    new_node = {"data": {"id": node.getNodeId(), "label": node.getNodeLabel(),'url': 'url(/assets/NodeIcons/'+node.getNodeIcon()+')'}}
-    elements.append(new_node)
-
+    new_node = {"data": {"id": node.getNodeId(), "label": node.getNodeLabel(),'url': 'url(/assets/NodeIcons/'+node.getNodeIcon()+')'}, 'position': {'x': 0, 'y': 0}}
+    elements.insert(0, new_node)#adds it at the front of the list or else it will break
     return elements,False
 
 @callback(
@@ -576,6 +574,8 @@ def toggleEditmodal(edit_clicks, close_clicks,selectedNode,projectId):
     
     )
 def editNode(editNode,elements,projectId,nodeId,nodeDate,nodehour,nodeminute,nodesecond, malformedInputs,sourceHostInput,targetHostInput,intialsInput,vectorIdInput,teamInput,descriptionInput,nodeLocation,nodeIcon):
+    if(elements == None):
+        raise dash.exceptions.PreventUpdate
     if(editNode):
         if(nodeDate == None or nodehour == None or nodeminute == None):
             eventTimeStamp = ""
@@ -603,7 +603,6 @@ def get_image(exportGraph):
     ctx = dash.callback_context
     if ctx.triggered:
         if ctx.triggered_id == "exportGraph":
-            print("OOOO IMAGE OUT")
             action = "download"
             type = "jpg"
             return {

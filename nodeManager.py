@@ -47,7 +47,7 @@ def deleteEdge(projectId,eventId,targetId):
     project = projectManager.getProject(projectId)
     nodeDictionary = project.getEventGraph().getDictOfNodes()
     nodeDictionary[eventId].deleteOneConnection(targetId)
-    loggerManager.addUserActivity("User has deleted an edge and has been removed from node with nodeId"+nodeDictionary[eventId]+" updated in project Named:"+ project.getProjectName())
+    loggerManager.addUserActivity("User has deleted an edge and has been removed from node with nodeId"+eventId+" updated in project Named:"+ project.getProjectName())
     project.save()
 
 def deleteNode(projectId,eventId):

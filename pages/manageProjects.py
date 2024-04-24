@@ -215,7 +215,6 @@ def toggle_modal(n1, n2, n3, is_open,projectName, analystInitals,logDirectory):
 )
 def toggle_modal_3(n1, n2, is_open,selectedProect):
     if (n1 or n2) and (selectedProect != None and selectedProect != {}):
-        print(selectedProect)
         return not is_open, [html.P("Are you sure you want to delete " + projectManager.getProjectName(selectedProect) + "?", style={"font-size": "15px", "margin-left": "10px", 'display': 'inline-block'}, id = "deleteMessage"),html.Br(),]
     return is_open, html.P("TEST", style={"font-size": "40px", "margin-left": "10px", 'display': 'inline-block'}, id = "deleteMessage")
 
@@ -240,7 +239,6 @@ def deleteProject(n_click,selectedProject):
 def checkIfProjectExists(n_clicks,selectedProject):
     if n_clicks:
         if projectManager.checkIfProjectExists(selectedProject):
-            print("THING " + selectedProject)
             return "/displayEvents"
     raise dash.exceptions.PreventUpdate
 
@@ -267,7 +265,6 @@ def get_log_files():
 def update_log_files_dropdown(is_open):
     if is_open:
         log_files = get_log_files()
-        print(log_files)
         return [{'label': f, 'value': f} for f in log_files]
     raise dash.exceptions.PreventUpdate
 

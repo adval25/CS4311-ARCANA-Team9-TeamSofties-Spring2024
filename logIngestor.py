@@ -103,19 +103,17 @@ def defaultEventIcon(eventTeam):
 def eventDataListToEventDictionary(eventAccumulator): #turns all of the event data into event objects and returns a list of events
     eventDict ={}
     for eventInfromation in eventAccumulator:
-        if eventInfromation.get("dateCreated") == None:
-            break
-        event = Event(eventTimeStamp = str(eventInfromation["dateCreated"]),
-                        analystInitals = str(eventInfromation["initials"]),
-                        eventTeam = str(eventInfromation["team"]),
-                        eventDescription =str(eventInfromation["description"]), 
-                        eventLocation = str(eventInfromation["location"]),
-                        eventSourceHost = str(eventInfromation["sourceHost"]),
-                        eventTargetHost = str(eventInfromation["targetHost"]),
-                        eventVectorId = str(eventInfromation["vectorId"]),
+        event = Event(eventTimeStamp = str(eventInfromation.get("dateCreated",eventInfromation.get("Timestamp",""))),
+                        analystInitals = str(eventInfromation.get("initials","")),
+                        eventTeam = str(eventInfromation.get("team","")),
+                        eventDescription =str(eventInfromation.get("description",eventInfromation.get("comments",""))), 
+                        eventLocation = str(eventInfromation.get("location","")),
+                        eventSourceHost = str(eventInfromation.get("sourceHost",eventInfromation.get('source address',""))),
+                        eventTargetHost = str(eventInfromation.get("targetHost",eventInfromation.get('destination address',""))),
+                        eventVectorId = str(eventInfromation.get("vectorId","")),
                         eventDataSource = str(eventInfromation["dataSource"]),
                         eventId = str(ObjectId()),
-                        eventIcon = defaultEventIcon(str(eventInfromation["team"]))
+                        eventIcon = defaultEventIcon(str(eventInfromation.get("team","")))
                         )    
         eventDict[event.getId()] = event
     return eventDict

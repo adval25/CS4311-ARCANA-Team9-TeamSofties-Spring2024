@@ -12,9 +12,17 @@ services:
       - MONGO_URI=mongodb://mongodb:27017/
     volumes:
       - ../logRepository:/logRepository
+    networks:
+      - mongoDbDash
   mongodb:
-    image: mongo:latest
+    image: mongo:4.4
     ports:
       - "27017:27017"
     volumes:
       - ./mongodb_data:/data/db
+    networks:
+      - mongoDbDash
+
+networks:
+  mongoDbDash:
+    driver: bridge

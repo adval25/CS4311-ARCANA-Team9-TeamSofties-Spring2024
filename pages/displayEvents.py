@@ -65,15 +65,17 @@ def generatedisplayEventCard():
 )
 
 @callback(
-    Output('dummyDivEventManager', 'children'),
+    [Output('dummyDivEventManager', 'children'),Output('location', 'href',allow_duplicate=True)],
     [Input('deleteButton', 'n_clicks')],
-     [State("SelectedRowEvent", "selectedRows")],
-    [State('selected-project-store', 'data')]
+    [State("SelectedRowEvent", "selectedRows"),State('selected-project-store', 'data')],
+    prevent_initial_call=True
+
 )
 def deleteEvent(n_clicks,activeEventInformation,activeProjectId):
     if n_clicks:
         eventManager.deleteEvent(activeEventInformation[0]["_id"],activeProjectId)
-    return None
+        return None,'/displayEvents'
+    raise dash.exceptions.PreventUpdate
 
 @callback(
     Output('eventtableOutput', 'children'),

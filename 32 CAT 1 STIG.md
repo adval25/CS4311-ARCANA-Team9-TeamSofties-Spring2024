@@ -1,6 +1,6 @@
 # Security: 32 CAT 1 STIG Vulnerabilities
 
-# Justification of CAT 1 STIG Vulnerabilities
+Justification of CAT 1 STIG Vulnerabilities
 
 VULNERABILITY ID  |           DESCRIPTION          |         MITIGATING REASON                          |
 ————————————————————————————————————————————————--------------------------------------------------------|
@@ -91,4 +91,32 @@ V – 222608        | The application must not be    | To mitigate XML-oriented 
                   |                                | -  Avoid XML External Entity Attacks               |
                   |                                | -  Use a secure XML Parser                         |
                   |                                | -  Input validation for XML Data                   |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222602        | The application must protect   | To mitigate Cross-Site Scripting (XSS)             |
+                  | from Cross-Site Scripting (XSS)| vulnerabilities in the locally run application,    |
+                  | vulnerabilities.               | follow these best practices:                       |
+                  |                                | -  Output encoding                                 |
+                  |                                | -  Content Security Policy (CSP)                   |
+                  |                                | -  Use frameworks with built-in protection         |
+                  |                                |    (e.g. React, Angular, Vue...)                   |
+                  |                                | -  Escape Dynamic JavaScript values                |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222601        | The application must not store | To ensure that your application does not store     |
+                  | sensitive information in hidden| sensitive information in hidden fields, we can     |
+                  | fields.                        | follow these best practices:                       |
+                  |                                | -  Avoid Storing Sensitive Data                    |
+                  |                                | -  Secure Communication Channels                   |
+                  |                                | -  Use local storage                               |
+                  |                                | -  Data Masking                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222607        | The application must not be    | Even though MongoDB is a NoSQL database and not    |
+                  | vulnerable to SQL Injection.   | susceptible to traditional SQL injection attacks,  |
+                  |                                | it's crucial to follow best practices to prevent   |
+                  |                                | NoSQL injection or other security vulnerabilities. |
+                  |                                |                                                    |
+                  |                                | Here are some recommendations to mitigate this:    |
+                  |                                | -  Use parameterized queries                       |
+                  |                                | -  Sanitize input                                  |
+                  |                                | -  Error Handling                                  |
+                  |                                | -  Update dependencies                             |
 ———————————————————————————————————————————-------------------------------------------------------------|

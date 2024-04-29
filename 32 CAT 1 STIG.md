@@ -1,6 +1,6 @@
 # Security: 32 CAT 1 STIG Vulnerabilities
 
-# Justification of CAT 1 STIG Vulnerabilities
+Justification of CAT 1 STIG Vulnerabilities
 
 VULNERABILITY ID  |           DESCRIPTION          |         MITIGATING REASON                          |
 ————————————————————————————————————————————————--------------------------------------------------------|
@@ -58,7 +58,7 @@ V – 222430        | The application must execute   | In this scenario where th
 V – 222432        | The application must enforce   | ARCANA application does not need user/password     |
                   | the limit of three consecutive | requirements, this STIG is not relevant for this   |
                   | invalid logon attempts by a    | project.                                           |
-                  | user during a 15-minite time   |                                                    |
+                  | user during a 15-minute time   |                                                    |
                   | period.                        |                                                    |
 ——————————————————-—————————————————————————------------------------------------------------------------|
 V – 222577        | The application must not expose| It's crucial to implement measures to prevent      |

@@ -3,6 +3,18 @@ ARCANA System Ver 1.4
 Language: Python
 
 System Requirements: Linux OS, Mongo & Mongo DB Compass, Docker
+dash==2.14.2
+dash-bootstrap-components==1.5.0
+dash-core-components==2.0.0
+dash-html-components==2.0.0
+dash-table==5.0.0
+dash_ag_grid==31.0.1
+dash_cytoscape==0.2.0
+mongoengine==0.27.0
+pandas==2.2.0
+pymongo==4.6.1
+Flask==3.0.1
+gunicorn==22.0.0
 
 In case of issues with program launch, Ensure the following are properly installed
 

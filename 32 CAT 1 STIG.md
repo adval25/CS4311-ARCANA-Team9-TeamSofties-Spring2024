@@ -120,3 +120,114 @@ V – 222607        | The application must not be    | Even though MongoDB is a 
                   |                                | -  Error Handling                                  |
                   |                                | -  Update dependencies                             |
 ———————————————————————————————————————————-------------------------------------------------------------|
+V – 222604        | The application must be        | To protect the application from command injection  |
+                  | protected from command         | vulnerabilities, especially in the context of using|
+                  | injection.                     | MongoDB, we can follow these best practices to     |
+                  |                                |mitigate this:                                      |
+                  |                                | -  Use parameterized queries                       |
+                  |                                | -  Sanitize input                                  |
+                  |                                | -  Error Handling                                  |
+                  |                                | -  Update dependencies                             |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222403        | The application must use       | Same as with V-222400 and V- 222404 this would not |
+                  | the NotOnOrAfter condition     | apply to this project due to the project not       |
+                  | when using the                 | requiring any kind of authentication, SSO or such. |
+                  | SubjectConfirmation            |                                                    |
+                  | element in a SAML assertion.   |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222585        | The application must fail to a | Ensuring that the application fails to a secure    |
+                  | a secure state if system       | state in the event of various failures involves    |
+                  | initialization fails, shutdown | implementing robust error handling and recovery    |
+                  | fails, or aborts fail.         | mechanisms.                                        |
+                  |                                | Here are some guidelines to achieve this:          |
+                  |                                | -  Error handling                                  |
+                  |                                | -  Graceful initialization                         |
+                  |                                | -  Shutdown process                                |
+                  |                                | -  Abort handling                                  |
+                  |                                | -  Testing Scenarios                               |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222550        | The application, when utilizing| The application does not need any kind of          |
+                  | PKI-based authentication, must | authentication/certification use, this would not   |
+                  | validate certificates by       | apply for this project.                            |
+                  | constructing a certification   |                                                    |
+                  | path to an accepted trust      |                                                    |
+                  | anchor.                        |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222522        | The application must uniquely  | The application does not need any kind of          |
+                  | identify and authenticate      | authentication, but the application to mitigate    |
+                  | organizational users           | this is using the user's requirement for their     |
+                  | (or processes acting on behalf | initials to recognize who did what.                |
+                  | of organizational users).      |                                                    |
+                  |                                |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222554        | The application must not       |This application will have no usage for passwords.  |
+                  | display passwords/PINs as      |                                                    |
+                  | clear text.                    |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222596        | The application must protect   |This application will have no usage for passwords.  |
+                  | the confidentiality and        |                                                    |
+                  | integrity of transmitted       |                                                    |
+                  | information.                   |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222399        | Messages protected with        |N/A; ARCANA will not use WS_Security tokens.        |
+                  | WS_Security must use time      |                                                    |
+                  | istamps with creation and      |                                                    |
+                  | expiration times.              |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222658        | All products must be supported | All products from this application will be         |
+                  | by the vendor or the           | supported by the development team and vendor       |
+                  | development team.              |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222659        | TThe application must be       | When decommissioned the application will be        |
+                  | decommissioned when maintenance| available to terminate any files and storagee.     |
+                  | support is no longer available.|                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222551        | The application, when using    |All PKI-Based Authentication will give access to a  |
+                  | PKI-based authentication, must |corresponding private key.                          |
+                  | enforce authorized access to   |                                                    |
+                  | the corresponding private key. |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222620        | Application web servers must be| The application will have no use of the internet.  |
+                  | on a separate network segment  |                                                    |
+                  | from the application and       |                                                    |
+                  | database servers if it is a    |                                                    |
+                  | tiered application operating in|                                                    |
+                  | the DoD DMZ.                   |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222536        | The application must enforce a | The application will have no use for passwords.    |
+                  | minimum 15-character password  |                                                    |
+                  | length.                        |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222643        | The application must have the  | The application will give the option to mark       |
+                  | capability to mark sensitive/  | sensitive data to specific users.                  |
+                  | classified output when required|                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222542        | The application must only store| The application will have no use for passwords.    |
+                  | cryptographic representations  |                                                    |
+                  | of passwords.                  |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222543        | The application must transmit  | The application will have no use for passwords.    |
+                  |only cryptographically-protected|                                                    |
+                  | passwords.                     |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222425        | The application must enforce   | This application will give the approved user       |
+                  | approved authorizations for    | specific data they are entrusted with.             |
+                  | logical access to information  |                                                    |
+                  | and system resources in        |                                                    |
+                  | accordance with applicable     |                                                    |
+                  | access control policies.       |                                                    |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222642        |The application must not contain| The user must give authentication details each     |
+                  | embedded authentication data.  | time a user logs in.                               |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222662        |Default passwords must be changed| The application will have no use for passwords.   |
+———————————————————————————————————————————-------------------------------------------------------------|
+V – 222555        |The application must use         | This application will follow all the guidelines of|
+                  |mechanisms meeting the           | Federal Laws, Executive Orders, Policies,         |
+                  |requirements of applicable       | Regulations, Stands for the cryptographic module. |
+                  |federal laws, Executive Orders,  |                                                   |
+                  |directives, policies,regulations,|                                                   |
+                  |standards,and guidance for       |                                                   |
+                  |authentication to a cryptographic|                                                   |
+                  |module.                          |                                                   |
+———————————————————————————————————————————-------------------------------------------------------------|

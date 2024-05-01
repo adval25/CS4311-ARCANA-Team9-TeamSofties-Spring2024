@@ -219,6 +219,10 @@ def handleEditButtonClick(n_clicks,eventId,projectId,eventDate,eventhour,eventmi
             eventIcon =""
         event = eventManager.createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,previousEvent.getDataSource(),eventIcon,eventId)
         eventManager.addEventToProject(projectId,event)
+        oldNode = graphManager.getNode(eventId,projectId)
         node = nodeManager.createNode(projectId,event)
+        node = nodeManager.saveEditedNodePosition(node,oldNode)
+        node = nodeManager.addOldNodeConnections(node,oldNode)
         graphManager.addNodeToGraph(node,projectId)
+        
         return ""

@@ -32,6 +32,10 @@ class Node(EmbeddedDocument):
                 return True
         return False  
     
+    def setNodeConnections(self,nodeConnections):
+        self.nodeConnections = []
+        self.nodeConnections = nodeConnections
+    
     def deleteAllTargetConnections(self,targetNodeId):
          self.nodeConnections = [connection for connection in self.nodeConnections if connection.get('data', {}).get('target') != targetNodeId]
 

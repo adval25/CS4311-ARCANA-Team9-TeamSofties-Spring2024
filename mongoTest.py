@@ -1,6 +1,6 @@
 import loggerManager
 import mongoengine
-mongoengine.connect("projectsDb", alias="default") 
-user_activity_logger = loggerManager.getUserLogs()
-data=[{"log_description": log} for log in user_activity_logger]
-print(data)
+from project import Project
+mongoengine.connect("projectsDB2", alias="default", host="mongodb", port=27017)
+newProject = Project(projectName = "hello from local host",analystInitals ="FXR",eventCollection = {},eventGraph = None)
+newProject.save()

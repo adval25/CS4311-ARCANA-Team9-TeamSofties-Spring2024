@@ -59,4 +59,13 @@ def deleteNode(projectId,eventId):
     loggerManager.addUserActivity("User has deleted a node with id:" +eventId+" updated in project Named:"+ project.getProjectName())
     project.save()
 
+def saveEditedNodePosition(newNode,oldNode):
+    newNode.changeNodeXPosition(oldNode.getNodeXPosition())
+    newNode.changeNodeYPosition(oldNode.getNodeYPosition())
+    return newNode
+
+def addOldNodeConnections(newNode,oldNode):
+    newNode.setNodeConnections(oldNode.getNodeConnections())
+    return newNode
+
     

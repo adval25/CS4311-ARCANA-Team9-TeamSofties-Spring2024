@@ -8,7 +8,7 @@ from mongoengine.context_managers import switch_db
 
 
 def createProjectDb(projectName,analystInitals): #makes the project object
-    newProject = Project(projectName = projectName,analystInitals =analystInitals,eventCollection = [],eventGraph = None)
+    newProject = Project(projectName = projectName,analystInitals =analystInitals,eventCollection = {},eventGraph = None)
     return newProject
 
 def addEventDictionaryToProject(project,eventDic): 
@@ -39,25 +39,20 @@ def getEmbeddedDocFromDb(projectId):
 def getAllProjectsFromDb():
     try:
         projectList = Project.objects.all()
-        print(projectList)
         return projectList
     except Exception as e:
         print("An error occurred while retrieving projects:", str(e))
         return None
 
 def getAllProjectsFromSeprateDb(dataBaseName,host):
-    client = MongoClient(host, 27017)
-    mongoengine.connect(dataBaseName, alias="syncedProject")
-    database = mongoengine.get_connection("syncedProject")
-    # Access database and collection
-    db = client.mydatabase
-    allProjects = db.mycollection
-    # allProjects = Project.objects.using("syncedProject")[:]
+    print(dataBaseName)
+    mongoengine.connect(dataBaseName,alias="syncedProject",host="mongodb", port=27017)
+    allProjects = Project.objects.using("syncedProject")[:]
     mongoengine.disconnect(alias="syncedProject")
     return allProjects
 
 def getProjectByIDFromSeprateDb(dataBaseName, host, projectId):
-    mongoengine.connect(dataBaseName,alias="syncedProject")
+    mongoengine.connect(dataBaseName,alias="syncedProject",host="mongodb", port=27017)
     
     try:
         project = Project.objects.using("syncedProject").get(id=projectId)

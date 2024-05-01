@@ -6,10 +6,6 @@ import csv
 from event import Event
 from bson.objectid import ObjectId
 
-path = os.getcwd()
-folder_name = 'pdrr'
-file_path = os.path.join(path, folder_name)
-
 
 def get_wlogs(file_path): # Returns a list of file paths for White team logs
     wlogs_dir = [] # final list that will be returned with directories of all white team logs
@@ -69,7 +65,7 @@ def get_rlogs(file_path): # Returns a list of file paths for Red team logs
     return rlogs_dir
 
 def combineLogLists(logPath):
-   return  get_wlogs(logPath) +  get_rlogs(file_path) + get_blogs(file_path)
+   return  get_wlogs(logPath) +  get_rlogs(logPath) + get_blogs(logPath)
 
 
 def getCsvPaths(listOfFilePaths):
@@ -99,6 +95,11 @@ def defaultEventIcon(eventTeam):
             return "Whitecard.png"
         case _:
             return ""
+        
+def markMalformed(event):
+    if(event.getEventTimeStamp() == "" or event.getVectorId() == ""  or event.geteventTeam() == ""):
+        return True
+    return False 
 
 def eventDataListToEventDictionary(eventAccumulator): #turns all of the event data into event objects and returns a list of events
     eventDict ={}
@@ -115,5 +116,6 @@ def eventDataListToEventDictionary(eventAccumulator): #turns all of the event da
                         eventId = str(ObjectId()),
                         eventIcon = defaultEventIcon(str(eventInfromation.get("team","")))
                         )    
+        event.setMalformed(markMalformed(event))
         eventDict[event.getId()] = event
     return eventDict

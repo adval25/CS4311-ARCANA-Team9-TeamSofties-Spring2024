@@ -264,10 +264,7 @@ def generateSyncCard():
             children=[
                 dbc.Col(width=1), #gives the card nice margin
                  dbc.Row(
-                dbc.Col([html.P("Sort:",style={'display': 'inline-block'}),
-                         dropDownMaker("sortDropDown",sortDropDown,"4rem"),
-                         dbc.Switch(id="standalone-switch",label="Filter",value=False,style={'display': 'inline-block'}),
-                         dbc.Input(id="input", placeholder="Type something...", type="text",size="md",style={'display': 'inline-block',"width" : "30rem","margin-left" : "15rem"}),
+                dbc.Col([html.P("Graph Actions:             ",style={'display': 'inline-block'}),
                          dbc.Button("Save Event Graph", color="primary", className="me-1",size="md", id = "exportButton"),
                          dbc.Button("Add Edge", color="primary", className="me-1",size="md", id = "addEdge"),
                          dbc.Button("Delete Edge", color="primary", className="me-1",size="md", id = "deleteEdge"),

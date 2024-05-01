@@ -5,6 +5,7 @@ from .  import eventNavbar
 import dataBaseCommunicator
 import dash_ag_grid as dag
 import eventManager
+import nodeManager
 
 
 dash.register_page(__name__, path='/displayEvents')
@@ -37,15 +38,6 @@ def generatedisplayEventCard():
                     ],
                 ),
                 html.Br(),
-                 dbc.Row(
-                dbc.Col([html.P("Sort:",style={'display': 'inline-block'}),
-                         dropDownMaker("sortDropDown",sortDropDown,"4rem"),
-                         dbc.Switch(id="standalone-switch",label="Filter",value=False,style={'display': 'inline-block'}),
-                         dbc.Input(id="input", placeholder="Type something...", type="text",size="md",style={'display': 'inline-block',"width" : "30rem","margin-left" : "20rem"}),
-                        dropDownMaker("logicDropDown",logicDropDown,"0rem"),
-                         dbc.Button("Search", color="primary", className="me-1",size="md"),
-                         ])
-                         ),
                   html.Div(id='eventtableOutput'),
                   html.A(html.Button('Refresh Data'),href='/displayEvents'),
                   html.Div(
@@ -74,6 +66,7 @@ def generatedisplayEventCard():
 def deleteEvent(n_clicks,activeEventInformation,activeProjectId):
     if n_clicks:
         eventManager.deleteEvent(activeEventInformation[0]["_id"],activeProjectId)
+        nodeManager.deleteNode(activeProjectId,activeEventInformation[0]["_id"])
         return None,'/displayEvents'
     raise dash.exceptions.PreventUpdate
 

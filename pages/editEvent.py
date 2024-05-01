@@ -164,7 +164,6 @@ def generateEditEvent(eventDic,previousEvent = None):
     [State('selected-project-store', 'data')]
 )
 def fillValuesForEditEvent(dummyValue, eventId,projectId):
-    print(eventId)
     if eventId != None:
           previousEvent = eventManager.getEventFromProject(eventId,projectId)
           eventDic = previousEvent.eventToDictionary()

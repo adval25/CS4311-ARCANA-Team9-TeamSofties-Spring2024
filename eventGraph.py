@@ -18,7 +18,6 @@ class EventGraph(mongoengine.EmbeddedDocument):
     
     def addVectorIds(self,newVectorId):
         maxVectorPosition = max(self.vectorIdPositions.values())
-        print(maxVectorPosition)
         if newVectorId not in self.vectorIdPositions:
             self.vectorIdPositions[newVectorId] = maxVectorPosition + 200
 

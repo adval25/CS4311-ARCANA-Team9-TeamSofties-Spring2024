@@ -6,7 +6,6 @@ import loggerManager
 def createEvent(eventTimeStamp, malformedInputs,intialsInput,vectorIdInput,sourceHostInput,targetHostInput,teamInput,descriptionInput,eventLocation,eventDataSource,eventIcon,eventId=None):
     if eventId is None:
         eventId = str(ObjectId())
-    print("EVENTID" +eventId)
     event = Event(eventTimeStamp = str(eventTimeStamp),
                 analystInitals = str(intialsInput),
                 malformed = bool(malformedInputs),

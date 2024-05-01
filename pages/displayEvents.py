@@ -82,7 +82,6 @@ def display_store_data(dummyValue, storeData):
         return ""
 
 def createEvenTable(projectId):
-    print(projectId)
     Selectedproject = dataBaseCommunicator.getProjectFromDb(projectId)
     columnDefsNames = ['malformed', 'eventTimeStamp', 'analystInitals', 'eventTeam', 'eventDescription', 'eventLocation', 'eventSourceHost', 'eventTargetHost', 'eventVectorId', 'eventDataSource', '_id']
     columnDefs = [{"field": i} for i in columnDefsNames]
@@ -115,7 +114,6 @@ def output_selected_rows(selected_rows,current_data): #grabs the eventId of the 
         return (current_data,)
     else:
         selectedEvent = [f"{event['_id']}" for event in selected_rows]
-        print( (f"{'s' if len(selected_rows) > 1 else ''}{', '.join(selectedEvent)}",))
         return (f"{'s' if len(selected_rows) > 1 else ''}{', '.join(selectedEvent)}",)
 
 @callback(

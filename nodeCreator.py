@@ -16,7 +16,6 @@ def unconnectedNodePositions(uniqueVectorIds): #if nodes have no positions this 
     for vectorId in uniqueVectorIds:
         vectorIdXPositionDic[vectorId] = positionX
         positionX = positionX + 200
-    print(vectorIdXPositionDic)
     return vectorIdXPositionDic
 
 def nodeYpositions(uniqueVectorIds):

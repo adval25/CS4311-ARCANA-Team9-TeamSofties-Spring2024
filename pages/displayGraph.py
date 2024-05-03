@@ -136,6 +136,7 @@ def editNodeModal(eventDic = {}):
     )
 
 def addNodeModal(eventDic = {}):
+    
     team_options = ["White", "Red", "Blue"]
     event_node_icons_options = {
         "White": "eventNodeIcon.png",
@@ -247,6 +248,52 @@ def addNodeModal(eventDic = {}):
     ]
    
     )
+
+def confirmDeleteModal():
+    return html.Div([ dbc.Modal(
+            [
+                dbc.ModalHeader(),
+                dbc.ModalBody(
+                    [
+                        html.P("Are you sure you want to delete Node?", style={"font-size": "40px", "margin-left": "10px", 'display': 'inline-block'}, id = "deleteMessage"),
+                        html.Br(),
+                        html.Br(),
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    dbc.Button("Delete", size="lg", color="primary", id="deleteNodeConfirmed", className="ms-auto", n_clicks=0),
+                                    width={"size": 6, "order": 2}  # Positions in the opposite corner
+                                ),
+                                dbc.Col(
+                                    dbc.Button("Cancel", size="lg", color="secondary", id="closeDeleteConfirm", className="me-auto", n_clicks=0),
+                                    width={"size": 6, "order": 1}  # Positions in the opposite corner
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+                dbc.ModalFooter(),
+            ],
+            id = "confirmDeleteModal",
+            is_open = False,
+        ),])
+@callback(
+    [Output("confirmDeleteModal", "is_open",allow_duplicate=True)],
+    [Input("deleteNode", "n_clicks"), Input("closeDeleteConfirm", "n_clicks"),Input("deleteNodeConfirmed","n_clicks")],
+    [State("confirmDeleteModal", "is_open")],
+    prevent_initial_call=True
+)
+def toggle_modal(delete_clicks, close_clicks, deleteClicks,is_open):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        return [is_open]
+    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    if button_id == "deleteNode":
+        return [True]
+    elif button_id == "closeDeleteConfirm" or deleteClicks == "deleteNodeConfirmed":
+        return [False]
+    else:
+        return [is_open]
 
 def dropDownMaker(menueId,menueContent,marginRight):
     return dbc.Select(
@@ -410,8 +457,8 @@ def delete_edge(delete_clicks, elements, tap_edge, projectId):
     return elements
 
 @callback(
-    Output("eventGraphGui", "elements", allow_duplicate=True),
-    [Input("deleteNode", "n_clicks")],
+    [Output("eventGraphGui", "elements", allow_duplicate=True),Output("confirmDeleteModal", "is_open",allow_duplicate=True)],
+    [Input("deleteNodeConfirmed", "n_clicks")],
     [State("eventGraphGui", "elements"), State("eventGraphGui", "selectedNodeData"), State('selected-project-store', 'data')],
     prevent_initial_call=True
 )
@@ -419,7 +466,7 @@ def delete_node(delete_clicks, elements, tap_node, projectId):
     if delete_clicks:
         elements = nodeManager.deleteNodeFromGui(elements, tap_node[0]["id"])
         nodeManager.deleteNode(projectId, tap_node[0]["id"])
-        return elements
+        return elements,False
     return dash.exceptions.PreventUpdate
 
 @callback(
@@ -621,6 +668,7 @@ layout = html.Div([
     html.Div(id="updateDropDowns"),
     addNodeModal(),
     editNodeModal(),
+    confirmDeleteModal(),
     html.Br(),
     eventNavbar.eventSidebar,
     generateSyncCard()
